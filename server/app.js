@@ -1,6 +1,7 @@
-let express = require('express');
-let bodyParser = require('body-parser');
-let app = express();
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
 
 require('dotenv').config();
 
@@ -11,26 +12,28 @@ var db_config = {
   text: 'mongodb://127.0.0.1/273_lab1_dropbox_test'
 };
 
-var app_env = app.settings.env;
-mongoose.connect(db_config[app_env], {useMongoClient: true}, (err, res) => {
+const app_env = app.settings.env;
+mongoose.connect(db_config[app_env], { useMongoClient: true }, (err, res) => {
   console.log(`Connected to DB: ${db_config[app_env]}`);
 });
 // mongoose setup end ####
 
 
-let index = require('./routes/index');
-let auth = require('./routes/auth');
+const index = require('./routes/index');
+const auth = require('./routes/auth');
+const users = require('./routes/users');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', index);
 app.use('/auth', auth);
+app.use('/users', users);
 
-var port = process.env.PORT || '3000';
+const port = process.env.PORT || '3000';
 
-app.listen(port, function() {
+app.listen(port, () => {
   console.log(`Dropbox server is listening on port ${port}`);
-})
+});
 
 module.exports = app;
