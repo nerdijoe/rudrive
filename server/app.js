@@ -19,11 +19,13 @@ mongoose.connect(db_config[app_env], {useMongoClient: true}, (err, res) => {
 
 
 let index = require('./routes/index');
+let auth = require('./routes/auth');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', index);
+app.use('/auth', auth);
 
 var port = process.env.PORT || '3000';
 
