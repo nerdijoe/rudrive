@@ -15,3 +15,20 @@ exports.signup = (req, res, next) => {
     }
   });
 };
+
+exports.signin = (req, res) => {
+  // req.user is passed from passport
+  const user = req.user;
+  console.log('auth.signin');
+  console.log(user);
+
+  const email = req.user.email;
+  const token = jwt.sign({
+    firstname: req.user.firstname,
+    lastname: req.user.lastname,
+    email: req.user.email,
+    _id: req.user._id,
+  }, process.env.JWT_KEY);
+
+  res.send({ token, email, _id: req.user._id });
+};
