@@ -6,14 +6,28 @@ require('dotenv').config();
 exports.signup = (req, res, next) => {
   console.log(req);
 
-  const user = req.body;
-  user.password = passwordHash.generate(user.password);
   
-  db.User.create(user)
-  .then( user => {
-    console.log(`created user`, user);
-    res.json(user);
-  })  
+
+  db.User.findOne({
+    where: {
+      email: req.body.email,
+    }
+  }).then ( user => {
+    if (user) {
+      res.json({message: 'Email is already taken.'});
+    }
+    else {
+      const new_user = req.body;
+      new_user.password = passwordHash.generate(new_user.password);
+      
+      db.User.create(new_user)
+      .then( user => {
+        console.log(`created user`, user);
+        res.json(user);
+      })
+    }
+  })
+
 };
 
 exports.signin = (req, res, next) => {
