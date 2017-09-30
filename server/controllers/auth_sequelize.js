@@ -42,6 +42,9 @@ exports.signin = (req, res, next) => {
     _id: user.id,
   }, process.env.JWT_KEY);
 
+  // set session
+  req.session.user = user;
+
   res.send({ token, email, id: req.user.id });
 }
 
