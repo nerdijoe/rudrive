@@ -6,6 +6,8 @@ const LocalStrategy = require('passport-local').Strategy;
 const passwordHash = require('password-hash');
 const cors = require('cors');
 
+const session = require('client-sessions');
+
 const Sequelize = require('sequelize');
 const path = require('path');
 
@@ -38,6 +40,13 @@ mongoose.connect(dbConfig[appEnv], { useMongoClient: true }, (err, res) => {
 });
 // mongoose setup end ####
 
+
+app.use(session({
+  cookieName: 'session', // cookie name dictates the key name added to the request object
+  secret: process.env.SESSION_SECRET, // should be a large unguessable string
+  duration: 24 * 60 * 60 * 1000, // how long the session will stay valid in ms
+  activeDuration: 1000 * 60 * 5,
+}));
 
 const index = require('./routes/index');
 const auth = require('./routes/auth');
