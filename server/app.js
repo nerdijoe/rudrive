@@ -56,26 +56,63 @@ app.use('/authseq', authSequelize);
 
 app.use(passport.initialize());
 
-
 passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (username, password, done) => {
-  console.log(`----> ${username}, ${password}`);
-  let User = require('./models/user');
-  User.findOne({ email: username }, (err, user) => {
-    if (err) { return done(err); }
-    
-    console.log(`here, user=${user}`);
+  console.log(`passport----> ${username}, ${password}`);
+  let db = require('./models');
 
-    if (!user) {
+  db.User.findOne({
+    where: {
+      email: username
+    }
+  }).then( user => {
+    if(!user) {
       done('User does not exist');
     } else {
       if (passwordHash.verify(password, user.password)) {
         done(null, user);
       } else {
-        done('Email and password do not match!');
+        done ('Email and password do not match');
       }
     }
   });
+
+  // User.findOne({ email: username }, (err, user) => {
+  //   if (err) { return done(err); }
+    
+  //   console.log(`here, user=${user}`);
+
+  //   if (!user) {
+  //     done('User does not exist');
+  //   } else {
+  //     if (passwordHash.verify(password, user.password)) {
+  //       done(null, user);
+  //     } else {
+  //       done('Email and password do not match!');
+  //     }
+  //   }
+  // });
 }));
+
+// mongoose
+// passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (username, password, done) => {
+//   console.log(`----> ${username}, ${password}`);
+//   let User = require('./models/user');
+//   User.findOne({ email: username }, (err, user) => {
+//     if (err) { return done(err); }
+    
+//     console.log(`here, user=${user}`);
+
+//     if (!user) {
+//       done('User does not exist');
+//     } else {
+//       if (passwordHash.verify(password, user.password)) {
+//         done(null, user);
+//       } else {
+//         done('Email and password do not match!');
+//       }
+//     }
+//   });
+// }));
 
 // passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, function(username, password, cb) {
 //   let User = require('./models/user');
