@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "damnit",
+    "database": "273_lab1_dropbox",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "damnit",
+    "database": "273_lab1_dropbox_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "damnit",
+    "database": "273_lab1_dropbox_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
