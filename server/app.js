@@ -6,6 +6,22 @@ const LocalStrategy = require('passport-local').Strategy;
 const passwordHash = require('password-hash');
 const cors = require('cors');
 
+const Sequelize = require('sequelize');
+const path = require('path');
+
+const env = process.env.NODE_ENV || "development";
+const config = require(path.join(__dirname, 'config', 'config.json'))[env];
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Sequelize MySQL Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
 const app = express();
 
 require('dotenv').config();
@@ -26,6 +42,7 @@ mongoose.connect(dbConfig[appEnv], { useMongoClient: true }, (err, res) => {
 const index = require('./routes/index');
 const auth = require('./routes/auth');
 const users = require('./routes/users');
+const authSequelize = require('./routes/auth_sequelize');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -34,6 +51,8 @@ app.use(cors());
 app.use('/', index);
 app.use('/auth', auth);
 app.use('/users', users);
+app.use('/authseq', authSequelize);
+
 
 app.use(passport.initialize());
 
