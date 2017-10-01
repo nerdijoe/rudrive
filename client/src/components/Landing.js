@@ -7,8 +7,9 @@ class Landing extends Component {
   render() {
     return (
       <Container>
-        <Navbar />
-        Yay!
+        Landing Yay!
+
+
       </Container>
     );
   }
