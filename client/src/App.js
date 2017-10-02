@@ -12,6 +12,7 @@ import './App.css';
 import Nav from './components/Navbar';
 import Landing from './components/Landing';
 import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
 
 class App extends Component {
   render() {
@@ -31,6 +32,7 @@ class App extends Component {
           
           <Route exact path='/' component={Landing} />
           <Route path='/signin' component={SignIn} />
+          <Route path='/signup' component={SignUp} />
           
         </Container>
       </Router>
