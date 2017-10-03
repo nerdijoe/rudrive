@@ -83,7 +83,9 @@ passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'passwor
         done ('Email and password do not match');
       }
     }
-  });
+  }).catch (err => {
+    done('Error')
+  })
 
   // User.findOne({ email: username }, (err, user) => {
   //   if (err) { return done(err); }

@@ -4,9 +4,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 exports.signup = (req, res, next) => {
-  console.log(req);
-
-  
+  // console.log(req);
 
   db.User.findOne({
     where: {
@@ -35,6 +33,8 @@ exports.signin = (req, res, next) => {
   console.log('auth_sequelize signin', user);
 
   const email = user.email;
+
+  // create jsonwebtoken
   const token = jwt.sign({
     firstname: user.firstname,
     lastname: user.lastname,
@@ -45,6 +45,11 @@ exports.signin = (req, res, next) => {
   // set session
   req.session.user = user;
 
-  res.send({ token, email, id: req.user.id });
-}
-
+  res.send({
+    token,
+    email,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    id: req.user.id,
+  });
+};
