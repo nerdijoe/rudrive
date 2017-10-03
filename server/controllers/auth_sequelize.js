@@ -4,9 +4,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 exports.signup = (req, res, next) => {
-  console.log(req);
-
-  
+  // console.log(req);
 
   db.User.findOne({
     where: {

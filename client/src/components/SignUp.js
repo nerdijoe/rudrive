@@ -15,13 +15,23 @@ class SignUp extends Component {
     };
   }
 
-  handleSignUp() {
+  handleSignUp(e) {
+    e.preventDefault();
+    console.log('handleSignUp',this.state);
     this.props.axiosSignUp(this.state);
+    
+    this.props.history.push('/');
+    
+
   }
 
-  handleChange(stateName, text) {
+  handleChange(e) {
+    const target = e.target;
+    
+    console.log(`handleChange ${target.name}=[${target.value}]`);
+
     this.setState({
-      [stateName]: text,
+      [target.name]: target.value,
     });
   }
 
@@ -31,19 +41,19 @@ class SignUp extends Component {
         <Form onSubmit={ (e) => { this.handleSignUp(e) }} >
         <Form.Field>
               <label>First Name</label>
-              <input placeholder='John' value={this.state.name} onChangeText={ (text) => { this.handleChange('name', text); }} />
+              <input placeholder='John' name='firstname' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
           </Form.Field>
           <Form.Field>
               <label>Last Name</label>
-              <input placeholder='Snow' />
+              <input placeholder='Snow' name='lastname' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
           </Form.Field>
           <Form.Field>
               <label>Email</label>
-              <input placeholder='john.snow@winterfell.com' />
+              <input placeholder='john.snow@winterfell.com' name='email' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
           </Form.Field>
           <Form.Field>
             <label>Password</label>
-            <input placeholder='Password' />
+            <input type='password' placeholder='Password' name='password' value={this.state.name} onChange={ (e) => { this.handleChange(e); }}/>
           </Form.Field>
 
           <Button type='submit'>Sign In</Button>

@@ -8,6 +8,18 @@ const UserReducer = (state = initialState, action) => {
       // not sure what to do here
       return state;
     }
+    case actionType.USER_SIGN_UP: {
+      return { 
+        ...state,
+        user: {
+          firstname: action.data.firstname,
+          lastname: action.data.lastname,
+          email: action.data.email,
+        }
+      };
+    }
+    default:
+      return state;
   }
 };
 
