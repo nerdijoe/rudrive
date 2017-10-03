@@ -6,4 +6,4 @@ const Dropbox = combineReducers({
   UserReducer,
 })
 
-export default UserReducer;
+export default Dropbox;

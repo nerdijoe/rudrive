@@ -45,6 +45,11 @@ exports.signin = (req, res, next) => {
   // set session
   req.session.user = user;
 
-  res.send({ token, email, id: req.user.id });
-}
-
+  res.send({
+    token,
+    email,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    id: req.user.id,
+  });
+};

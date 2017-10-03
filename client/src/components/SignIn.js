@@ -17,7 +17,14 @@ class SignIn extends Component {
     e.preventDefault();
     console.log('handleSignIn', this.state);
 
-    this.props.axiosSignIn(this.state);    
+    this.props.axiosSignIn(this.state, this.props.history );
+
+    // if(this.props.is_authenticated) {
+    //   this.props.history.push('/home');
+    // } else {
+    //   alert('Please check your email and password again.');
+    // }
+
   }
 
   handleChange(e) {
@@ -49,12 +56,19 @@ class SignIn extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
+  console.log('mapStateToProps', state);
   return {
-    axiosSignIn: (data) => { dispatch(axiosSignIn(data)) },
+    is_authenticated: state.UserReducer.is_authenticated,
   }
 }
 
-const connectedSignIn = connect(null, mapDispatchToProps)(SignIn);
+const mapDispatchToProps = dispatch => {
+  return {
+    axiosSignIn: (data, router) => { dispatch(axiosSignIn(data, router)) },
+  }
+}
+
+const connectedSignIn = connect(mapStateToProps, mapDispatchToProps)(SignIn);
 
 export default connectedSignIn;

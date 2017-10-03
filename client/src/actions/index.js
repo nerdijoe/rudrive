@@ -29,7 +29,7 @@ export const userSignUp = (data) => {
 };
 
 
-export const axiosSignIn = data => (dispatch) => {
+export const axiosSignIn = (data, router) => (dispatch) => {
   axios.post('http://localhost:3000/authseq/signin', {
     email: data.email,
     password: data.password,
@@ -40,9 +40,35 @@ export const axiosSignIn = data => (dispatch) => {
     localStorage.setItem('token', res.data.token);
     localStorage.setItem('user_id', res.data.id);
     localStorage.setItem('user_email', res.data.email);
+    localStorage.setItem('user_firstname', res.data.firstname);
+    localStorage.setItem('user_lastname', res.data.lastname);
+    
+    router.push('/home');
 
+    dispatch(userSignIn(data));
+    
   }).catch( (err) => {
     console.log('Error when signin', err);
     // display the error message
   })
+}
+
+export const userSignIn = (data) => {
+  return {
+    type: actionType.USER_SIGN_IN,
+    data,
+  };
+};
+
+export const userSignOut = () => {
+  console.log('userSignOut');
+  localStorage.removeItem('token');
+  localStorage.removeItem('user_id');
+  localStorage.removeItem('user_email');
+  localStorage.removeItem('user_firstname');
+  localStorage.removeItem('user_lastname');
+  
+  return {
+    type: actionType.USER_SIGN_OUT,
+  }
 }
