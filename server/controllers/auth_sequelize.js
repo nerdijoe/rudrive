@@ -33,6 +33,8 @@ exports.signin = (req, res, next) => {
   console.log('auth_sequelize signin', user);
 
   const email = user.email;
+
+  // create jsonwebtoken
   const token = jwt.sign({
     firstname: user.firstname,
     lastname: user.lastname,
