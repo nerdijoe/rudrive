@@ -52,16 +52,20 @@ const index = require('./routes/index');
 const auth = require('./routes/auth');
 const users = require('./routes/users');
 const authSequelize = require('./routes/auth_sequelize');
+const uploads = require('./routes/uploads');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/auth', auth);
 app.use('/users', users);
 app.use('/authseq', authSequelize);
+app.use('/uploads', uploads);
 
+app.use('./public/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(passport.initialize());
 

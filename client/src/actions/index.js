@@ -72,3 +72,14 @@ export const userSignOut = () => {
     type: actionType.USER_SIGN_OUT,
   }
 }
+
+export const axiosUpload = (data) => (dispatch) => {
+  axios.post('http://localhost:3000/uploads', data)
+  .then ( res => {
+    console.log('axiosUpload');
+    console.log(res);
+
+  }).catch (err => {
+    console.log(err);
+  })
+};
