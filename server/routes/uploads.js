@@ -24,5 +24,6 @@ router.post('/', [helper.auth, upload.single('doc')], uploadsController.uploadFi
 
 router.get('/listdir', helper.auth , uploadsController.listDir);
 
+router.post('/createdir', helper.auth, uploadsController.createDir);
 
 module.exports = router;

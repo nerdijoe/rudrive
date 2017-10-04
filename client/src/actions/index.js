@@ -50,8 +50,8 @@ export const axiosSignIn = (data, router) => (dispatch) => {
   }).catch( (err) => {
     console.log('Error when signin', err);
     // display the error message
-  })
-}
+  });
+};
 
 export const userSignIn = (data) => {
   return {
@@ -67,11 +67,11 @@ export const userSignOut = () => {
   localStorage.removeItem('user_email');
   localStorage.removeItem('user_firstname');
   localStorage.removeItem('user_lastname');
-  
+
   return {
     type: actionType.USER_SIGN_OUT,
-  }
-}
+  };
+};
 
 export const FetchListing = (data) => {
   return {
@@ -111,8 +111,6 @@ export const axiosUpload = (data) => (dispatch) => {
     console.log(err);
   })
 };
-
-
 
 export const axiosFetchListing = () => (dispatch) => {
   const token = localStorage.getItem('token');
