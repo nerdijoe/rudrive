@@ -73,6 +73,13 @@ export const userSignOut = () => {
   }
 }
 
+export const FetchListing = (data) => {
+  return {
+    type: actionType.FETCH_LISTING,
+    data,
+  };
+};
+
 // export const axiosUpload = (data) => (dispatch) => {
 //   axios.post('http://localhost:3000/uploads', data)
 //   .then ( res => {
@@ -97,18 +104,15 @@ export const axiosUpload = (data) => (dispatch) => {
     console.log('axiosUpload');
     console.log(res);
 
+    // update the list state
+    dispatch(axiosFetchListing());
+
   }).catch (err => {
     console.log(err);
   })
 };
 
 
-export const FetchListing = (data) => {
-  return {
-    type: actionType.FETCH_LISTING,
-    data,
-  };
-};
 
 export const axiosFetchListing = () => (dispatch) => {
   const token = localStorage.getItem('token');
