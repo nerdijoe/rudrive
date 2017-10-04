@@ -26,10 +26,10 @@ exports.uploadFile = (req, res) => {
   // })
   console.log('uploadFile req.decoded', req.decoded);
   const file = req.file;
-  const user_email = req.decoded.email;
+  const userEmail = req.decoded.email;
 
 
-  var dir = `./public/uploads/${user_email}`;
+  var dir = `./public/uploads/${userEmail}`;
   // create dir if it doesn't exist
   if (!fs.existsSync(dir)){
       fs.mkdirSync(dir);
@@ -49,6 +49,7 @@ exports.uploadFile = (req, res) => {
 };
 
 exports.listDir = (req, res) => {
-  const files = fs.readdirSync('./public/uploads');
+  const userEmail = req.decoded.email;
+  const files = fs.readdirSync(`./public/uploads/${userEmail}`);
   res.json(files);
 };
