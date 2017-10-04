@@ -3,11 +3,10 @@ import { Container } from 'semantic-ui-react';
 import {
   BrowserRouter as Router,
   Route,
-  Link
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 
 import store from './store/manageStore';

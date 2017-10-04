@@ -72,3 +72,32 @@ export const userSignOut = () => {
     type: actionType.USER_SIGN_OUT,
   }
 }
+
+// export const axiosUpload = (data) => (dispatch) => {
+//   axios.post('http://localhost:3000/uploads', data)
+//   .then ( res => {
+//     console.log('axiosUpload');
+//     console.log(res);
+
+//   }).catch (err => {
+//     console.log(err);
+//   })
+// };
+
+export const axiosUpload = (data) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosUpload get token=', token);
+
+  axios.post('http://localhost:3000/uploads', data, { 
+    headers: {
+      token,
+    },
+  })
+  .then ( res => {
+    console.log('axiosUpload');
+    console.log(res);
+
+  }).catch (err => {
+    console.log(err);
+  })
+};

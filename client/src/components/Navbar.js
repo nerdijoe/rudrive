@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Input, Menu } from 'semantic-ui-react';
+import { Container, Menu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userSignOut } from '../actions';
