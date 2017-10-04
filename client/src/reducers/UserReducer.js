@@ -2,7 +2,8 @@ import * as actionType from '../actions/constants';
 
 const initialState = {
   is_authenticated: false,
-  user: {}
+  user: {},
+  list: [], // array
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -15,20 +16,28 @@ const UserReducer = (state = initialState, action) => {
       };
     }
     case actionType.USER_SIGN_UP: {
-      return { 
+      return {
         ...state,
         user: {
           firstname: action.data.firstname,
           lastname: action.data.lastname,
           email: action.data.email,
-        }
+        },
       };
     }
     case actionType.USER_SIGN_OUT: {
       return {
         ...state,
         is_authenticated: false,
-      }
+      };
+    }
+    case actionType.FETCH_LISTING: {
+      console.log('*** reducer action.list', action);
+
+      return {
+        ...state,
+        list: action.data,
+      };
     }
     default:
       return state;
