@@ -1,7 +1,8 @@
 const router = require('express').Router();
-const uploadsController = require('../controllers/uploads');
-
 const multer = require('multer');
+
+const uploadsController = require('../controllers/uploads');
+const helper = require('../helpers/authVerifyHelper');
 
 // File upload ----
 const storage = multer.diskStorage({
@@ -19,7 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // need to check jwt token before uploading a file.
-router.post('/', upload.single('doc'), uploadsController.uploadFile);
+router.post('/', [helper.auth, upload.single('doc')], uploadsController.uploadFile);
 
 router.get('/listdir', uploadsController.listDir);
 
