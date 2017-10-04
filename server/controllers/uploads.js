@@ -1,6 +1,6 @@
-  var multer = require('multer');
+const fs = require('fs');
 
-  // File upload ----
+// File upload ----
 
 // var storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
@@ -26,4 +26,9 @@ exports.uploadFile = (req, res) => {
   // })
 
   res.status(204).end();
+};
+
+exports.listDir = (req, res) => {
+  const files = fs.readdirSync('./public/uploads');
+  res.json(files);
 };
