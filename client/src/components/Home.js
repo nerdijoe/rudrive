@@ -6,12 +6,16 @@ import FileUpload from './FileUpload';
 import Listing from './Listing';
 import CreateFolder from './CreateFolder';
 
-import { axiosFetchListing } from '../actions';
+import { 
+  axiosFetchListing,
+  axiosFetchUserAbout,
+} from '../actions';
 
 class Home extends Component {
 
   componentDidMount() {
     this.props.axiosFetchListing();
+    this.props.axiosFetchUserAbout();
   }
 
   render() {
@@ -30,6 +34,7 @@ class Home extends Component {
 const mapDispatchToProps = dispatch => {
   return {
     axiosFetchListing: () => { dispatch(axiosFetchListing()) },
+    axiosFetchUserAbout: () => { dispatch(axiosFetchUserAbout()) },
   };
 };
 

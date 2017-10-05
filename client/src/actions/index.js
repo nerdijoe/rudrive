@@ -155,3 +155,54 @@ export const axiosCreateFolder = (data) => (dispatch) => {
     console.log(err);
   });
 };
+
+export const FetchUserAbout = (data) => {
+  return {
+    type: actionType.FETCH_USER_ABOUT,
+    data,
+  };
+};
+
+export const axiosFetchUserAbout = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/users/about', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchUserAbout');
+    console.log(res.data);
+
+    dispatch(FetchUserAbout(res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
+
+}
+
+export const updateUserAbout = (data) => {
+  return {
+    type: actionType.UPDATE_USER_ABOUT,
+    data,
+  };
+};
+
+export const axiosUpdateUserAbout = (data) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosUpdateUserAbout data', data);
+  axios.put('http://localhost:3000/users/about', {
+    ...data
+  },{
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosUpdateUserAbout');
+    console.log(res.data);
+
+    dispatch(updateUserAbout(data));
+  }).catch((err) => {
+    console.log(err);
+  });
+
+}

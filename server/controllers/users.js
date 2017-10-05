@@ -19,7 +19,7 @@ exports.getAbout = (req, res) => {
       user_id: req.decoded._id,
     }
   }).then( about => {
-    console.log('getAbout', about);
+    // console.log('getAbout', about);
     if (!about) {
       about = {
         overview: '',
@@ -28,7 +28,36 @@ exports.getAbout = (req, res) => {
         life_events: '',
       };
     }
-    
+
     res.json(about);
   })
+}
+
+
+
+exports.updateAbout = (req, res) => {
+  console.log('updateAbout req.decode._id=', req.decoded._id);
+  console.log('updateAbout req.body=', req.body);
+  const about = req.body;
+  db.About.update({ 
+    overview: about.overview,
+    work: about.work,
+    education: about.education,
+    contact_info: about.contact_info,
+    life_events: about.life_events,
+  },
+    { where: { user_id: req.decoded._id } }
+  )
+    .then(updatedAbout => {
+      console.log('after updateAbout updatedAbout=', updatedAbout);
+      if(updatedAbout[0] === 1)
+      {
+        console.log("update About successful");
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }).catch(err => {
+      console.log(err);
+    })
 }

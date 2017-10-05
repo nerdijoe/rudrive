@@ -46,6 +46,20 @@ const UserReducer = (state = initialState, action) => {
         list: action.data,
       };
     }
+    case actionType.FETCH_USER_ABOUT: {
+      console.log('*** reducer FETCH_USER_ABOUT', action);
+      return {
+        ...state,
+        about: { ...action.data },
+      };
+    }
+    case actionType.UPDATE_USER_ABOUT: {
+      console.log('*** reducer UPDATE_USER_ABOUT', action);
+      return {
+        ...state,
+        about: { ...action.data },
+      };
+    }
     default:
       return state;
   }

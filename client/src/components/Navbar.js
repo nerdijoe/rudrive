@@ -24,7 +24,7 @@ class Navbar extends Component {
           { this.props.is_authenticated ? (
             <Menu.Menu position='right'>
               <Link to='/about'>
-                <Menu.Item name='about' onClick={this.handleSignOut} />
+                <Menu.Item name='about' onClick={this.handleItemClick} />
               </Link>
               <Link to='/'>
                 <Menu.Item name='signOut' onClick={this.handleSignOut} />
