@@ -21,9 +21,37 @@ exports.signup = (req, res, next) => {
       db.User.create(new_user)
       .then( user => {
         console.log(`created user`, user);
-        res.json(user);
+        // res.json(user);
+
+        // need to create a new entry in the about and interest tables
+        const new_about = {
+          overview: '',
+          work_edu: '',
+          contact_info: '',
+          life_events: '',
+          user_id: user.id,
+        };
+        db.About.create(new_about)
+        .then( about => {
+          console.log('create new about', about);
+
+          const new_interest = {
+            music: '',
+            shows: '',
+            sports: '',
+            fav_teams: '',
+            user_id: user.id,
+          };
+          db.Interest.create(new_interest)
+          .then( interest => {
+            console.log('create new interest', interest);
+            res.json(user);
+          })
+
+        })
+
       })
-    }
+    } // eof else
   })
 
 };
@@ -53,3 +81,7 @@ exports.signin = (req, res, next) => {
     id: req.user.id,
   });
 };
+
+exports.profileAbout = (req, res, next) => {
+  
+}
