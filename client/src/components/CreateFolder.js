@@ -30,13 +30,13 @@ class CreateFolder extends Component {
   render() {
     return (
       <Container>
-        <Form onSubmit={ (e) => { this.handleSubmit(e) }} >
+        <Form onSubmit={(e) => { this.handleSubmit(e); }} >
           <Form.Field>
-              <label>New Folder</label>
-              <input placeholder='' name='folderName' value={this.state.folderName} onChange={ (e) => { this.handleChange(e) } }/>
+            <label>New Folder</label>
+            <input placeholder="" name="folderName" value={this.state.folderName} onChange={(e) => { this.handleChange(e); }} />
           </Form.Field>
 
-          <Button type='submit'>Add</Button>
+          <Button type="submit">Add</Button>
         </Form>
       </Container>
     );
