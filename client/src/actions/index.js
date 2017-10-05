@@ -50,8 +50,8 @@ export const axiosSignIn = (data, router) => (dispatch) => {
   }).catch( (err) => {
     console.log('Error when signin', err);
     // display the error message
-  })
-}
+  });
+};
 
 export const userSignIn = (data) => {
   return {
@@ -67,11 +67,11 @@ export const userSignOut = () => {
   localStorage.removeItem('user_email');
   localStorage.removeItem('user_firstname');
   localStorage.removeItem('user_lastname');
-  
+
   return {
     type: actionType.USER_SIGN_OUT,
-  }
-}
+  };
+};
 
 export const FetchListing = (data) => {
   return {
@@ -112,8 +112,6 @@ export const axiosUpload = (data) => (dispatch) => {
   })
 };
 
-
-
 export const axiosFetchListing = () => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosFetchListing token=', token);
@@ -132,3 +130,28 @@ export const axiosFetchListing = () => (dispatch) => {
   });
 };
 
+export const axiosCreateFolder = (data) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  const email = localStorage.getItem('user_email');
+  console.log('axiosCreateFolder token=', token);
+  console.log('axiosCreateFolder email=', email);
+  
+  axios.post('http://localhost:3000/uploads/createfolder', {
+    name: data.folderName,
+    currentPath: `./public/uploads/${email}`,
+  }, {
+    headers: {
+      token,
+    },
+  })
+  .then ( res => {
+    console.log('axiosCreateFolder');
+    console.log(res);
+
+    // update the list state
+    dispatch(axiosFetchListing());
+
+  }).catch (err => {
+    console.log(err);
+  });
+};

@@ -44,12 +44,32 @@ exports.uploadFile = (req, res) => {
     console.log(`>>> ${file.filename} has been moved to ${target_path}`);
   })
 
-
   res.status(204).end();
 };
 
 exports.listDir = (req, res) => {
   const userEmail = req.decoded.email;
   const files = fs.readdirSync(`./public/uploads/${userEmail}`);
+  res.json(files);
+};
+
+exports.createDir = (req, res) => {
+  console.log('createDir')
+  const userEmail = req.decoded.email;
+
+  const newDirName = req.body.name;
+  const currentPath = req.body.currentPath;
+
+  // var newDirPath = `./public/uploads/${userEmail}/${newDirName}`;
+  var newDirPath = `${currentPath}/${newDirName}`;
+  // create dir if it doesn't exist
+  if (!fs.existsSync(newDirPath)) {
+    fs.mkdirSync(newDirPath);
+    console.log(`folder '${newDirName}' is created`);
+  } else {
+    console.log(`folder '${newDirName}' is already existed`);
+  }
+
+  const files = fs.readdirSync(`${currentPath}`);
   res.json(files);
 };
