@@ -23,7 +23,7 @@ exports.signup = (req, res, next) => {
         console.log(`created user`, user);
         // res.json(user);
 
-        // need to create a new entry in the about table
+        // need to create a new entry in the about and interest tables
         const new_about = {
           overview: '',
           work_edu: '',
@@ -34,11 +34,24 @@ exports.signup = (req, res, next) => {
         db.About.create(new_about)
         .then( about => {
           console.log('create new about', about);
-          res.json(user);
+
+          const new_interest = {
+            music: '',
+            shows: '',
+            sports: '',
+            fav_teams: '',
+            user_id: user.id,
+          };
+          db.Interest.create(new_interest)
+          .then( interest => {
+            console.log('create new interest', interest);
+            res.json(user);
+          })
+
         })
 
       })
-    }
+    } // eof else
   })
 
 };
