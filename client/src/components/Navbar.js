@@ -23,6 +23,17 @@ class Navbar extends Component {
         
           { this.props.is_authenticated ? (
             <Menu.Menu position='right'>
+              <Link to='/home'>
+                <Menu.Item name='files' onClick={this.handleItemClick} />
+              </Link>
+
+              <Link to='/about'>
+                <Menu.Item name='about' onClick={this.handleItemClick} />
+              </Link>
+              <Link to='/interest'>
+                <Menu.Item name='interest' onClick={this.handleItemClick} />
+              </Link>
+
               <Link to='/'>
                 <Menu.Item name='signOut' onClick={this.handleSignOut} />
               </Link>

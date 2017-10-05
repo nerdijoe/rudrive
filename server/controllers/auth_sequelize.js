@@ -1,6 +1,7 @@
 const db = require('../models');
 const passwordHash = require('password-hash');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 require('dotenv').config();
 
 exports.signup = (req, res, next) => {
@@ -22,6 +23,14 @@ exports.signup = (req, res, next) => {
       .then( user => {
         console.log(`created user`, user);
         // res.json(user);
+
+        // create uniq directory
+        var dir = `./public/uploads/${user.email}`;
+        // create dir if it doesn't exist
+        if (!fs.existsSync(dir)){
+            fs.mkdirSync(dir);
+        }
+      
 
         // need to create a new entry in the about and interest tables
         const new_about = {

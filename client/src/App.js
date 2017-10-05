@@ -16,6 +16,8 @@ import Landing from './components/Landing';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Home from './components/Home';
+import About from './components/UserAbout';
+import Interest from './components/UserInterest';
 
 class App extends Component {
   render() {
@@ -39,8 +41,10 @@ class App extends Component {
             <Route path='/signin' component={SignIn} />
             <Route path='/signup' component={SignUp} />
             <Route path='/home' component={Home} />
+            <Route path='/about' component={About} />
+            <Route path='/interest' component={Interest} />
             
-          </Container>
+            </Container>
         </Router>
       </Provider>
     );

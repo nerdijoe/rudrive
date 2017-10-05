@@ -155,3 +155,102 @@ export const axiosCreateFolder = (data) => (dispatch) => {
     console.log(err);
   });
 };
+
+export const FetchUserAbout = (data) => {
+  return {
+    type: actionType.FETCH_USER_ABOUT,
+    data,
+  };
+};
+
+export const axiosFetchUserAbout = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/users/about', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchUserAbout');
+    console.log(res.data);
+
+    dispatch(FetchUserAbout(res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+export const updateUserAbout = (data) => {
+  return {
+    type: actionType.UPDATE_USER_ABOUT,
+    data,
+  };
+};
+
+export const axiosUpdateUserAbout = (data) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosUpdateUserAbout data', data);
+  axios.put('http://localhost:3000/users/about', {
+    ...data
+  },{
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosUpdateUserAbout');
+    console.log(res.data);
+
+    dispatch(updateUserAbout(data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+export const FetchUserInterest = (data) => {
+  return {
+    type: actionType.FETCH_USER_INTEREST,
+    data,
+  };
+};
+
+export const axiosFetchUserInterest = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/users/interest', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchUserInterest');
+    console.log(res.data);
+
+    dispatch(FetchUserInterest(res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+export const updateUserInterest = (data) => {
+  return {
+    type: actionType.UPDATE_USER_INTEREST,
+    data,
+  };
+};
+
+export const axiosUpdateUserInterest = (data) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosUpdateUserInterest data', data);
+  axios.put('http://localhost:3000/users/interest', {
+    ...data,
+  },{
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosUpdateUserInterest');
+    console.log(res.data);
+
+    dispatch(updateUserInterest(data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+

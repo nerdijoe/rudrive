@@ -3,7 +3,20 @@ import * as actionType from '../actions/constants';
 const initialState = {
   is_authenticated: false,
   user: {},
-  list: [], // array
+  list: [''], // array
+  about: {
+    overview: '',
+    work: '',
+    education: '',
+    contact_info: '',
+    life_events: '',
+  },
+  interest: {
+    music: '',
+    shows: '',
+    sports: '',
+    fav_teams: '',
+  },
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -39,7 +52,34 @@ const UserReducer = (state = initialState, action) => {
         list: action.data,
       };
     }
-    default:
+    case actionType.FETCH_USER_ABOUT: {
+      console.log('*** reducer FETCH_USER_ABOUT', action);
+      return {
+        ...state,
+        about: { ...action.data },
+      };
+    }
+    case actionType.UPDATE_USER_ABOUT: {
+      console.log('*** reducer UPDATE_USER_ABOUT', action);
+      return {
+        ...state,
+        about: { ...action.data },
+      };
+    }
+    case actionType.FETCH_USER_INTEREST: {
+      console.log('*** reducer FETCH_USER_INTEREST', action);
+      return {
+        ...state,
+        interest: { ...action.data },
+      };
+    }
+    case actionType.UPDATE_USER_INTEREST: {
+      console.log('*** reducer UPDATE_USER_INTEREST', action);
+      return {
+        ...state,
+        interest: { ...action.data },
+      };
+    }    default:
       return state;
   }
 };
