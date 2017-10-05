@@ -3,7 +3,14 @@ import * as actionType from '../actions/constants';
 const initialState = {
   is_authenticated: false,
   user: {},
-  list: [], // array
+  list: [''], // array
+  about: {
+    overview: '',
+    work: '',
+    education: '',
+    contact_info: '',
+    life_events: '',
+  },
 };
 
 const UserReducer = (state = initialState, action) => {
