@@ -8,4 +8,7 @@ const helper = require('../helpers/authVerifyHelper');
 router.get('/about', helper.auth, userController.getAbout);
 router.put('/about', helper.auth, userController.updateAbout);
 
+router.get('/interest', helper.auth, userController.getInterest);
+router.put('/interest', helper.auth, userController.updateInterest);
+
 module.exports = router;

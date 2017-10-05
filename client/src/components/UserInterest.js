@@ -2,12 +2,32 @@ import React, { Component } from 'react';
 import { Container, Form, Button, Header } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
+import { axiosUpdateUserInterest } from '../actions';
+
 class UserInterest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      
+      music: this.props.interest.music,
+      shows: this.props.interest.shows,
+      sports: this.props.interest.sports,
+      fav_teams: this.props.interest.fav_teams,
     };
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    console.log('handleSubmit this.state=', this.state);
+    this.props.axiosUpdateUserInterest(this.state);
+  }
+
+  handleChange(e) {
+    const target = e.target
+    console.log(`handleChange ${target.name}=[${target.value}]`);
+
+    this.setState({
+      [target.name]: target.value,
+    });
   }
 
 
@@ -15,26 +35,22 @@ class UserInterest extends Component {
     return (
       <Container>
         <Header size='medium'>Interest</Header>
-        <Form onSubmit={ (e) => { this.handleSignUp(e) }} >
+        <Form onSubmit={ (e) => { this.handleSubmit(e) }} >
         <Form.Field>
-              <label>Overview</label>
-              <input type='text' placeholder='' name='overview' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
+              <label>Music</label>
+              <input type='text' placeholder='' name='music' value={this.state.music} onChange={ (e) => { this.handleChange(e); }} />
           </Form.Field>
           <Form.Field>
-              <label>Work</label>
-              <input type='text' placeholder='Work History' name='work' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
+              <label>Shows</label>
+              <input type='text' placeholder='Shows' name='shows' value={this.state.shows} onChange={ (e) => { this.handleChange(e); }} />
           </Form.Field>
           <Form.Field>
-            <label>Education</label>
-            <input type='text' placeholder='Education History' name='education' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
+            <label>Sports</label>
+            <input type='text' placeholder='Sports' name='sports' value={this.state.sports} onChange={ (e) => { this.handleChange(e); }} />
           </Form.Field>
           <Form.Field>
-              <label>Contact Info</label>
-              <input placeholder='(415)111-2222' name='contact_info' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
-          </Form.Field>
-          <Form.Field>
-            <label>Life Events</label>
-            <input placeholder='Life events' name='life_events' value={this.state.name} onChange={ (e) => { this.handleChange(e); }}/>
+              <label>Favorite Teams</label>
+              <input placeholder='Teams' name='fav_teams' value={this.state.fav_teams} onChange={ (e) => { this.handleChange(e); }} />
           </Form.Field>
 
           <Button type='submit'>Update</Button>
@@ -47,9 +63,15 @@ class UserInterest extends Component {
 
 const mapStateToProps = state => {
   return {
-    about: state.UserReducer.about,
+    interest: state.UserReducer.interest,
   };
 };
 
-const connectedUserInterest = connect(mapStateToProps, null)(UserInterest);
+const mapDispatchToProps = dispatch => {
+  return {
+    axiosUpdateUserInterest: (data) => { dispatch(axiosUpdateUserInterest(data)); },
+  }
+};
+
+const connectedUserInterest = connect(mapStateToProps, mapDispatchToProps)(UserInterest);
 export default connectedUserInterest;

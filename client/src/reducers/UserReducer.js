@@ -11,6 +11,12 @@ const initialState = {
     contact_info: '',
     life_events: '',
   },
+  interest: {
+    music: '',
+    shows: '',
+    sports: '',
+    fav_teams: '',
+  },
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -60,7 +66,20 @@ const UserReducer = (state = initialState, action) => {
         about: { ...action.data },
       };
     }
-    default:
+    case actionType.FETCH_USER_INTEREST: {
+      console.log('*** reducer FETCH_USER_INTEREST', action);
+      return {
+        ...state,
+        interest: { ...action.data },
+      };
+    }
+    case actionType.UPDATE_USER_INTEREST: {
+      console.log('*** reducer UPDATE_USER_INTEREST', action);
+      return {
+        ...state,
+        interest: { ...action.data },
+      };
+    }    default:
       return state;
   }
 };

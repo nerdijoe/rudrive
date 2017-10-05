@@ -30,8 +30,8 @@ exports.getAbout = (req, res) => {
     }
 
     res.json(about);
-  })
-}
+  });
+};
 
 
 
@@ -60,4 +60,53 @@ exports.updateAbout = (req, res) => {
     }).catch(err => {
       console.log(err);
     })
-}
+};
+
+
+exports.getInterest = (req, res) => {
+  console.log('getInterest req.decode._id=', req.decoded._id);
+  db.Interest.findOne({
+    where: {
+      user_id: req.decoded._id,
+    }
+  }).then( interest => {
+    // console.log('getAbout', about);
+    if (!interest) {
+      interest = {
+        music: '',
+        shows: '',
+        sports: '',
+        fav_teams: '',
+      };
+    }
+
+    res.json(interest);
+  });
+};
+
+
+exports.updateInterest = (req, res) => {
+  console.log('updateInterest req.decode._id=', req.decoded._id);
+  console.log('updateInterest req.body=', req.body);
+  const interest = req.body;
+  db.Interest.update({ 
+    music: interest.music,
+    shows: interest.shows,
+    sports: interest.sports,
+    fav_teams: interest.fav_teams,
+  },
+    { where: { user_id: req.decoded._id } }
+  )
+    .then(updatedInterest => {
+      console.log('after updateInterest updatedInterest=', updatedInterest);
+      if(updatedInterest[0] === 1)
+      {
+        console.log("update Interest successful");
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+};

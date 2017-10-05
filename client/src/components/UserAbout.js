@@ -34,11 +34,6 @@ class UserAbout extends Component {
       [target.name]: target.value,
     });
   }
-  
-  componentDidMount() {
-    // this.props.axiosFetchUserAbout();
-  }
-
 
   render() {
     return (

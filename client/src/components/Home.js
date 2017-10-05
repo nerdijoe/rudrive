@@ -9,13 +9,14 @@ import CreateFolder from './CreateFolder';
 import { 
   axiosFetchListing,
   axiosFetchUserAbout,
+  axiosFetchUserInterest,
 } from '../actions';
 
 class Home extends Component {
-
   componentDidMount() {
     this.props.axiosFetchListing();
     this.props.axiosFetchUserAbout();
+    this.props.axiosFetchUserInterest();
   }
 
   render() {
@@ -35,6 +36,7 @@ const mapDispatchToProps = dispatch => {
   return {
     axiosFetchListing: () => { dispatch(axiosFetchListing()) },
     axiosFetchUserAbout: () => { dispatch(axiosFetchUserAbout()) },
+    axiosFetchUserInterest: () => { dispatch(axiosFetchUserInterest()) },
   };
 };
 
