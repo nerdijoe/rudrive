@@ -21,7 +21,22 @@ exports.signup = (req, res, next) => {
       db.User.create(new_user)
       .then( user => {
         console.log(`created user`, user);
-        res.json(user);
+        // res.json(user);
+
+        // need to create a new entry in the about table
+        const new_about = {
+          overview: '',
+          work_edu: '',
+          contact_info: '',
+          life_events: '',
+          user_id: user.id,
+        };
+        db.About.create(new_about)
+        .then( about => {
+          console.log('create new about', about);
+          res.json(user);
+        })
+
       })
     }
   })
@@ -53,3 +68,7 @@ exports.signin = (req, res, next) => {
     id: req.user.id,
   });
 };
+
+exports.profileAbout = (req, res, next) => {
+  
+}

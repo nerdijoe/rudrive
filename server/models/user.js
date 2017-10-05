@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+        User.hasOne(models.About, { foreignKey: 'user_id' })
       }
     }
   });
