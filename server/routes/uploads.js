@@ -22,8 +22,8 @@ const upload = multer({ storage });
 // need to check jwt token before uploading a file.
 router.post('/', [helper.auth, upload.single('doc')], uploadsController.uploadFile);
 
-router.get('/listdir', helper.auth , uploadsController.listDir);
+router.get('/listdir', helper.auth, uploadsController.listDir);
 
-router.post('/createdir', helper.auth, uploadsController.createDir);
+router.post('/createfolder', helper.auth, uploadsController.createDir);
 
 module.exports = router;

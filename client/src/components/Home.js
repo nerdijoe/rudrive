@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import FileUpload from './FileUpload';
 import Listing from './Listing';
+import CreateFolder from './CreateFolder';
 
 import { axiosFetchListing } from '../actions';
 
@@ -18,6 +19,7 @@ class Home extends Component {
       <Container>
         Home
         <FileUpload />
+        <CreateFolder />
 
         <Listing />
       </Container>
