@@ -18,9 +18,9 @@
 ### End Points
 
 ### Authorization
-Sign Up
+#### Sign Up
 ```
-POST - localhost:3000/auth/signup
+POST - localhost:3000/authseq/signup
 ```
 | Field         |      |
 | --------------|:-------------:|
@@ -30,9 +30,9 @@ POST - localhost:3000/auth/signup
 | password      | required        |
 
 
-Sign In
+#### Sign In
 ```
-POST - localhost:3000/auth/signin
+POST - localhost:3000/authseq/signin
 ```
 | Field         |      |
 | --------------|:-------------:|
@@ -41,13 +41,68 @@ POST - localhost:3000/auth/signin
 
 Return token, email, and _id
 
-
-### Users
+#### User's About 
 ```
-Get all users - GET - localhost:3000/users
+GET - localhost:3000/users/about
+```
+```
+PUT - localhost:3000/users/about
+```
+| Field         |      |
+| --------------|:-------------:|
+| overview     | optional        |
+| work      | optional        |
+| education         | optional        |
+| contact_info     | optional        |
+| life_events     | optional        |
+
+
+#### User's Interest
+```
+GET - localhost:3000/users/interest
+```
+```
+PUT - localhost:3000/users/interest
+```
+| Field         |      |
+| --------------|:-------------:|
+| music     | optional        |
+| shows      | optional        |
+| sports         | optional        |
+| fav_teams     | optional        |
+| life_events     | optional        |
+
+
+### Uploading a File
+**Need user authentication**
+```
+Upload a file - POST - localhost:3000/uploads
 
 ```
+
+Upload single file at a time.
+
+Will upload to './public/uploads/<user@email.com>'
+
+### Files
+**Need user authentication**
+```
+Fetch user files - GET - localhost:3000/files
+
+```
+
+```
+Star a file  - PUT - localhost:3000/files/star
+
+```
+
+
+
 
 ---
 ## Client 2
 
+* React.js
+* Semantic 
+* React Redux
+* 
