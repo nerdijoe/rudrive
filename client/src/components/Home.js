@@ -10,6 +10,7 @@ import {
   axiosFetchListing,
   axiosFetchUserAbout,
   axiosFetchUserInterest,
+  axiosFetchFiles,
 } from '../actions';
 
 class Home extends Component {
@@ -17,6 +18,7 @@ class Home extends Component {
     this.props.axiosFetchListing();
     this.props.axiosFetchUserAbout();
     this.props.axiosFetchUserInterest();
+    this.props.axiosFetchFiles();
   }
 
   render() {
@@ -37,6 +39,7 @@ const mapDispatchToProps = dispatch => {
     axiosFetchListing: () => { dispatch(axiosFetchListing()) },
     axiosFetchUserAbout: () => { dispatch(axiosFetchUserAbout()) },
     axiosFetchUserInterest: () => { dispatch(axiosFetchUserInterest()) },
+    axiosFetchFiles: () => { dispatch(axiosFetchFiles()) },
   };
 };
 

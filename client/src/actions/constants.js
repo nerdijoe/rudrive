@@ -1,8 +1,12 @@
 export const USER_SIGN_UP = 'USER_SIGN_UP';
 export const USER_SIGN_IN = 'USER_SIGN_IN';
 export const USER_SIGN_OUT = 'USER_SIGN_OUT';
-export const FETCH_LISTING = 'FETCH_LISTING';
 export const FETCH_USER_ABOUT = 'FETCH_USER_ABOUT';
 export const FETCH_USER_INTEREST = 'FETCH_USER_INTEREST';
 export const UPDATE_USER_ABOUT = 'UPDATE_USER_ABOUT';
 export const UPDATE_USER_INTEREST = 'UPDATE_USER_INTEREST';
+
+export const FETCH_LISTING = 'FETCH_LISTING';
+export const FETCH_FILES = 'FETCH_FILES';
+export const ADD_NEW_FILE = 'ADD_NEW_FILE';
+export const STAR_FILE = 'STAR_FILE';

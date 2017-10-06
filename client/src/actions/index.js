@@ -91,6 +91,13 @@ export const FetchListing = (data) => {
 //   })
 // };
 
+export const addNewFile = (data) => {
+  return {
+    type: actionType.ADD_NEW_FILE,
+    data,
+  };
+};
+
 export const axiosUpload = (data) => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosUpload get token=', token);
@@ -106,6 +113,8 @@ export const axiosUpload = (data) => (dispatch) => {
 
     // update the list state
     dispatch(axiosFetchListing());
+
+    dispatch(addNewFile(res.data));
 
   }).catch (err => {
     console.log(err);
@@ -254,3 +263,52 @@ export const axiosUpdateUserInterest = (data) => (dispatch) => {
   });
 };
 
+export const fetchFiles = (data) => {
+  return {
+    type: actionType.FETCH_FILES,
+    data,
+  };
+};
+
+export const axiosFetchFiles = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/files', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchFiles');
+    console.log(res.data);
+
+    dispatch(fetchFiles(res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+export const starFile = (data) => {
+  return {
+    type: actionType.STAR_FILE,
+    data,
+  };
+};
+
+export const axiosStarFile = (data) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosStarFile data', data);
+  axios.put('http://localhost:3000/files/star', {
+    ...data,
+  },{
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosStarFile');
+    console.log(res.data);
+
+    dispatch(starFile(data));
+
+  }).catch((err) => {
+    console.log(err);
+  });
+} 
