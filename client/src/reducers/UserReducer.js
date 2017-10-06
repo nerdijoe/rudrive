@@ -17,6 +17,7 @@ const initialState = {
     sports: '',
     fav_teams: '',
   },
+  files: [],
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -79,7 +80,37 @@ const UserReducer = (state = initialState, action) => {
         ...state,
         interest: { ...action.data },
       };
-    }    default:
+    }
+    case actionType.FETCH_FILES: {
+      console.log('*** reducer FETCH_FILES', action);
+      return {
+        ...state,
+        files: [...action.data],
+      };
+    }
+    case actionType.ADD_NEW_FILE: {
+      console.log('*** reducer ADD_NEW_FILE');
+      return {
+        ...state,
+        files: [...state.files, action.data],
+      };
+    }
+    case actionType.STAR_FILE: {
+      console.log('*** reducer STAR_FILE action.data', action.data);
+      const updatedFiles = [...state.files];
+      let pos = updatedFiles.findIndex( i => i.id === action.data.id )
+      if(pos !== -1) {
+        console.log(typeof updatedFiles[pos].is_starred);
+        console.log(`--> updatedFiles[${pos}].is_starred=${updatedFiles[pos].is_starred}`);
+        // const star_status = (updatedFiles[pos].is_starred == 'true');
+        updatedFiles[pos].is_starred = !updatedFiles[pos].is_starred;
+      }
+      return {
+        ...state,
+        files: updatedFiles,
+      }
+    }
+    default:
       return state;
   }
 };

@@ -38,31 +38,31 @@ class UserAbout extends Component {
   render() {
     return (
       <Container>
-        <Header size='medium'>About</Header>
+        <Header size="medium">About</Header>
 
-        <Form onSubmit={ (e) => { this.handleSubmit(e) }} >
-        <Form.Field>
-              <label>Overview</label>
-              <TextArea placeholder='' name='overview' value={this.state.overview} onChange={ (e) => { this.handleChange(e); }} />
+        <Form onSubmit={(e) => { this.handleSubmit(e); }} >
+          <Form.Field>
+            <label>Overview</label>
+            <TextArea placeholder="Tell a little bit about yourself" name="overview" value={this.state.overview} onChange={(e) => { this.handleChange(e); }} />
           </Form.Field>
           <Form.Field>
-              <label>Work</label>
-              <input type='text' placeholder='Work History' name='work' value={this.state.work} onChange={ (e) => { this.handleChange(e); }} />
+            <label>Work</label>
+            <input type="text" placeholder="Work History" name="work" value={this.state.work ? this.state.work : ''} onChange={(e) => { this.handleChange(e); }} />
           </Form.Field>
           <Form.Field>
             <label>Education</label>
-            <input type='text' placeholder='Education History' name='education' value={this.state.education} onChange={ (e) => { this.handleChange(e); }} />
+            <input type="text" placeholder="Education History" name="education" value={this.state.education ? this.state.education : ''} onChange={(e) => { this.handleChange(e); }} />
           </Form.Field>
           <Form.Field>
-              <label>Contact Info</label>
-              <input placeholder='(415)111-2222' name='contact_info' value={this.state.contact_info} onChange={ (e) => { this.handleChange(e); }} />
+            <label>Contact Info</label>
+            <input placeholder="(415)111-2222" name="contact_info" value={this.state.contact_info} onChange={(e) => { this.handleChange(e); }} />
           </Form.Field>
           <Form.Field>
             <label>Life Events</label>
-            <input placeholder='Life events' name='life_events' value={this.state.life_events} onChange={ (e) => { this.handleChange(e); }}/>
+            <input placeholder="Life events" name="life_events" value={this.state.life_events} onChange={(e) => { this.handleChange(e); }} />
           </Form.Field>
 
-          <Button type='submit'>Update</Button>
+          <Button type="submit">Update</Button>
         </Form>
       </Container>
     );
