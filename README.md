@@ -103,6 +103,7 @@ Star a file  - PUT - localhost:3000/files/star
 ## Client 2
 
 * React.js
-* Semantic 
+* React Semantic UI
 * React Redux
-* 
+* React Router Dom
+* Axios
