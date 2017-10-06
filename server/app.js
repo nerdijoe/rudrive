@@ -53,6 +53,7 @@ const auth = require('./routes/auth');
 const users = require('./routes/users');
 const authSequelize = require('./routes/auth_sequelize');
 const uploads = require('./routes/uploads');
+const files = require('./routes/files');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -64,6 +65,7 @@ app.use('/auth', auth);
 app.use('/users', users);
 app.use('/authseq', authSequelize);
 app.use('/uploads', uploads);
+app.use('/files', files);
 
 app.use('./public/uploads', express.static(path.join(__dirname, 'uploads')));
 

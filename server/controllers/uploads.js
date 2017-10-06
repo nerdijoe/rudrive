@@ -1,29 +1,11 @@
 const fs = require('fs');
-
-// File upload ----
-
-// var storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'uploads/')
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.fieldname + '-' + Date.now());
-//   }
-// });
-
-// const upload = multer({ storage }).single('doc');
+const db = require('../models');
 
 exports.uploadFile = (req, res) => {
   // console.log('uploadFile req', req);
   console.log('uploadFile req.body', req.body);
   console.log('uploadFile req.file', req.file);
 
-  // upload(req, res, err => {
-  //   if (err) {
-  //     res.end('Error upload');
-  //   }
-  //   res.end('File is uploaded');
-  // })
   console.log('uploadFile req.decoded', req.decoded);
   const file = req.file;
   const userEmail = req.decoded.email;
@@ -42,9 +24,37 @@ exports.uploadFile = (req, res) => {
     if (err) throw err;
 
     console.log(`>>> ${file.filename} has been moved to ${target_path}`);
+
+    // add to db
+    /* 
+    uploadFile req.file { fieldname: 'doc',
+      originalname: 'Police.csv',
+      encoding: '7bit',
+      mimetype: 'text/csv',
+      destination: './public/uploads/',
+      filename: 'Police_1507247984057.csv',
+      path: 'public/uploads/Police_1507247984057.csv',
+      size: 5740 }
+    */
+    const new_file = {
+      name: req.file.filename,
+      path: dir,
+      full_path: target_path,
+      type: req.file.mimetype,
+      size: req.file.size,
+      is_starred: false,
+      user_id: req.decoded._id,
+    };
+    db.File.create(new_file)
+    .then( file => {
+      console.log('>>>> DB inserted a new file', file);
+
+      res.json(file);
+    })
+
   })
 
-  res.status(204).end();
+  // res.status(204).end();
 };
 
 exports.listDir = (req, res) => {
