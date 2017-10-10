@@ -64,7 +64,7 @@ exports.listDir = (req, res) => {
 };
 
 exports.createDir = (req, res) => {
-  console.log('createDir')
+  console.log('createDir req.decoded._id=', req.decoded._id)
   const userEmail = req.decoded.email;
 
   const newDirName = req.body.name;
@@ -76,10 +76,28 @@ exports.createDir = (req, res) => {
   if (!fs.existsSync(newDirPath)) {
     fs.mkdirSync(newDirPath);
     console.log(`folder '${newDirName}' is created`);
+
+    // insert to DB
+    const new_folder = {
+      name: newDirName,
+      path: currentPath,
+      full_path: newDirPath,
+      is_starred: false,
+      user_id: req.decoded._id,
+    };
+    db.Folder.create(new_folder)
+      .then( (folder) => {
+        console.log('>>>> DB inserted a new folder', folder);
+        res.json(folder);
+      })
   } else {
-    console.log(`folder '${newDirName}' is already existed`);
+    const msg = {
+      message: `folder '${newDirName}' is already existed`,
+    };
+    console.log(msg);
+    res.json(msg);
   }
 
-  const files = fs.readdirSync(`${currentPath}`);
-  res.json(files);
+  // const files = fs.readdirSync(`${currentPath}`);
+  // res.json(files);
 };
