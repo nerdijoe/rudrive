@@ -18,6 +18,7 @@ const initialState = {
     fav_teams: '',
   },
   files: [],
+  folders: [],
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -110,6 +111,36 @@ const UserReducer = (state = initialState, action) => {
         files: updatedFiles,
       }
     }
+    case actionType.FETCH_FOLDERS: {
+      console.log('*** reducer FETCH_FOLDERS', action);
+      return {
+        ...state,
+        folders: [...action.data],
+      };
+    }
+    case actionType.ADD_NEW_FOLDER: {
+      console.log('*** reducer ADD_NEW_FOLDER');
+      return {
+        ...state,
+        folders: [...state.folders, action.data],
+      };
+    }
+    case actionType.STAR_FOLDER: {
+      console.log('*** reducer STAR_FOLDER action.data', action.data);
+      const updatedFolders = [...state.folders];
+      const pos = updatedFolders.findIndex(i => i.id === action.data.id);
+      if (pos !== -1) {
+        console.log(typeof updatedFolders[pos].is_starred);
+        console.log(`--> updatedFolders[${pos}].is_starred=${updatedFolders[pos].is_starred}`);
+        // const star_status = (updatedFiles[pos].is_starred == 'true');
+        updatedFolders[pos].is_starred = !updatedFolders[pos].is_starred;
+      }
+      return {
+        ...state,
+        folders: updatedFolders,
+      };
+    }
+
     default:
       return state;
   }

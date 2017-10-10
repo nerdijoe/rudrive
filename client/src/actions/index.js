@@ -139,6 +139,13 @@ export const axiosFetchListing = () => (dispatch) => {
   });
 };
 
+export const addNewFolder = (data) => {
+  return {
+    type: actionType.ADD_NEW_FOLDER,
+    data,
+  };
+};
+
 export const axiosCreateFolder = data => (dispatch) => {
   const token = localStorage.getItem('token');
   const email = localStorage.getItem('user_email');
@@ -160,7 +167,8 @@ export const axiosCreateFolder = data => (dispatch) => {
     dispatch(axiosFetchListing());
 
     // update folders list
-
+    dispatch(addNewFolder(res.data));
+    
   }).catch (err => {
     console.log(err);
   });
@@ -308,6 +316,56 @@ export const axiosStarFile = (data) => (dispatch) => {
     console.log(res.data);
 
     dispatch(starFile(data));
+
+  }).catch((err) => {
+    console.log(err);
+  });
+} 
+
+export const fetchFolders = (data) => {
+  return {
+    type: actionType.FETCH_FOLDERS,
+    data,
+  };
+};
+
+export const axiosFetchFolders = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/folders', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchFolders');
+    console.log(res.data);
+
+    dispatch(fetchFolders(res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+export const starFolder = (data) => {
+  return {
+    type: actionType.STAR_FOLDER,
+    data,
+  };
+};
+
+export const axiosStarFolder = (data) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosStarFolder data', data);
+  axios.put('http://localhost:3000/folders/star', {
+    ...data,
+  },{
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosStarFolder');
+    console.log(res.data);
+
+    dispatch(starFolder(data));
 
   }).catch((err) => {
     console.log(err);
