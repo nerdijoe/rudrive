@@ -31,10 +31,20 @@ class Listing extends Component {
     this.props.axiosFetchContentsByFolderId(folder);
   }
 
+  openInNewTab(url) {
+    // e.preventDefault();
+    var win = window.open(url, '_blank');
+    win.focus();
+    console.log('openInNewTab', url)
+  }
+
   render() {
     const listItems = this.props.list.map((item) => <li>{item}</li>);
     const user_id = localStorage.getItem('user_id');
-    console.log(`render listing user_id=${user_id}`)
+    console.log(`render listing user_id=${user_id}`);
+    const user_email = localStorage.getItem('user_email');
+    const homeAddress = `http://localhost:3000/`;
+
     return (
       <Container>
         {/* Listing
@@ -87,11 +97,15 @@ class Listing extends Component {
 
             { // Files
               this.props.files.map( (file) => {
+                let re = new RegExp('./public/')
+                const downloadLink = homeAddress + file.full_path.replace(re, '');
+                // console.log(downloadLink);
                 return (
                   <Table.Row key={file.id}>
                     <Table.Cell>
-                      {file.name} {' '}
+                      <a href={downloadLink} target="_blank" >{file.name}</a>{' '}
                       {file.is_starred ? <Icon name='blue star' /> : ''}
+
                     </Table.Cell>
                     <Table.Cell>
                       {Moment(file.updatedAt).format('L LT')}
