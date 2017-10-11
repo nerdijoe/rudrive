@@ -6,4 +6,7 @@ const foldersController = require('../controllers/folders');
 router.get('/', helper.auth, foldersController.fetchFolders);
 router.put('/star', helper.auth, foldersController.starFolder);
 
+router.get('/:id', helper.auth, foldersController.fetchById);
+// router.post('/', helper.auth, foldersController.fetchByPath);
+
 module.exports = router;
