@@ -37,8 +37,8 @@ class Listing extends Component {
     console.log(`render listing user_id=${user_id}`)
     return (
       <Container>
-        Listing
-        <ul>{listItems}</ul>
+        {/* Listing
+        <ul>{listItems}</ul> */}
 
         <FolderBreadcrumb />
 
@@ -66,9 +66,10 @@ class Listing extends Component {
                 return (
                   <Table.Row key={folder.id}>
                     <Table.Cell>
-                      <Icon name='blue folder' />{folder.name} {' '}
+                      <a onClick={() => {this.handleClickFolder(folder)}}>
+                        <Icon name='blue folder' />{folder.name} {' '}
+                      </a>
                       {folder.is_starred ? <Icon name='blue star' /> : ''}
-                      <a class="item" onClick={() => {this.handleClickFolder(folder)}}>test</a>
                     </Table.Cell>
                     <Table.Cell>
                       {Moment(folder.updatedAt).format('L LT')}

@@ -194,6 +194,34 @@ export const axiosCreateFolder = data => (dispatch) => {
   });
 };
 
+export const axiosCreateFolderOnCurrentPath = (data, currentPath) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  const email = localStorage.getItem('user_email');
+  console.log('axiosCreateFolder token=', token);
+  console.log('axiosCreateFolder email=', email);
+
+  axios.post('http://localhost:3000/uploads/createfolder', {
+    name: data.folderName,
+    currentPath,
+  }, {
+    headers: {
+      token,
+    },
+  }).then( (res) => {
+    console.log('axiosCreateFolder');
+    console.log(res);
+
+    // update the list state
+    dispatch(axiosFetchListing());
+
+    // update folders list
+    dispatch(addNewFolder(res.data));
+    
+  }).catch (err => {
+    console.log(err);
+  });
+};
+
 export const FetchUserAbout = (data) => {
   return {
     type: actionType.FETCH_USER_ABOUT,
