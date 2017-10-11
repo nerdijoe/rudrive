@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { Container, Form, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import { axiosUpload } from '../actions';
+import {
+  axiosUpload,
+  axiosUploadToPath,
+} from '../actions';
 
 class FileUpload extends Component {
 
@@ -25,7 +28,16 @@ class FileUpload extends Component {
 
     payload.append('doc', e.target.files[0]);
     console.log('payload ---->', payload);
-    this.props.axiosUpload(payload);
+    // this.props.axiosUpload(payload);
+
+    // upload to path
+    const email = localStorage.getItem('user_email');
+    let currentPath = 0;
+    if (this.props.breadcrumb.length > 0) {
+      const pos = this.props.breadcrumb.length - 1;
+      currentPath = this.props.breadcrumb[pos].id;
+    }
+    this.props.axiosUploadToPath(payload, currentPath);
   }
 
   render() {
@@ -52,12 +64,19 @@ class FileUpload extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = (state) => {
   return {
-    axiosUpload: data => { dispatch(axiosUpload(data)) },
+    breadcrumb: state.UserReducer.breadcrumb,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    axiosUpload: (data) => { dispatch(axiosUpload(data)); },
+    axiosUploadToPath: (data, currentPath) => { dispatch(axiosUploadToPath(data, currentPath)); },
   }
 }
 
-const connectedFileUpload = connect(null, mapDispatchToProps)(FileUpload);
+const connectedFileUpload = connect(mapStateToProps, mapDispatchToProps)(FileUpload);
 
 export default connectedFileUpload;

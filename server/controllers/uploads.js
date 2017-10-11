@@ -57,6 +57,86 @@ exports.uploadFile = (req, res) => {
   // res.status(204).end();
 };
 
+
+exports.uploadFileToPath = (req, res) => {
+  // console.log('uploadFile req', req);
+  console.log('uploadFile req.body', req.body);
+  console.log('uploadFile req.file', req.file);
+
+  console.log('uploadFile req.decoded', req.decoded);
+  console.log(`currentPath = [${req.params.currentPath}] `, typeof req.params.currentPath);
+
+  // need to query the path
+
+  const currentPath = req.params.currentPath;
+
+  // if (currentPath > 0) {
+
+  // }
+
+  db.Folder.findOne({
+    where: {
+      user_id: req.decoded._id,
+      id: currentPath,
+    },
+  }).then((folder) => {
+    console.log('**** after querying for the folder', folder);
+    const file = req.file;
+    const userEmail = req.decoded.email;
+
+    // var dir = `./public/uploads/${userEmail}`;
+    let dir = `./public/uploads/${userEmail}`;
+    if (folder) {
+      dir = folder.full_path;
+    }
+    
+    // create dir if it doesn't exist
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+
+    const default_path = file.path;
+    const target_path = dir + '/' + file.filename;
+
+    fs.rename(default_path, target_path, (err) => {
+      if (err) throw err;
+
+      console.log(`>>> ${file.filename} has been moved to ${target_path}`);
+
+      // add to db
+      /*
+      uploadFile req.file { fieldname: 'doc',
+        originalname: 'Police.csv',
+        encoding: '7bit',
+        mimetype: 'text/csv',
+        destination: './public/uploads/',
+        filename: 'Police_1507247984057.csv',
+        path: 'public/uploads/Police_1507247984057.csv',
+        size: 5740 }
+      */
+
+      const new_file = {
+        name: req.file.filename,
+        path: dir,
+        full_path: target_path,
+        type: req.file.mimetype,
+        size: req.file.size,
+        is_starred: false,
+        user_id: req.decoded._id,
+      };
+      db.File.create(new_file)
+        .then((file) => {
+          console.log('>>>> DB inserted a new file', file);
+
+          res.json(file);
+        });
+    }); // end of fs.rename
+  });
+
+
+  // res.status(204).end();
+};
+
 exports.listDir = (req, res) => {
   const userEmail = req.decoded.email;
   const files = fs.readdirSync(`./public/uploads/${userEmail}`);

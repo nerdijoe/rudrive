@@ -121,6 +121,7 @@ export const addNewFile = (data) => {
 export const axiosUpload = (data) => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosUpload get token=', token);
+  console.log(data);
 
   axios.post('http://localhost:3000/uploads', data, { 
     headers: {
@@ -137,6 +138,28 @@ export const axiosUpload = (data) => (dispatch) => {
     dispatch(addNewFile(res.data));
 
   }).catch (err => {
+    console.log(err);
+  })
+};
+
+export const axiosUploadToPath = (data, currentPath) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosUploadToPath get token=', token);
+  console.log("currentPath", currentPath);
+  console.log("data", data);
+  
+  axios.post(`http://localhost:3000/uploads/${currentPath}`, data, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('axiosUploadToPath');
+    console.log(res);
+
+    // update the list state
+    dispatch(axiosFetchListing());
+    dispatch(addNewFile(res.data));
+  }).catch((err) => {
     console.log(err);
   })
 };
@@ -166,6 +189,7 @@ export const addNewFolder = (data) => {
   };
 };
 
+// obselete axios upload method
 export const axiosCreateFolder = data => (dispatch) => {
   const token = localStorage.getItem('token');
   const email = localStorage.getItem('user_email');
