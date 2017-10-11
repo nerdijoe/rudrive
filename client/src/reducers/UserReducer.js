@@ -19,6 +19,7 @@ const initialState = {
   },
   files: [],
   folders: [],
+  breadcrumb: [],
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -138,6 +139,45 @@ const UserReducer = (state = initialState, action) => {
       return {
         ...state,
         folders: updatedFolders,
+      };
+    }
+    case actionType.FETCH_CONTENTS_BY_FOLDER_ID: {
+      console.log('*** reducer FETCH_CONTENTS_BY_FOLDER_ID', action);
+      return {
+        ...state,
+        files: [...action.data.files],
+        folders: [...action.data.folders],
+      };
+    }
+    case actionType.BREADCRUMB_PUSH: {
+      console.log('*** reducer BREADCRUMB_PUSH', action);
+
+      return {
+        ...state,
+        breadcrumb: [...state.breadcrumb, action.data],
+      };
+    }
+    case actionType.BREADCRUMB_POP: {
+      console.log('*** reducer BREADCRUMB_POP', action);
+
+      let updated = [...state.breadcrumb];
+      const pos = updated.findIndex(i => i.id === action.data.id);
+      if (pos !== -1) {
+        console.log('updated[pos]=', updated[pos]);
+        updated.splice(pos + 1);
+      }
+
+      return {
+        ...state,
+        breadcrumb: updated,
+      };
+    }
+    case actionType.BREADCRUMB_CLEAR: {
+      console.log('*** reducer BREADCRUMB_CLEAR', action);
+
+      return {
+        ...state,
+        breadcrumb: [],
       };
     }
 

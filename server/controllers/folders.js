@@ -1,4 +1,5 @@
 const db = require('../models');
+require('dotenv').config();
 
 exports.fetchFolders = (req, res) => {
   console.log('fetchFolders', req.decoded._id);
@@ -7,12 +8,28 @@ exports.fetchFolders = (req, res) => {
     where: {
       user_id: req.decoded._id,
     }
-  }).then ( folders => {
+  }).then((folders) => {
     console.log('after fetchFolders folders=', folders);
 
     res.json(folders);
-  }) 
-}
+  });
+};
+
+exports.fetchRootFolders = (req, res) => {
+  console.log('fetchRootFolder', req.decoded._id);
+
+  db.Folder.findAll({
+    where: {
+      user_id: req.decoded._id,
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    }
+  }).then((folders) => {
+    console.log('after fetchRootFolder folders=', folders);
+
+    res.json(folders);
+  });
+};
+
 
 exports.starFolder = (req, res) => {
   console.log('starFile', req.decoded._id);

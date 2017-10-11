@@ -4,6 +4,26 @@ import axios from 'axios';
 // } from './constants';
 import * as actionType from './constants';
 
+export const breadcrumbPush = (data) => {
+  return {
+    type: actionType.BREADCRUMB_PUSH,
+    data,
+  };
+};
+
+export const breadcrumbPop = (data) => {
+  return {
+    type: actionType.BREADCRUMB_POP,
+    data,
+  };
+};
+
+export const breadcrumbClear = () => {
+  return {
+    type: actionType.BREADCRUMB_CLEAR,
+  };
+};
+
 
 export const axiosSignUp = data => (dispatch) => {
   axios.post('http://localhost:3000/authseq/signup', {
@@ -295,6 +315,23 @@ export const axiosFetchFiles = () => (dispatch) => {
   });
 };
 
+export const axiosFetchRootFiles = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/files/root', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchRootFiles');
+    console.log(res.data);
+
+    dispatch(fetchFiles(res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+
 export const starFile = (data) => {
   return {
     type: actionType.STAR_FILE,
@@ -345,6 +382,23 @@ export const axiosFetchFolders = () => (dispatch) => {
   });
 };
 
+export const axiosFetchRootFolders = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/folders/root', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchRootFolders');
+    console.log(res.data);
+
+    dispatch(fetchFolders(res.data));
+    dispatch(breadcrumbClear());
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
 export const starFolder = (data) => {
   return {
     type: actionType.STAR_FOLDER,
@@ -352,7 +406,7 @@ export const starFolder = (data) => {
   };
 };
 
-export const axiosStarFolder = (data) => (dispatch) => {
+export const axiosStarFolder = data => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosStarFolder data', data);
   axios.put('http://localhost:3000/folders/star', {
@@ -371,3 +425,51 @@ export const axiosStarFolder = (data) => (dispatch) => {
     console.log(err);
   });
 } 
+
+export const fetchContentsByFolderId = (data) => {
+  return {
+    type: actionType.FETCH_CONTENTS_BY_FOLDER_ID,
+    data,
+  };
+};
+
+export const axiosFetchContentsByFolderId = data => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosFetchContentsByFolderId data=', data);
+
+  axios.get(`http://localhost:3000/folders/${data.id}`, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchContentsByFolderId');
+    console.log(res.data);
+
+    dispatch(fetchContentsByFolderId(res.data));
+    dispatch(breadcrumbPush(data));
+
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+
+export const axiosFetchContentsByFolderIdBackward = data => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosFetchContentsByFolderId data=', data);
+
+  axios.get(`http://localhost:3000/folders/${data.id}`, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchContentsByFolderId');
+    console.log(res.data);
+
+    dispatch(fetchContentsByFolderId(res.data));
+    dispatch(breadcrumbPop(data));
+
+  }).catch((err) => {
+    console.log(err);
+  });
+};
