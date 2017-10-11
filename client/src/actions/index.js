@@ -4,6 +4,26 @@ import axios from 'axios';
 // } from './constants';
 import * as actionType from './constants';
 
+export const breadcrumbPush = (data) => {
+  return {
+    type: actionType.BREADCRUMB_PUSH,
+    data,
+  };
+};
+
+export const breadcrumbPop = (data) => {
+  return {
+    type: actionType.BREADCRUMB_POP,
+    data,
+  };
+};
+
+export const breadcrumbClear = () => {
+  return {
+    type: actionType.BREADCRUMB_CLEAR,
+  };
+};
+
 
 export const axiosSignUp = data => (dispatch) => {
   axios.post('http://localhost:3000/authseq/signup', {
@@ -101,6 +121,7 @@ export const addNewFile = (data) => {
 export const axiosUpload = (data) => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosUpload get token=', token);
+  console.log(data);
 
   axios.post('http://localhost:3000/uploads', data, { 
     headers: {
@@ -117,6 +138,28 @@ export const axiosUpload = (data) => (dispatch) => {
     dispatch(addNewFile(res.data));
 
   }).catch (err => {
+    console.log(err);
+  })
+};
+
+export const axiosUploadToPath = (data, currentPath) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosUploadToPath get token=', token);
+  console.log("currentPath", currentPath);
+  console.log("data", data);
+  
+  axios.post(`http://localhost:3000/uploads/${currentPath}`, data, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('axiosUploadToPath');
+    console.log(res);
+
+    // update the list state
+    dispatch(axiosFetchListing());
+    dispatch(addNewFile(res.data));
+  }).catch((err) => {
     console.log(err);
   })
 };
@@ -139,12 +182,20 @@ export const axiosFetchListing = () => (dispatch) => {
   });
 };
 
-export const axiosCreateFolder = (data) => (dispatch) => {
+export const addNewFolder = (data) => {
+  return {
+    type: actionType.ADD_NEW_FOLDER,
+    data,
+  };
+};
+
+// obselete axios upload method
+export const axiosCreateFolder = data => (dispatch) => {
   const token = localStorage.getItem('token');
   const email = localStorage.getItem('user_email');
   console.log('axiosCreateFolder token=', token);
   console.log('axiosCreateFolder email=', email);
-  
+
   axios.post('http://localhost:3000/uploads/createfolder', {
     name: data.folderName,
     currentPath: `./public/uploads/${email}`,
@@ -152,14 +203,44 @@ export const axiosCreateFolder = (data) => (dispatch) => {
     headers: {
       token,
     },
-  })
-  .then ( res => {
+  }).then( (res) => {
     console.log('axiosCreateFolder');
     console.log(res);
 
     // update the list state
     dispatch(axiosFetchListing());
 
+    // update folders list
+    dispatch(addNewFolder(res.data));
+    
+  }).catch (err => {
+    console.log(err);
+  });
+};
+
+export const axiosCreateFolderOnCurrentPath = (data, currentPath) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  const email = localStorage.getItem('user_email');
+  console.log('axiosCreateFolder token=', token);
+  console.log('axiosCreateFolder email=', email);
+
+  axios.post('http://localhost:3000/uploads/createfolder', {
+    name: data.folderName,
+    currentPath,
+  }, {
+    headers: {
+      token,
+    },
+  }).then( (res) => {
+    console.log('axiosCreateFolder');
+    console.log(res);
+
+    // update the list state
+    dispatch(axiosFetchListing());
+
+    // update folders list
+    dispatch(addNewFolder(res.data));
+    
   }).catch (err => {
     console.log(err);
   });
@@ -286,6 +367,23 @@ export const axiosFetchFiles = () => (dispatch) => {
   });
 };
 
+export const axiosFetchRootFiles = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/files/root', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchRootFiles');
+    console.log(res.data);
+
+    dispatch(fetchFiles(res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+
 export const starFile = (data) => {
   return {
     type: actionType.STAR_FILE,
@@ -312,3 +410,118 @@ export const axiosStarFile = (data) => (dispatch) => {
     console.log(err);
   });
 } 
+
+export const fetchFolders = (data) => {
+  return {
+    type: actionType.FETCH_FOLDERS,
+    data,
+  };
+};
+
+export const axiosFetchFolders = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/folders', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchFolders');
+    console.log(res.data);
+
+    dispatch(fetchFolders(res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+export const axiosFetchRootFolders = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/folders/root', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchRootFolders');
+    console.log(res.data);
+
+    dispatch(fetchFolders(res.data));
+    dispatch(breadcrumbClear());
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+export const starFolder = (data) => {
+  return {
+    type: actionType.STAR_FOLDER,
+    data,
+  };
+};
+
+export const axiosStarFolder = data => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosStarFolder data', data);
+  axios.put('http://localhost:3000/folders/star', {
+    ...data,
+  },{
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosStarFolder');
+    console.log(res.data);
+
+    dispatch(starFolder(data));
+
+  }).catch((err) => {
+    console.log(err);
+  });
+} 
+
+export const fetchContentsByFolderId = (data) => {
+  return {
+    type: actionType.FETCH_CONTENTS_BY_FOLDER_ID,
+    data,
+  };
+};
+
+export const axiosFetchContentsByFolderId = data => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosFetchContentsByFolderId data=', data);
+
+  axios.get(`http://localhost:3000/folders/${data.id}`, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchContentsByFolderId');
+    console.log(res.data);
+
+    dispatch(fetchContentsByFolderId(res.data));
+    dispatch(breadcrumbPush(data));
+
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+
+export const axiosFetchContentsByFolderIdBackward = data => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosFetchContentsByFolderId data=', data);
+
+  axios.get(`http://localhost:3000/folders/${data.id}`, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchContentsByFolderId');
+    console.log(res.data);
+
+    dispatch(fetchContentsByFolderId(res.data));
+    dispatch(breadcrumbPop(data));
+
+  }).catch((err) => {
+    console.log(err);
+  });
+};

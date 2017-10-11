@@ -11,6 +11,9 @@ import {
   axiosFetchUserAbout,
   axiosFetchUserInterest,
   axiosFetchFiles,
+  axiosFetchFolders,
+  axiosFetchRootFolders,
+  axiosFetchRootFiles,
 } from '../actions';
 
 class Home extends Component {
@@ -18,7 +21,10 @@ class Home extends Component {
     this.props.axiosFetchListing();
     this.props.axiosFetchUserAbout();
     this.props.axiosFetchUserInterest();
-    this.props.axiosFetchFiles();
+    // this.props.axiosFetchFiles();
+    // this.props.axiosFetchFolders();
+    this.props.axiosFetchRootFolders();
+    this.props.axiosFetchRootFiles();
   }
 
   render() {
@@ -34,12 +40,15 @@ class Home extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    axiosFetchListing: () => { dispatch(axiosFetchListing()) },
-    axiosFetchUserAbout: () => { dispatch(axiosFetchUserAbout()) },
-    axiosFetchUserInterest: () => { dispatch(axiosFetchUserInterest()) },
-    axiosFetchFiles: () => { dispatch(axiosFetchFiles()) },
+    axiosFetchListing: () => { dispatch(axiosFetchListing()); },
+    axiosFetchUserAbout: () => { dispatch(axiosFetchUserAbout()); },
+    axiosFetchUserInterest: () => { dispatch(axiosFetchUserInterest()); },
+    axiosFetchFiles: () => { dispatch(axiosFetchFiles()); },
+    axiosFetchFolders: () => { dispatch(axiosFetchFolders()); },
+    axiosFetchRootFolders: () => { dispatch(axiosFetchRootFolders()); },
+    axiosFetchRootFiles: () => { dispatch(axiosFetchRootFiles()); },
   };
 };
 

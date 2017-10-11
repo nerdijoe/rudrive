@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { Container, Form, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import { axiosCreateFolder } from '../actions';
+import {
+  axiosCreateFolder,
+  axiosCreateFolderOnCurrentPath,
+} from '../actions';
 
 class CreateFolder extends Component {
   constructor(props) {
@@ -16,7 +19,17 @@ class CreateFolder extends Component {
     e.preventDefault();
     console.log('handleSubmit', this.folderName);
 
-    this.props.axiosCreateFolder(this.state);
+    
+    // this.props.axio CreateFolder(this.state);
+
+    const email = localStorage.getItem('user_email');
+    let currentPath = `./public/uploads/${email}`;
+    if (this.props.breadcrumb.length > 0) {
+      const pos = this.props.breadcrumb.length - 1;
+      currentPath = this.props.breadcrumb[pos].full_path;
+    }
+
+    this.props.axiosCreateFolderOnCurrentPath(this.state, currentPath);
   }
 
   handleChange(e) {
@@ -43,12 +56,19 @@ class CreateFolder extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = (state) => {
   return {
-    axiosCreateFolder: (data) => { dispatch(axiosCreateFolder(data)); },
+    breadcrumb: state.UserReducer.breadcrumb,
   };
 };
 
-const connectedCreateFolder = connect(null, mapDispatchToProps)(CreateFolder);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    axiosCreateFolder: (data) => { dispatch(axiosCreateFolder(data)); },
+    axiosCreateFolderOnCurrentPath: (data, currentpath) => { dispatch(axiosCreateFolderOnCurrentPath(data, currentpath)); },
+  };
+};
+
+const connectedCreateFolder = connect(mapStateToProps, mapDispatchToProps)(CreateFolder);
 
 export default connectedCreateFolder;

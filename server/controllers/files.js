@@ -14,6 +14,23 @@ exports.fetchFiles = (req, res) => {
   })
 };
 
+exports.fetchRootFiles = (req, res) => {
+  console.log('fetchRootFiles', req.decoded._id);
+
+  db.File.findAll({
+    where: {
+      user_id: req.decoded._id,
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    }
+  }).then((files) => {
+    console.log('after fetchRootFiles files=', files);
+
+    res.json(files);
+  });
+};
+
+
+
 exports.starFile = (req, res) => {
   console.log('starFile', req.decoded._id);
   const file = req.body;
