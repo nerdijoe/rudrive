@@ -13,6 +13,12 @@ class SignIn extends Component {
     }
   }
 
+  componentDidMount() {
+    if(localStorage.getItem('token') != null) {
+      this.props.history.push('/home');
+    }
+  }
+
   handleSignIn(e) {
     e.preventDefault();
     console.log('handleSignIn', this.state);

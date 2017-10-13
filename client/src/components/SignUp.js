@@ -15,6 +15,12 @@ class SignUp extends Component {
     };
   }
 
+  componentDidMount() {
+    if(localStorage.getItem('token') != null) {
+      this.props.history.push('/home');
+    }
+  }
+
   handleSignUp(e) {
     e.preventDefault();
     console.log('handleSignUp', this.state);
