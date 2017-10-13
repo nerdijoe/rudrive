@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         User.hasOne(models.Interest, { foreignKey: 'user_id' });
         User.hasMany(models.File, { foreignKey: 'user_id' });
         User.hasMany(models.Folder, { foreignKey: 'user_id' });
+        User.hasMany(models.FileSharing, { foreignKey: 'user_id' });
         
       }
     }

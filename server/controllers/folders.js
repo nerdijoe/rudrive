@@ -24,7 +24,7 @@ exports.fetchRootFolders = (req, res) => {
       path: process.env.ROOT_FOLDER + req.decoded.email,
     }
   }).then((folders) => {
-    console.log('after fetchRootFolder folders=', folders);
+    // console.log('after fetchRootFolder folders=', folders);
 
     res.json(folders);
   });
@@ -64,7 +64,7 @@ exports.fetchById = (req, res) => {
 
   db.Folder.findOne({
     where: {
-      user_id: req.decoded._id,
+      // user_id: req.decoded._id,
       id: req.params.id,
     },
   }).then((folder) => {
@@ -73,7 +73,7 @@ exports.fetchById = (req, res) => {
     // after get the folder, we need to get the contents of this folder
     db.Folder.findAll({
       where: {
-        user_id: req.decoded._id,
+        // user_id: req.decoded._id,
         path: folder.full_path,
       },
     }).then((folders) => {
@@ -83,9 +83,10 @@ exports.fetchById = (req, res) => {
 
       db.File.findAll({
         where: {
-          user_id: req.decoded._id,
+          // user_id: req.decoded._id,
           path: folder.full_path,
         },
+        include: [{ model: db.User }],
       }).then((files) => {
         console.log(`----> files in '${folder.full_path}'`, files);
 

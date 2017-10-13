@@ -17,6 +17,11 @@ export const STAR_FOLDER = 'STAR_FOLDER';
 
 export const FETCH_CONTENTS_BY_FOLDER_ID = 'FETCH_CONTENTS_BY_FOLDER_ID';
 
+// Navigation Breadcrumb
 export const BREADCRUMB_PUSH = 'BREADCRUMB_PUSH';
 export const BREADCRUMB_POP = 'BREADCRUMB_POP';
 export const BREADCRUMB_CLEAR = 'BREADCRUMB_CLEAR';
+
+// Sharing
+export const FILE_SHARING_ADD = 'FILE_SHARING_ADD';
+export const FILE_SHARING_REMOVE = 'FILE_SHARING_REMOVE';

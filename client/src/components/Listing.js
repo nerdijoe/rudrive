@@ -1,7 +1,17 @@
 import React, { Component } from 'react';
-import { Container, Table, Icon, Button, Header } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import Moment from 'moment';
+import {
+  Container,
+  Table,
+  Icon,
+  Button,
+  Header,
+  Modal,
+  Input,
+  Form,
+  Popup,
+} from 'semantic-ui-react';
 
 import FolderBreadcrumb from './FolderBreadcrumb';
 
@@ -9,11 +19,33 @@ import {
   axiosStarFile,
   axiosStarFolder,
   axiosFetchContentsByFolderId,
+  axiosFileShareAdd,
 } from '../actions';
 
 class Listing extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      open: false,
+      shareUsers: '',
+      shareFileId: 0,
+      shareFileName: '',
+    }
+  }
+
+  // handleRef = component => (this.ref = component);
+  open = () => this.setState({ open: true });
+  close = () => this.setState({ open: false });
+
+  handleModalShareFileOpen(openValue, file) {
+    console.log(`handleModalShareFileOpen openValue=${openValue}, file.id=${file.id}`);
+    this.setState({
+      open: openValue,
+      shareFileId: file.id,
+      shareFileName: file.name,
+    });
+
   }
 
   handleClick(file) {
@@ -38,10 +70,37 @@ class Listing extends Component {
     console.log('openInNewTab', url)
   }
 
+  // Modal
+  handleFileShareSubmit(e) {
+    e.preventDefault();
+    console.log(`Modal handleSubmit ${this.state.shareUsers}, ${this.state.shareFileId}`);
+
+
+
+    this.close();
+
+    this.props.axiosFileShareAdd(this.state.shareUsers, this.state.shareFileId)
+    this.setState({
+      shareUsers: '',
+      shareFileId: 0,
+    })
+  }
+
+  handleChange(e) {
+    const target = e.target;
+    console.log(`handleChange ${target.name}=[${target.value}]`);
+    
+    this.setState({
+      [target.name]: target.value,
+    });
+  }
+
+
+
   render() {
     const listItems = this.props.list.map((item) => <li>{item}</li>);
     const user_id = localStorage.getItem('user_id');
-    console.log(`render listing user_id=${user_id}`);
+    // console.log(`render listing user_id=${user_id}`);
     const user_email = localStorage.getItem('user_email');
     const homeAddress = `http://localhost:3000/`;
 
@@ -88,8 +147,11 @@ class Listing extends Component {
                       { (folder.user_id == user_id) ? 'Only you' : 'Others'}
                     </Table.Cell>
 
+                    {/* Actions */}
                     <Table.HeaderCell>
                       <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
+                      {/* <Button primary content='Share' onClick={() => {this.handleModalShareFileOpen()}} /> */}
+
                     </Table.HeaderCell>
                   </Table.Row>
                 ); // end of return
@@ -100,6 +162,13 @@ class Listing extends Component {
                 let re = new RegExp('./public/')
                 const downloadLink = homeAddress + file.full_path.replace(re, '');
                 // console.log(downloadLink);
+
+                const membersMsg = (file.Users.length > 0 ) ? `${file.Users.length} ${(file.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
+
+                const members = file.Users.map( (item) => {
+                  return <div>{`${item.firstname} ${item.lastname}`}</div>;
+                })
+                
                 return (
                   <Table.Row key={file.id}>
                     <Table.Cell>
@@ -111,11 +180,20 @@ class Listing extends Component {
                       {Moment(file.updatedAt).format('L LT')}
                     </Table.Cell>
                     <Table.Cell>
-                      { (file.user_id == user_id) ? 'Only you' : 'Others'}
+
+                      <Popup
+                        trigger={<span>{ membersMsg }</span>}
+                        content={<span>{ members }</span>}
+                        size='tiny'
+                        position='bottom center'
+                        inverted
+                      />
                     </Table.Cell>
 
                     <Table.HeaderCell>
                       <Button basic color="blue" onClick={() => {this.handleClick(file)}}>Star</Button>
+                      <Button primary content='Share' onClick={ () => this.handleModalShareFileOpen(true, file)} />
+
                     </Table.HeaderCell>
                   </Table.Row>
                 ); // end of return
@@ -123,6 +201,24 @@ class Listing extends Component {
 
           </Table.Body>
         </Table>
+
+        <Modal dimmer='inverted' open={this.state.open} onClose={this.close}>
+          <Modal.Content>
+            <Form onSubmit={(e) => { this.handleFileShareSubmit(e); }} >
+              <Form.Field>
+                <Container>
+                  <Header sub>Share a file</Header>
+                  <span>{this.state.shareFileName}</span>
+                  <Header size='tiny'>Share with other users, Enter user emails separated by a comma.</Header>
+                </Container>
+                <Input placeholder="harden@rockets.com, cp3@rockets.com, ..." name="shareUsers" value={this.state.shareUsers} onChange={(e) => { this.handleChange(e); }} />
+              </Form.Field>
+  
+              <Button type="submit">Share</Button>
+            </Form>
+          </Modal.Content>
+        </Modal>
+
 
       </Container>
     );
@@ -142,6 +238,7 @@ const mapDispatchToProps = (dispatch) => {
     axiosStarFile: (data) => { dispatch(axiosStarFile(data)); },
     axiosStarFolder: (data) => { dispatch(axiosStarFolder(data)); },
     axiosFetchContentsByFolderId: (data) => { dispatch(axiosFetchContentsByFolderId(data)); },
+    axiosFileShareAdd: (users, file_id) => { dispatch(axiosFileShareAdd(users, file_id)); },
   };
 };
 

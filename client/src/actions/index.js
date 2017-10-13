@@ -525,3 +525,29 @@ export const axiosFetchContentsByFolderIdBackward = data => (dispatch) => {
     console.log(err);
   });
 };
+
+export const fileShareAdd = (data) => {
+  return {
+    type: actionType.FILE_SHARING_ADD,
+    data,
+  };
+};
+
+export const axiosFileShareAdd = (users, file_id) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log(`axiosFileShareAdd users='${users}', file_id=${file_id}`);
+  axios.post(`http://localhost:3000/files/share`, {
+    users,
+    file_id,
+  }, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFileShareAdd');
+    console.log(res.data);
+
+    //update state
+    dispatch(fileShareAdd(res.data));
+  });
+};

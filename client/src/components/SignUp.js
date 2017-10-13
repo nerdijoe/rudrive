@@ -17,17 +17,14 @@ class SignUp extends Component {
 
   handleSignUp(e) {
     e.preventDefault();
-    console.log('handleSignUp',this.state);
+    console.log('handleSignUp', this.state);
     this.props.axiosSignUp(this.state);
-    
     this.props.history.push('/');
-    
-
   }
 
   handleChange(e) {
     const target = e.target;
-    
+
     console.log(`handleChange ${target.name}=[${target.value}]`);
 
     this.setState({
