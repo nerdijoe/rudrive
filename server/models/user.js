@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         User.hasMany(models.File, { foreignKey: 'user_id' });
         User.hasMany(models.Folder, { foreignKey: 'user_id' });
         User.hasMany(models.FileSharing, { foreignKey: 'user_id' });
+        User.hasMany(models.FolderSharing, { foreignKey: 'user_id' });
         
       }
     }

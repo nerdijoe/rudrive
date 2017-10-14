@@ -33,6 +33,10 @@ Object.keys(db).forEach(modelName => {
 db.File.belongsToMany(db.User, { through: db.FileSharing, foreignKey: 'file_id' });
 db.User.belongsToMany(db.File, { through: db.FileSharing, foreignKey: 'user_id' });
 
+db.Folder.belongsToMany(db.User, { through: db.FolderSharing, foreignKey: 'folder_id' });
+db.User.belongsToMany(db.Folder, { through: db.FolderSharing, foreignKey: 'user_id' });
+
+
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

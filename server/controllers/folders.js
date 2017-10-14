@@ -30,6 +30,22 @@ exports.fetchRootFolders = (req, res) => {
   });
 };
 
+exports.fetchRootFoldersWithShare = (req, res) => {
+  console.log('fetchRootFoldersWithShare', req.decoded._id);
+
+  db.Folder.findAll({
+    where: {
+      user_id: req.decoded._id,
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    },
+    include: [{ model: db.User }],
+  }).then((folders) => {
+    // console.log('after fetchRootFolder folders=', folders);
+
+    res.json(folders);
+  });
+};
+
 
 exports.starFolder = (req, res) => {
   console.log('starFile', req.decoded._id);
@@ -102,3 +118,59 @@ exports.fetchById = (req, res) => {
     // res.json(folder);
   });
 };
+
+exports.addFolderSharing = (req, res) => {
+  console.log('addFolderSharing', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  let users = req.body.users.split(/[,]\s/);
+  console.log('users=', users);
+  let folder_id = req.body.folder_id;
+
+  db.User.findAll({
+    where: {
+      email: users,
+    },
+  }).then((fetchedUsers) => {
+    console.log('fetchUsers', fetchedUsers);
+
+
+    let bulkContent = fetchedUsers.map((i) => {
+      return { user_id: i.id, folder_id: folder_id };
+    });
+
+    console.log('bulkContent', bulkContent);
+    db.FolderSharing.bulkCreate(bulkContent)
+      .then(() => {
+
+        // db.FileSharing.findAll({
+        //   where: {
+        //     file_id: file_id,
+        //   }
+        // }).then((finalResult) => {
+        //   console.log('finalResult', finalResult);
+        //   res.json(finalResult);
+        // });
+
+        // db.File.getUsers({
+        //   where: {
+        //     id: file_id,
+        //   },
+        // }).then((shareInfo) => {
+        //   console.log('shareInfo', shareInfo);
+        //   res.json(shareInfo);
+        // });
+
+        db.Folder.findAll({
+          where: { id: folder_id },
+          include: [{ model: db.User }],
+        }).then((shareInfo) => {
+          console.log('shareInfo', shareInfo);
+          res.json(shareInfo);
+        });
+
+      });
+  });
+
+  // res.json('addFileSharing');
+}

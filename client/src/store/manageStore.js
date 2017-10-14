@@ -4,14 +4,16 @@ import thunk from 'redux-thunk';
 
 import DropboxReducers from '../reducers';
 
-let middlewares = applyMiddleware(logger, thunk);
+const middlewares = applyMiddleware(logger, thunk);
 
-let store = createStore(
+const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+
+const store = createStore(
   DropboxReducers,
   compose(
     middlewares,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
- );
+    devTools,
+  ),
+);
 
- export default store;
+export default store;

@@ -21,6 +21,7 @@ const initialState = {
   folders: [],
   breadcrumb: [],
   shareFiles: [],
+  shareFolders: [],
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -196,9 +197,7 @@ const UserReducer = (state = initialState, action) => {
       return {
         ...state,
         files: updatedFiles,
-      }
-
-      
+      };
     }
     case actionType.FETCH_SHARE_FILES: {
       console.log('*** reducer FETCH_SHARE_FILES', action);
@@ -207,7 +206,13 @@ const UserReducer = (state = initialState, action) => {
         shareFiles: [...action.data],
       };
     }
-
+    case actionType.FETCH_SHARE_FOLDERS: {
+      console.log('*** reducer FETCH_SHARE_FOLDERS', action);
+      return {
+        ...state,
+        shareFolders: [...action.data],
+      };
+    }
 
     default:
       return state;

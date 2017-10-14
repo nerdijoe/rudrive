@@ -582,3 +582,27 @@ export const axiosFetchShareFiles = () => (dispatch) => {
   });
 };
 
+export const fetchShareFolders = (data) => {
+  return {
+    type: actionType.FETCH_SHARE_FOLDERS,
+    data,
+  };
+};
+
+
+export const axiosFetchShareFolders = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/folders/share', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchShareFolders');
+    console.log(res.data);
+
+    dispatch(fetchShareFolders(res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
