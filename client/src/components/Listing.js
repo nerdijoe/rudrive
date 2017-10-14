@@ -11,6 +11,8 @@ import {
   Input,
   Form,
   Popup,
+  Divider,
+  Image,
 } from 'semantic-ui-react';
 
 import FolderBreadcrumb from './FolderBreadcrumb';
@@ -23,6 +25,9 @@ import {
   axiosFolderShareAdd,
 } from '../actions';
 
+import ProfilePhoto from '../assets/images/ewoks.jpg'
+
+
 class Listing extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +38,7 @@ class Listing extends Component {
       shareUsers: '',
       shareFileId: 0,
       shareFileName: '',
+      shareFileUsers: [],
       shareFolderId: 0,
       shareFolderName: '',
     }
@@ -45,10 +51,13 @@ class Listing extends Component {
   
   handleModalShareFileOpen(openValue, file) {
     console.log(`handleModalShareFileOpen openValue=${openValue}, file.id=${file.id}`);
+    console.log('file.Users', file.Users);
+
     this.setState({
       open: openValue,
       shareFileId: file.id,
       shareFileName: file.name,
+      shareFileUsers: file.Users,
     });
 
   }
@@ -114,6 +123,10 @@ class Listing extends Component {
     })
   }
 
+
+  handleFileShareRemove(user) {
+    console.log('handleFileShareRemove', user);
+  }
 
   handleChange(e) {
     const target = e.target;
@@ -251,20 +264,77 @@ class Listing extends Component {
           </Table.Body>
         </Table>
 
-        <Modal dimmer='inverted' open={this.state.open} onClose={this.close}>
+        <Modal size='tiny' dimmer='inverted' open={this.state.open} onClose={this.close}>
           <Modal.Content>
             <Form onSubmit={(e) => { this.handleFileShareSubmit(e); }} >
               <Form.Field>
                 <Container>
-                  <Header sub>Share a file</Header>
+                  <Header size='small'>Share a file</Header>
                   <span>{this.state.shareFileName}</span>
-                  <Header size='tiny'>Share with other users, Enter user emails separated by a comma.</Header>
+                  <Header size='tiny'>Enter user emails separated by a comma.</Header>
                 </Container>
-                <Input placeholder="harden@rockets.com, cp3@rockets.com, ..." name="shareUsers" value={this.state.shareUsers} onChange={(e) => { this.handleChange(e); }} />
+                <Form.Group>
+                  <Form.Input width={12} placeholder="harden@rockets.com, cp3@rockets.com, ..." name="shareUsers" value={this.state.shareUsers} onChange={(e) => { this.handleChange(e); }} />
+                  <Button basic type="submit">Can view</Button>
+                </Form.Group>
                 
               </Form.Field>
-              <Button basic type="submit">Can view</Button>
             </Form>
+            <Divider />
+
+            <Table basic='very'>
+
+
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell>
+                    <Header as='h4' image>
+                      <Image src={ProfilePhoto} shape='rounded' size='mini' />
+                      <Header.Content>
+                          {localStorage.getItem('user_firstname')} {localStorage.getItem('user_lastname')} 
+                        <Header.Subheader>{localStorage.getItem('user_email')}</Header.Subheader>
+                      </Header.Content>
+                    </Header>
+                  </Table.Cell>
+                  <Table.Cell>
+                      Owner
+                  </Table.Cell>
+                </Table.Row>
+
+                { this.state.shareFileUsers.map( (user) => {
+                return (
+                  <Table.Row>
+                    <Table.Cell>
+                      <Header as='h4' image>
+                        <Image src={ProfilePhoto} shape='rounded' size='mini' />
+                        <Header.Content>
+                            {user.firstname} {user.lastname}
+                          <Header.Subheader>{user.email}</Header.Subheader>
+                        </Header.Content>
+                      </Header>
+                    </Table.Cell>
+                    <Table.Cell>
+                    <Popup
+                      trigger={<Button color='red' icon='flask' content='Remove' />}
+                      content={<Button color='green' content='Confirm' onClick={ () => {this.handleFileShareRemove(user)}}/>}
+                      on='click'
+                      position='top right'
+                    />
+                    </Table.Cell>
+                  </Table.Row>
+
+                );
+              })
+              // end of this.state.shareFileUsers.map()
+              }
+
+
+              </Table.Body>
+            </Table>
+
+
+
+
           </Modal.Content>
         </Modal>
 

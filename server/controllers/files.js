@@ -144,3 +144,21 @@ exports.fetchFileSharing = (req, res) => {
     res.json(user.Files);
   });
 };
+
+exports.removeFileSharing = (req, res) => {
+  console.log('removeFileSharing', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  db.FileSharing.destroy({
+    where: {
+      user_id: req.body.user_id,
+      file_id: req.body.file_id,
+    },
+  }).then((rowDeleted) => {
+    if (rowDeleted === 1) {
+      res.json({ msg: 'Remove file share is successful.' });
+    } else {
+      res.json({ msg: 'error' });
+    }
+  });
+};
