@@ -635,6 +635,33 @@ export const axiosFolderShareAdd = (users, folder_id) => (dispatch) => {
   });
 };
 
+export const folderShareRemove = (data) => {
+  return {
+    type: actionType.FOLDER_SHARING_REMOVE,
+    data,
+  };
+};
+
+export const axiosFolderShareRemove = (user_id, folder_id) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log(`axiosFolderShareRemove user_id='${user_id}', folder_id=${folder_id}`);
+  console.log('token=', token);
+
+  axios.put(`http://localhost:3000/folders/share`, {
+    user_id,
+    folder_id,
+  }, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFolderShareRemove');
+    console.log('%%%%%% ',res.data);
+
+    // update state
+    dispatch(folderShareRemove({ user_id, folder_id }));
+  });
+};
 
 export const fetchShareFolders = (data) => {
   return {

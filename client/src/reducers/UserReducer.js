@@ -216,7 +216,6 @@ const UserReducer = (state = initialState, action) => {
         files: updatedFiles,
       };
     }
-
     case actionType.FETCH_SHARE_FILES: {
       console.log('*** reducer FETCH_SHARE_FILES', action);
       return {
@@ -232,6 +231,23 @@ const UserReducer = (state = initialState, action) => {
       if (pos !== -1) {
         updatedFolders.splice(pos, 1, action.data[0]);
       }
+      return {
+        ...state,
+        folders: updatedFolders,
+      };
+    }
+    case actionType.FOLDER_SHARING_REMOVE: {
+      console.log('*** reducer FOLDER_SHARING_REMOVE', action);
+
+      const updatedFolders = [...state.folders];
+      const pos = updatedFolders.findIndex(i => i.id === action.data.folder_id);
+      if (pos !== -1) {
+        const userPos = updatedFolders[pos].Users.findIndex(user => user.id === action.data.user_id);
+        if (userPos !== -1) {
+          updatedFolders[pos].Users.splice(userPos, 1);
+        }
+      }
+
       return {
         ...state,
         folders: updatedFolders,

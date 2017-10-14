@@ -23,7 +23,8 @@ import {
   axiosFetchContentsByFolderId,
   axiosFileShareAdd,
   axiosFolderShareAdd,
-  axiosFileShareRemove
+  axiosFileShareRemove,
+  axiosFolderShareRemove,
 } from '../actions';
 
 import ProfilePhoto from '../assets/images/ewoks.jpg'
@@ -42,6 +43,7 @@ class Listing extends Component {
       shareFileUsers: [],
       shareFolderId: 0,
       shareFolderName: '',
+      shareFolderUsers: [],
     }
   }
 
@@ -69,6 +71,7 @@ class Listing extends Component {
       openFolder: openValue,
       shareFolderId: folder.id,
       shareFolderName: folder.name,
+      shareFolderUsers: folder.Users,
     });
 
   }
@@ -134,9 +137,20 @@ class Listing extends Component {
       shareUsers: '',
       shareFileId: 0,
     })
-
-
   }
+
+  handleFolderShareRemove(user) {
+    console.log(`handleFolderShareRemove user_id=${user.id}, shareFileId=${this.state.shareFolderId}`);
+    this.props.axiosFolderShareRemove(user.id, this.state.shareFolderId);
+
+    this.closeFolder();
+    this.setState({
+      shareUsers: '',
+      shareFolderId: 0,
+    })
+  }
+
+
 
   handleChange(e) {
     const target = e.target;
@@ -187,7 +201,7 @@ class Listing extends Component {
 
                 const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length + 1} members` : 'Only you';
                 
-
+                let owner = <div>{`${localStorage.getItem('user_firstname')} ${localStorage.getItem('user_lastname')}`}</div>;                
                 let members = '';
                 if( folder.Users ) {
                   members = folder.Users.map( (item) => {
@@ -210,7 +224,7 @@ class Listing extends Component {
                     <Table.Cell>
                       <Popup
                         trigger={<span>{ membersMsg }</span>}
-                        content={<span>{ members }</span>}
+                        content={<span>{ owner }{ members }</span>}
                         size='tiny'
                         position='bottom center'
                         inverted
@@ -282,6 +296,7 @@ class Listing extends Component {
           </Table.Body>
         </Table>
 
+        {/* File Share Modal */}
         <Modal size='tiny' dimmer='inverted' open={this.state.open} onClose={this.close}>
           <Modal.Content>
             <Form onSubmit={(e) => { this.handleFileShareSubmit(e); }} >
@@ -346,30 +361,79 @@ class Listing extends Component {
               // end of this.state.shareFileUsers.map()
               }
 
+              </Table.Body>
+            </Table>
+
+          </Modal.Content>
+        </Modal>
+
+        {/* Folder Share Modal */}
+        <Modal size='tiny' dimmer='inverted' open={this.state.openFolder} onClose={this.closeFolder}>
+          <Modal.Content>
+            <Form onSubmit={(e) => { this.handleFolderShareSubmit(e); }} >
+              <Form.Field>
+                <Container>
+                  <Header size='small'>Share a folder</Header>
+                  <span>{this.state.shareFolderName}</span>
+                  <Header size='tiny'>Enter user emails separated by a comma.</Header>
+                </Container>
+                <Form.Group>
+                  <Form.Input width={12} placeholder="harden@rockets.com, cp3@rockets.com, ..." name="shareUsers" value={this.state.shareUsers} onChange={(e) => { this.handleChange(e); }} />
+                  <Button basic type="submit">Can view</Button>
+                </Form.Group>
+
+              </Form.Field>
+            </Form>
+            <Divider />
+
+            <Table basic='very'>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell>
+                    <Header as='h4' image>
+                      <Image src={ProfilePhoto} shape='rounded' size='mini' />
+                      <Header.Content>
+                          {localStorage.getItem('user_firstname')} {localStorage.getItem('user_lastname')} 
+                        <Header.Subheader>{localStorage.getItem('user_email')}</Header.Subheader>
+                      </Header.Content>
+                    </Header>
+                  </Table.Cell>
+                  <Table.Cell>
+                      Owner
+                  </Table.Cell>
+                </Table.Row>
+
+                { this.state.shareFolderUsers.map( (user) => {
+                return (
+                  <Table.Row>
+                    <Table.Cell>
+                      <Header as='h4' image>
+                        <Image src={ProfilePhoto} shape='rounded' size='mini' />
+                        <Header.Content>
+                            {user.firstname} {user.lastname}
+                          <Header.Subheader>{user.email}</Header.Subheader>
+                        </Header.Content>
+                      </Header>
+                    </Table.Cell>
+                    <Table.Cell>
+                    <Popup
+                      trigger={<Button color='red' icon='flask' content='Remove' />}
+                      content={<Button color='green' content='Confirm' onClick={ () => {this.handleFolderShareRemove(user)}}/>}
+                      on='click'
+                      position='top right'
+                    />
+                    </Table.Cell>
+                  </Table.Row>
+
+                );
+              })
+              // end of this.state.shareFileUsers.map()
+              }
 
               </Table.Body>
             </Table>
 
 
-
-
-          </Modal.Content>
-        </Modal>
-
-        <Modal dimmer='inverted' open={this.state.openFolder} onClose={this.closeFolder}>
-          <Modal.Content>
-            <Form onSubmit={(e) => { this.handleFolderShareSubmit(e); }} >
-              <Form.Field>
-                <Container>
-                  <Header sub>Share a folder</Header>
-                  <span>{this.state.shareFolderName}</span>
-                  <Header size='tiny'>Share with other users, Enter user emails separated by a comma.</Header>
-                </Container>
-                <Input placeholder="harden@rockets.com, cp3@rockets.com, ..." name="shareUsers" value={this.state.shareUsers} onChange={(e) => { this.handleChange(e); }} />
-                
-              </Form.Field>
-              <Button basic type="submit">Can view</Button>
-            </Form>
           </Modal.Content>
         </Modal>
 
@@ -397,6 +461,7 @@ const mapDispatchToProps = (dispatch) => {
     axiosFileShareAdd: (users, file_id) => { dispatch(axiosFileShareAdd(users, file_id)); },
     axiosFolderShareAdd: (users, folder_id) => { dispatch(axiosFolderShareAdd(users, folder_id)); },
     axiosFileShareRemove: (user_id, file_id) => { dispatch(axiosFileShareRemove(user_id, file_id));},
+    axiosFolderShareRemove: (user_id, folder_id) => { dispatch(axiosFolderShareRemove(user_id, folder_id));},
   };
 };
 
