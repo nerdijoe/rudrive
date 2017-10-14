@@ -20,6 +20,7 @@ const initialState = {
   files: [],
   folders: [],
   breadcrumb: [],
+  shareFiles: [],
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -180,6 +181,33 @@ const UserReducer = (state = initialState, action) => {
         breadcrumb: [],
       };
     }
+    case actionType.FILE_SHARING_ADD: {
+      console.log('*** reducer FILE_SHARING_ADD', action);
+
+      const updatedFiles = [...state.files];
+      const pos = updatedFiles.findIndex(i => i.id === action.data[0].id);
+      if (pos !== -1) {
+        // console.log(typeof updatedFiles[pos].is_starred);
+        // console.log(`--> updatedFiles[${pos}].is_starred=${updatedFiles[pos].is_starred}`);
+        // const star_status = (updatedFiles[pos].is_starred == 'true');
+        // updatedFiles[pos].Users = action.data.Users;
+        updatedFiles.splice(pos, 1, action.data[0]);
+      }
+      return {
+        ...state,
+        files: updatedFiles,
+      }
+
+      
+    }
+    case actionType.FETCH_SHARE_FILES: {
+      console.log('*** reducer FETCH_SHARE_FILES', action);
+      return {
+        ...state,
+        shareFiles: [...action.data],
+      };
+    }
+
 
     default:
       return state;

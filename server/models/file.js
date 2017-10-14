@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
       associate: function(models) {
         File.belongsTo(models.User, { foreignKey: 'user_id' })
+        File.hasMany(models.FileSharing, { foreignKey: 'file_id' });
+        
       }
     }
   });
