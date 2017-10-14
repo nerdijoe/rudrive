@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { Container } from 'semantic-ui-react';
+import {
+  Container,
+  Divider,
+} from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import FileUpload from './FileUpload';
 import Listing from './Listing';
 import CreateFolder from './CreateFolder';
 
-import { 
+import {
+  checkAuthentication,  
   axiosFetchListing,
   axiosFetchUserAbout,
   axiosFetchUserInterest,
@@ -14,10 +18,12 @@ import {
   axiosFetchFolders,
   axiosFetchRootFolders,
   axiosFetchRootFiles,
+  axiosFetchShareFiles,
 } from '../actions';
 
 class Home extends Component {
   componentDidMount() {
+    this.props.checkAuthentication();
     this.props.axiosFetchListing();
     this.props.axiosFetchUserAbout();
     this.props.axiosFetchUserInterest();
@@ -25,15 +31,19 @@ class Home extends Component {
     // this.props.axiosFetchFolders();
     this.props.axiosFetchRootFolders();
     this.props.axiosFetchRootFiles();
+    this.props.axiosFetchShareFiles();
   }
 
   render() {
     return (
       <Container>
-        Home
+        <p></p>
         <FileUpload />
+        <p></p>
         <CreateFolder />
 
+        <p></p><p></p><p></p>
+        <Divider />
         <Listing />
       </Container>
     );
@@ -42,6 +52,7 @@ class Home extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    checkAuthentication: () => { dispatch(checkAuthentication()); },
     axiosFetchListing: () => { dispatch(axiosFetchListing()); },
     axiosFetchUserAbout: () => { dispatch(axiosFetchUserAbout()); },
     axiosFetchUserInterest: () => { dispatch(axiosFetchUserInterest()); },
@@ -49,6 +60,7 @@ const mapDispatchToProps = (dispatch) => {
     axiosFetchFolders: () => { dispatch(axiosFetchFolders()); },
     axiosFetchRootFolders: () => { dispatch(axiosFetchRootFolders()); },
     axiosFetchRootFiles: () => { dispatch(axiosFetchRootFiles()); },
+    axiosFetchShareFiles: () => { dispatch(axiosFetchShareFiles()); },
   };
 };
 

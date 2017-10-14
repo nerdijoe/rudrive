@@ -18,6 +18,7 @@ import SignUp from './components/SignUp';
 import Home from './components/Home';
 import About from './components/UserAbout';
 import Interest from './components/UserInterest';
+import Sharing from './components/Sharing';
 
 class App extends Component {
   render() {
@@ -36,15 +37,15 @@ class App extends Component {
         <Router>
           <Container>
             <Nav />
-            
+
             <Route exact path='/' component={Landing} />
             <Route path='/signin' component={SignIn} />
             <Route path='/signup' component={SignUp} />
             <Route path='/home' component={Home} />
             <Route path='/about' component={About} />
             <Route path='/interest' component={Interest} />
-            
-            </Container>
+            <Route path='/sharing' component={Sharing} />
+          </Container>
         </Router>
       </Provider>
     );

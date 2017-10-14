@@ -80,6 +80,12 @@ export const userSignIn = (data) => {
   };
 };
 
+export const checkAuthentication = () => (dispatch) => {
+  if (localStorage.getItem('token') !== null ) {
+    dispatch(userSignIn());
+  }
+};
+
 export const userSignOut = () => {
   console.log('userSignOut');
   localStorage.removeItem('token');
@@ -551,3 +557,28 @@ export const axiosFileShareAdd = (users, file_id) => (dispatch) => {
     dispatch(fileShareAdd(res.data));
   });
 };
+
+export const fetchShareFiles = (data) => {
+  return {
+    type: actionType.FETCH_SHARE_FILES,
+    data,
+  };
+};
+
+
+export const axiosFetchShareFiles = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  axios.get('http://localhost:3000/files/share', {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFetchShareFiles');
+    console.log(res.data);
+
+    dispatch(fetchShareFiles(res.data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+

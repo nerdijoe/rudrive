@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Moment from 'moment';
+
 import {
   Container,
   Table,
@@ -11,9 +12,13 @@ import {
   Input,
   Form,
   Popup,
+  Menu,
 } from 'semantic-ui-react';
 
 import FolderBreadcrumb from './FolderBreadcrumb';
+
+import SharingFiles from './SharingFiles';
+import SharingFolders from './SharingFolders';
 
 import {
   axiosStarFile,
@@ -27,12 +32,18 @@ class Listing extends Component {
     super(props);
 
     this.state = {
+      activeItem: 'folders',
       open: false,
       shareUsers: '',
       shareFileId: 0,
       shareFileName: '',
     }
   }
+
+  componentDidMount() {
+
+  }
+  
 
   // handleRef = component => (this.ref = component);
   open = () => this.setState({ open: true });
@@ -95,8 +106,9 @@ class Listing extends Component {
     });
   }
 
-
-
+  // for menu
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  
   render() {
     const listItems = this.props.list.map((item) => <li>{item}</li>);
     const user_id = localStorage.getItem('user_id');
@@ -104,70 +116,44 @@ class Listing extends Component {
     const user_email = localStorage.getItem('user_email');
     const homeAddress = `http://localhost:3000/`;
 
+    // for menu
+    const { activeItem } = this.state
+    
     return (
       <Container>
         {/* Listing
         <ul>{listItems}</ul> */}
 
+
         <FolderBreadcrumb />
 
+        <Header as='h5'>Shared files let you collaborate on individual files. When someone shares a file with you, you’ll have private view-only access to that file.</Header>
+
         {
-          (this.props.folders.length === 0 && this.props.files.length === 0 ) ?
+          (this.props.shareFiles.length === 0 ) ?
           <Header as='h3' content='This folder is empty' subheader="Please upload some files." /> :
           ''
         }
+
 
         <Table basic="very">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Modified</Table.HeaderCell>
-              <Table.HeaderCell>Members</Table.HeaderCell>
               <Table.Cell><Icon name='ellipsis horizontal' /></Table.Cell>
 
             </Table.Row>
           </Table.Header>
 
           <Table.Body>
-            { // Folders
-              this.props.folders.map( (folder) => {
-
-                return (
-                  <Table.Row key={folder.id}>
-                    <Table.Cell>
-                      <a onClick={() => {this.handleClickFolder(folder)}}>
-                        <Icon name='blue folder' />{folder.name} {' '}
-                      </a>
-                      {folder.is_starred ? <Icon name='blue star' /> : ''}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {Moment(folder.updatedAt).format('L LT')}
-                    </Table.Cell>
-                    <Table.Cell>
-                      { (folder.user_id == user_id) ? 'Only you' : 'Others'}
-                    </Table.Cell>
-
-                    {/* Actions */}
-                    <Table.HeaderCell>
-                      <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
-                      {/* <Button primary content='Share' onClick={() => {this.handleModalShareFileOpen()}} /> */}
-
-                    </Table.HeaderCell>
-                  </Table.Row>
-                ); // end of return
-              })}
 
             { // Files
-              this.props.files.map( (file) => {
+              this.props.shareFiles.map( (file) => {
                 let re = new RegExp('./public/')
                 const downloadLink = homeAddress + file.full_path.replace(re, '');
                 // console.log(downloadLink);
 
-                const membersMsg = (file.Users && file.Users.length > 0 ) ? `${file.Users.length} ${(file.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
-
-                const members = file.Users.map( (item) => {
-                  return <div>{`${item.firstname} ${item.lastname}`}</div>;
-                })
                 
                 return (
                   <Table.Row key={file.id}>
@@ -177,17 +163,7 @@ class Listing extends Component {
 
                     </Table.Cell>
                     <Table.Cell>
-                      {Moment(file.updatedAt).format('L LT')}
-                    </Table.Cell>
-                    <Table.Cell>
-
-                      <Popup
-                        trigger={<span>{ membersMsg }</span>}
-                        content={<span>{ members }</span>}
-                        size='tiny'
-                        position='bottom center'
-                        inverted
-                      />
+                      {Moment(file.FileSharing.updatedAt).format('L LT')}
                     </Table.Cell>
 
                     <Table.HeaderCell>
@@ -212,7 +188,6 @@ class Listing extends Component {
                   <Header size='tiny'>Share with other users, Enter user emails separated by a comma.</Header>
                 </Container>
                 <Input placeholder="harden@rockets.com, cp3@rockets.com, ..." name="shareUsers" value={this.state.shareUsers} onChange={(e) => { this.handleChange(e); }} />
-                
               </Form.Field>
               <Button basic type="submit">Can view</Button>
             </Form>
@@ -230,6 +205,7 @@ const mapStateToProps = (state) => {
     list: state.UserReducer.list,
     files: state.UserReducer.files,
     folders: state.UserReducer.folders,
+    shareFiles: state.UserReducer.shareFiles,
   };
 };
 

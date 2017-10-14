@@ -72,6 +72,7 @@ exports.starFile = (req, res) => {
     })
 };
 
+// add users for file sharing
 exports.addFileSharing = (req, res) => {
   console.log('addFileSharing', req.decoded._id);
   console.log('req.body=', req.body);
@@ -127,3 +128,19 @@ exports.addFileSharing = (req, res) => {
 
   // res.json('addFileSharing');
 }
+
+exports.fetchFileSharing = (req, res) => {
+  console.log('fetchFileSharing', req.decoded._id);
+
+  db.User.findOne({
+    where: {
+      id: req.decoded._id,
+    },
+    include: [{ model: db.File }],
+  }).then((user) => {
+    console.log('after fetchFileSharing user=', user.dataValues);
+
+    // only return the files array that have been shared to the signed in user.
+    res.json(user.Files);
+  });
+};

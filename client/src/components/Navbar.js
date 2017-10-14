@@ -26,6 +26,9 @@ class Navbar extends Component {
               <Link to='/home'>
                 <Menu.Item name='files' onClick={this.handleItemClick} />
               </Link>
+              <Link to='/sharing/folders'>
+                <Menu.Item name='sharing' onClick={this.handleItemClick} />
+              </Link>
 
               <Link to='/about'>
                 <Menu.Item name='about' onClick={this.handleItemClick} />
@@ -40,13 +43,12 @@ class Navbar extends Component {
             </Menu.Menu>
           ) : (
             <Menu.Menu position='right'>
-
-            <Link to='/signup'>
-              <Menu.Item name='signUp' active={activeItem === 'signUp'} onClick={this.handleItemClick} />
-            </Link>
-            <Link to='/signin'>
-              <Menu.Item name='signIn' active={activeItem === 'signIn'} onClick={this.handleItemClick} />
-            </Link>
+              <Link to='/signup'>
+                <Menu.Item name='signUp' active={activeItem === 'signUp'} onClick={this.handleItemClick} />
+              </Link>
+              <Link to='/signin'>
+                <Menu.Item name='signIn' active={activeItem === 'signIn'} onClick={this.handleItemClick} />
+              </Link>
             </Menu.Menu>
           )}
 
