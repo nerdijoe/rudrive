@@ -19,6 +19,7 @@ import {
   axiosFetchRootFolders,
   axiosFetchRootFiles,
   axiosFetchShareFiles,
+  axiosFetchShareFolders,
 } from '../actions';
 
 class Home extends Component {
@@ -32,6 +33,7 @@ class Home extends Component {
     this.props.axiosFetchRootFolders();
     this.props.axiosFetchRootFiles();
     this.props.axiosFetchShareFiles();
+    this.props.axiosFetchShareFolders();
   }
 
   render() {
@@ -61,6 +63,7 @@ const mapDispatchToProps = (dispatch) => {
     axiosFetchRootFolders: () => { dispatch(axiosFetchRootFolders()); },
     axiosFetchRootFiles: () => { dispatch(axiosFetchRootFiles()); },
     axiosFetchShareFiles: () => { dispatch(axiosFetchShareFiles()); },
+    axiosFetchShareFolders: () => { dispatch(axiosFetchShareFolders()); },
   };
 };
 

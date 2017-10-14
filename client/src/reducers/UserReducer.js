@@ -21,6 +21,7 @@ const initialState = {
   folders: [],
   breadcrumb: [],
   shareFiles: [],
+  shareFolders: [],
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -196,9 +197,24 @@ const UserReducer = (state = initialState, action) => {
       return {
         ...state,
         files: updatedFiles,
+      };
+    }
+    case actionType.FILE_SHARING_REMOVE: {
+      console.log('*** reducer FILE_SHARING_REMOVE', action);
+
+      const updatedFiles = [...state.files];
+      const pos = updatedFiles.findIndex(i => i.id === action.data.file_id);
+      if (pos !== -1) {
+        const userPos = updatedFiles[pos].Users.findIndex(user => user.id === action.data.user_id);
+        if (userPos !== -1) {
+          updatedFiles[pos].Users.splice(userPos, 1);
+        }
       }
 
-      
+      return {
+        ...state,
+        files: updatedFiles,
+      };
     }
     case actionType.FETCH_SHARE_FILES: {
       console.log('*** reducer FETCH_SHARE_FILES', action);
@@ -207,7 +223,43 @@ const UserReducer = (state = initialState, action) => {
         shareFiles: [...action.data],
       };
     }
+    case actionType.FOLDER_SHARING_ADD: {
+      console.log('*** reducer FOLDER_SHARING_ADD', action);
 
+      const updatedFolders = [...state.folders];
+      const pos = updatedFolders.findIndex(i => i.id === action.data[0].id);
+      if (pos !== -1) {
+        updatedFolders.splice(pos, 1, action.data[0]);
+      }
+      return {
+        ...state,
+        folders: updatedFolders,
+      };
+    }
+    case actionType.FOLDER_SHARING_REMOVE: {
+      console.log('*** reducer FOLDER_SHARING_REMOVE', action);
+
+      const updatedFolders = [...state.folders];
+      const pos = updatedFolders.findIndex(i => i.id === action.data.folder_id);
+      if (pos !== -1) {
+        const userPos = updatedFolders[pos].Users.findIndex(user => user.id === action.data.user_id);
+        if (userPos !== -1) {
+          updatedFolders[pos].Users.splice(userPos, 1);
+        }
+      }
+
+      return {
+        ...state,
+        folders: updatedFolders,
+      };
+    }
+    case actionType.FETCH_SHARE_FOLDERS: {
+      console.log('*** reducer FETCH_SHARE_FOLDERS', action);
+      return {
+        ...state,
+        shareFolders: [...action.data],
+      };
+    }
 
     default:
       return state;

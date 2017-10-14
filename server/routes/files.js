@@ -11,5 +11,6 @@ router.put('/star', helper.auth, filesController.starFile);
 // File Sharing
 router.post('/share', helper.auth, filesController.addFileSharing);
 router.get('/share', helper.auth, filesController.fetchFileSharing);
+router.put('/share', helper.auth, filesController.removeFileSharing);
 
 module.exports = router;

@@ -125,7 +125,7 @@ class Listing extends Component {
         <ul>{listItems}</ul> */}
 
 
-        <FolderBreadcrumb />
+        {/* <FolderBreadcrumb /> */}
 
         <Header as='h5'>Shared files let you collaborate on individual files. When someone shares a file with you, you’ll have private view-only access to that file.</Header>
 
@@ -167,8 +167,8 @@ class Listing extends Component {
                     </Table.Cell>
 
                     <Table.HeaderCell>
-                      <Button basic color="blue" onClick={() => {this.handleClick(file)}}>Star</Button>
-                      <Button primary content='Share' onClick={ () => this.handleModalShareFileOpen(true, file)} />
+                      {/* <Button basic color="blue" onClick={() => {this.handleClick(file)}}>Star</Button>
+                      <Button primary content='Share' onClick={ () => this.handleModalShareFileOpen(true, file)} /> */}
 
                     </Table.HeaderCell>
                   </Table.Row>

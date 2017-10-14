@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import { Container, Form, Button } from 'semantic-ui-react';
+import {
+  Container,
+  Form,
+  Button,
+  Input,
+} from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import {
@@ -56,7 +61,7 @@ class FileUpload extends Component {
           <Button type='submit'>Upload</Button>
         </Form> */}
 
-        <input type="file" name="doc" onChange={ e => {this.handleFileUpload(e)} } />
+        <Input type="file" name="doc" onChange={ e => {this.handleFileUpload(e)} } />
 
 
       </Container>

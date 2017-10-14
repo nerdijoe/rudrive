@@ -1,7 +1,4 @@
 'use strict';
-// const User = require('./user');
-// const File = require('./file');
-const db = require('./index');
 
 module.exports = (sequelize, DataTypes) => {
   var FileSharing = sequelize.define('FileSharing', {

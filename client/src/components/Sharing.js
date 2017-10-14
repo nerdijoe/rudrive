@@ -33,6 +33,7 @@ import {
   axiosFileShareAdd,
   checkAuthentication,
   axiosFetchShareFiles,
+  axiosFetchShareFolders,
 } from '../actions';
 
 class Listing extends Component {
@@ -51,6 +52,7 @@ class Listing extends Component {
   componentDidMount() {
     this.props.checkAuthentication();
     this.props.axiosFetchShareFiles();
+    this.props.axiosFetchShareFolders();
   }
   
 
@@ -131,6 +133,8 @@ class Listing extends Component {
     return (
       <Router>
       <Container>
+        <div></div>
+        <Header as='h3'>Sharing</Header>
         {/* Listing
         <ul>{listItems}</ul> */}
         <Menu pointing secondary>
@@ -171,6 +175,7 @@ const mapDispatchToProps = (dispatch) => {
     axiosFileShareAdd: (users, file_id) => { dispatch(axiosFileShareAdd(users, file_id)); },
     checkAuthentication: () => { dispatch(checkAuthentication()); },
     axiosFetchShareFiles: () => { dispatch(axiosFetchShareFiles()); },
+    axiosFetchShareFolders: () => { dispatch(axiosFetchShareFolders()); },
   };
 };
 
