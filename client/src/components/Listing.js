@@ -238,13 +238,15 @@ class Listing extends Component {
 
                 const membersMsg = (file.Users && file.Users.length > 0 ) ? `${file.Users.length + 1} members` : 'Only you';
                 
-
+                let owner = <div>{`${localStorage.getItem('user_firstname')} ${localStorage.getItem('user_lastname')}`}</div>;
                 let members = '';
                 if( file.Users ) {
                   members = file.Users.map( (item) => {
                     return <div>{`${item.firstname} ${item.lastname}`}</div>;
                   });
                 }
+
+                console.log('$$$ members', members);
 
                 
                 return (
@@ -261,7 +263,7 @@ class Listing extends Component {
 
                       <Popup
                         trigger={<span>{ membersMsg }</span>}
-                        content={<span>{ members }</span>}
+                        content={<span>{ owner }{ members }</span>}
                         size='tiny'
                         position='bottom center'
                         inverted

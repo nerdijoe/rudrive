@@ -175,6 +175,25 @@ exports.addFolderSharing = (req, res) => {
   // res.json('addFileSharing');
 }
 
+exports.removeFolderSharing = (req, res) => {
+  console.log('removeFolderSharing', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  db.FolderSharing.destroy({
+    where: {
+      user_id: req.body.user_id,
+      folder_id: req.body.folder_id,
+    },
+  }).then((rowDeleted) => {
+    if (rowDeleted === 1) {
+      res.json({ msg: 'Remove folder share is successful.' });
+    } else {
+      res.json({ msg: 'error' });
+    }
+  });
+};
+
+
 exports.fetchFolderSharing = (req, res) => {
   console.log('fetchFolderSharing', req.decoded._id);
 
@@ -190,3 +209,4 @@ exports.fetchFolderSharing = (req, res) => {
     res.json(user.Folders);
   });
 };
+
