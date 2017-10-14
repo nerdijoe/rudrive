@@ -23,6 +23,7 @@ import {
   axiosFetchContentsByFolderId,
   axiosFileShareAdd,
   axiosFolderShareAdd,
+  axiosFileShareRemove
 } from '../actions';
 
 import ProfilePhoto from '../assets/images/ewoks.jpg'
@@ -125,7 +126,16 @@ class Listing extends Component {
 
 
   handleFileShareRemove(user) {
-    console.log('handleFileShareRemove', user);
+    console.log(`handleFileShareRemove user_id=${user.id}, shareFileId=${this.state.shareFileId}`);
+    this.props.axiosFileShareRemove(user.id, this.state.shareFileId);
+
+    this.close();
+    this.setState({
+      shareUsers: '',
+      shareFileId: 0,
+    })
+
+
   }
 
   handleChange(e) {
@@ -173,8 +183,11 @@ class Listing extends Component {
           <Table.Body>
             { // Folders
               this.props.folders.map( (folder) => {
-                const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length} ${(folder.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
+                // const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length} ${(folder.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
+
+                const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length + 1} members` : 'Only you';
                 
+
                 let members = '';
                 if( folder.Users ) {
                   members = folder.Users.map( (item) => {
@@ -221,7 +234,10 @@ class Listing extends Component {
                 const downloadLink = homeAddress + file.full_path.replace(re, '');
                 // console.log(downloadLink);
 
-                const membersMsg = (file.Users && file.Users.length > 0 ) ? `${file.Users.length} ${(file.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
+                // const membersMsg = (file.Users && file.Users.length > 0 ) ? `${file.Users.length} ${(file.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
+
+                const membersMsg = (file.Users && file.Users.length > 0 ) ? `${file.Users.length + 1} members` : 'Only you';
+                
 
                 let members = '';
                 if( file.Users ) {
@@ -378,6 +394,7 @@ const mapDispatchToProps = (dispatch) => {
     axiosFetchContentsByFolderId: (data) => { dispatch(axiosFetchContentsByFolderId(data)); },
     axiosFileShareAdd: (users, file_id) => { dispatch(axiosFileShareAdd(users, file_id)); },
     axiosFolderShareAdd: (users, folder_id) => { dispatch(axiosFolderShareAdd(users, folder_id)); },
+    axiosFileShareRemove: (user_id, file_id) => { dispatch(axiosFileShareRemove(user_id, file_id));},
   };
 };
 

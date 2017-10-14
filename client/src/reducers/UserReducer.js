@@ -199,6 +199,24 @@ const UserReducer = (state = initialState, action) => {
         files: updatedFiles,
       };
     }
+    case actionType.FILE_SHARING_REMOVE: {
+      console.log('*** reducer FILE_SHARING_REMOVE', action);
+
+      const updatedFiles = [...state.files];
+      const pos = updatedFiles.findIndex(i => i.id === action.data.file_id);
+      if (pos !== -1) {
+        const userPos = updatedFiles[pos].Users.findIndex(user => user.id === action.data.user_id);
+        if (userPos !== -1) {
+          updatedFiles[pos].Users.splice(userPos, 1);
+        }
+      }
+
+      return {
+        ...state,
+        files: updatedFiles,
+      };
+    }
+
     case actionType.FETCH_SHARE_FILES: {
       console.log('*** reducer FETCH_SHARE_FILES', action);
       return {

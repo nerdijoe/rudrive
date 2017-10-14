@@ -558,13 +558,40 @@ export const axiosFileShareAdd = (users, file_id) => (dispatch) => {
   });
 };
 
+export const fileShareRemove = (data) => {
+  return {
+    type: actionType.FILE_SHARING_REMOVE,
+    data,
+  };
+};
+
+export const axiosFileShareRemove = (user_id, file_id) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log(`axiosFileShareRemove user_id='${user_id}', file_id=${file_id}`);
+  console.log('token=', token);
+
+  axios.put(`http://localhost:3000/files/share`, {
+    user_id,
+    file_id,
+  }, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosFileShareRemove');
+    console.log('%%%%%% ',res.data);
+
+    // update state
+    dispatch(fileShareRemove({ user_id, file_id }));
+  });
+};
+
 export const fetchShareFiles = (data) => {
   return {
     type: actionType.FETCH_SHARE_FILES,
     data,
   };
 };
-
 
 export const axiosFetchShareFiles = () => (dispatch) => {
   const token = localStorage.getItem('token');
@@ -581,8 +608,6 @@ export const axiosFetchShareFiles = () => (dispatch) => {
     console.log(err);
   });
 };
-
-
 
 export const folderShareAdd = (data) => {
   return {
@@ -634,4 +659,3 @@ export const axiosFetchShareFolders = () => (dispatch) => {
     console.log(err);
   });
 };
-
