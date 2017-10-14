@@ -21,6 +21,7 @@ import {
   axiosStarFile,
   axiosStarFolder,
   axiosDeleteFile,
+  axiosDeleteFolder,
   axiosFetchContentsByFolderId,
   axiosFileShareAdd,
   axiosFolderShareAdd,
@@ -90,6 +91,11 @@ class Listing extends Component {
   handleStarFolder(folder) {
     console.log('Listing handleStarFolder', folder);
     this.props.axiosStarFolder(folder);
+  }
+
+  handleDeleteFolder(folder) {
+    console.log('Listing handleDeleteFolder', folder);
+    this.props.axiosDeleteFolder(folder);
   }
 
   handleClickFolder(folder) {
@@ -202,7 +208,7 @@ class Listing extends Component {
 
           <Table.Body>
             { // Folders
-              this.props.folders.map( (folder) => {
+              this.props.folders.filter(folder => folder.is_deleted !== true).map( (folder) => {
                 // const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length} ${(folder.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
 
                 const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length + 1} members` : 'Only you';
@@ -243,6 +249,14 @@ class Listing extends Component {
                       <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
                       <Button primary content='Share' onClick={ () => this.handleModalShareFolderOpen(true, folder)} />
                       
+                      <Popup
+                      trigger={<Button color='red'>Delete</Button>}
+                      content={<Button color='green' content='Confirm' onClick={ () => {this.handleDeleteFolder(folder)}}/>}
+                      on='click'
+                      position='right center'
+                    />
+
+
                     </Table.HeaderCell>
                   </Table.Row>
                 ); // end of return
@@ -472,6 +486,7 @@ const mapDispatchToProps = (dispatch) => {
     axiosStarFile: (data) => { dispatch(axiosStarFile(data)); },
     axiosDeleteFile: (data) => { dispatch(axiosDeleteFile(data)); },
     axiosStarFolder: (data) => { dispatch(axiosStarFolder(data)); },
+    axiosDeleteFolder: (data) => { dispatch(axiosDeleteFolder(data)); },
     axiosFetchContentsByFolderId: (data) => { dispatch(axiosFetchContentsByFolderId(data)); },
     axiosFileShareAdd: (users, file_id) => { dispatch(axiosFileShareAdd(users, file_id)); },
     axiosFolderShareAdd: (users, folder_id) => { dispatch(axiosFolderShareAdd(users, folder_id)); },

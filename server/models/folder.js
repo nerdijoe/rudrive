@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     path: DataTypes.STRING,
     full_path: DataTypes.STRING,
     is_starred: DataTypes.BOOLEAN,
-    user_id: DataTypes.INTEGER
+    user_id: DataTypes.INTEGER,
+    is_deleted: DataTypes.BOOLEAN,
   }, {
     classMethods: {
       associate: function(models) {

@@ -424,12 +424,12 @@ export const deleteFile = (data) => {
   };
 };
 
-export const axiosDeleteFile = (data) => (dispatch) => {
+export const axiosDeleteFile = data => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosDeleteFile data', data);
   axios.put('http://localhost:3000/files/delete', {
     ...data,
-  },{
+  }, {
     headers: {
       token,
     },
@@ -438,13 +438,10 @@ export const axiosDeleteFile = (data) => (dispatch) => {
     console.log(res.data);
 
     dispatch(deleteFile(data));
-
   }).catch((err) => {
     console.log(err);
   });
-} 
-
-
+};
 
 export const fetchFolders = (data) => {
   return {
@@ -511,7 +508,33 @@ export const axiosStarFolder = data => (dispatch) => {
   }).catch((err) => {
     console.log(err);
   });
-} 
+};
+
+export const deleteFolder = (data) => {
+  return {
+    type: actionType.DELETE_FOLDER,
+    data,
+  };
+};
+
+export const axiosDeleteFolder = data => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosDeleteFolder data', data);
+  axios.put('http://localhost:3000/folders/delete', {
+    ...data,
+  }, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosDeleteFolder');
+    console.log(res.data);
+
+    dispatch(deleteFolder(data));
+  }).catch((err) => {
+    console.log(err);
+  });
+};
 
 export const fetchContentsByFolderId = (data) => {
   return {

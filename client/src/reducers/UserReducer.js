@@ -158,6 +158,21 @@ const UserReducer = (state = initialState, action) => {
         folders: updatedFolders,
       };
     }
+    case actionType.DELETE_FOLDER: {
+      console.log('*** reducer DELETE_FOLDER action.data', action.data);
+      const updatedFolders = [...state.folders];
+      const pos = updatedFolders.findIndex(i => i.id === action.data.id);
+      if (pos !== -1) {
+        console.log(typeof updatedFolders[pos].is_deleted);
+        console.log(`--> updatedFolders[${pos}].is_deleted=${updatedFolders[pos].is_deleted}`);
+
+        updatedFolders[pos].is_deleted = !updatedFolders[pos].is_deleted;
+      }
+      return {
+        ...state,
+        folders: updatedFolders,
+      };
+    }
     case actionType.FETCH_CONTENTS_BY_FOLDER_ID: {
       console.log('*** reducer FETCH_CONTENTS_BY_FOLDER_ID', action);
       return {

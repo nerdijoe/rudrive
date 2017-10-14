@@ -74,6 +74,35 @@ exports.starFolder = (req, res) => {
     })
 };
 
+exports.deleteFolder = (req, res) => {
+  console.log('deleteFolder', req.decoded._id);
+  console.log('req.body', req.body);
+  const folder = req.body;
+  console.log(`typeof folder.is_deleted=${typeof folder.is_deleted}`);
+
+  const delete_status = (folder.is_deleted == 'true');
+  console.log(`deleteFolder is_deleted=${folder.is_deleted}, delete_status = ${delete_status}, typeof ${typeof delete_status}`);
+
+  // !folder.is_deleted
+  db.Folder.update({ 
+    is_deleted: !folder.is_deleted,
+  }, {
+    where: { id: folder.id },
+  })
+    .then((updatedFolder) => {
+      console.log('after deleteFolder updatedFolder=', updatedFolder);
+      if (updatedFolder[0] === 1) {
+        console.log(`folder [${folder.name}]is deleted successfully`);
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+};
+
+
 exports.fetchById = (req, res) => {
   console.log('fetchByPath', req.decoded._id);
   console.log('fetchByPath req.params.id=', req.params.id);
