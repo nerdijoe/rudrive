@@ -174,3 +174,19 @@ exports.addFolderSharing = (req, res) => {
 
   // res.json('addFileSharing');
 }
+
+exports.fetchFolderSharing = (req, res) => {
+  console.log('fetchFolderSharing', req.decoded._id);
+
+  db.User.findOne({
+    where: {
+      id: req.decoded._id,
+    },
+    include: [{ model: db.Folder }],
+  }).then((user) => {
+    console.log('after fetchFolderSharing user=', user.dataValues);
+
+    // only return the files array that have been shared to the signed in user.
+    res.json(user.Folders);
+  });
+};

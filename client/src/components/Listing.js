@@ -20,6 +20,7 @@ import {
   axiosStarFolder,
   axiosFetchContentsByFolderId,
   axiosFileShareAdd,
+  axiosFolderShareAdd,
 } from '../actions';
 
 class Listing extends Component {
@@ -28,22 +29,36 @@ class Listing extends Component {
 
     this.state = {
       open: false,
+      openFolder: false,
       shareUsers: '',
       shareFileId: 0,
       shareFileName: '',
+      shareFolderId: 0,
+      shareFolderName: '',
     }
   }
 
   // handleRef = component => (this.ref = component);
   open = () => this.setState({ open: true });
   close = () => this.setState({ open: false });
-
+  closeFolder = () => this.setState({ openFolder: false });
+  
   handleModalShareFileOpen(openValue, file) {
     console.log(`handleModalShareFileOpen openValue=${openValue}, file.id=${file.id}`);
     this.setState({
       open: openValue,
       shareFileId: file.id,
       shareFileName: file.name,
+    });
+
+  }
+
+  handleModalShareFolderOpen(openValue, folder) {
+    console.log(`handleModalShareFolderOpen openValue=${openValue}, folder.id=${folder.id}`);
+    this.setState({
+      openFolder: openValue,
+      shareFolderId: folder.id,
+      shareFolderName: folder.name,
     });
 
   }
@@ -85,6 +100,20 @@ class Listing extends Component {
       shareFileId: 0,
     })
   }
+
+  handleFolderShareSubmit(e) {
+    e.preventDefault();
+    console.log(`Modal handleSubmit ${this.state.shareUsers}, ${this.state.shareFolderId}`);
+
+    this.closeFolder();
+
+    this.props.axiosFolderShareAdd(this.state.shareUsers, this.state.shareFolderId)
+    this.setState({
+      shareUsers: '',
+      shareFolderId: 0,
+    })
+  }
+
 
   handleChange(e) {
     const target = e.target;
@@ -131,7 +160,12 @@ class Listing extends Component {
           <Table.Body>
             { // Folders
               this.props.folders.map( (folder) => {
-
+                const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length} ${(folder.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
+                
+                const members = folder.Users.map( (item) => {
+                  return <div>{`${item.firstname} ${item.lastname}`}</div>;
+                })
+                
                 return (
                   <Table.Row key={folder.id}>
                     <Table.Cell>
@@ -144,14 +178,21 @@ class Listing extends Component {
                       {Moment(folder.updatedAt).format('L LT')}
                     </Table.Cell>
                     <Table.Cell>
-                      { (folder.user_id == user_id) ? 'Only you' : 'Others'}
+                      <Popup
+                        trigger={<span>{ membersMsg }</span>}
+                        content={<span>{ members }</span>}
+                        size='tiny'
+                        position='bottom center'
+                        inverted
+                      />
+
                     </Table.Cell>
 
                     {/* Actions */}
                     <Table.HeaderCell>
                       <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
-                      {/* <Button primary content='Share' onClick={() => {this.handleModalShareFileOpen()}} /> */}
-
+                      <Button primary content='Share' onClick={ () => this.handleModalShareFolderOpen(true, folder)} />
+                      
                     </Table.HeaderCell>
                   </Table.Row>
                 ); // end of return
@@ -219,6 +260,25 @@ class Listing extends Component {
           </Modal.Content>
         </Modal>
 
+        <Modal dimmer='inverted' open={this.state.openFolder} onClose={this.closeFolder}>
+          <Modal.Content>
+            <Form onSubmit={(e) => { this.handleFolderShareSubmit(e); }} >
+              <Form.Field>
+                <Container>
+                  <Header sub>Share a folder</Header>
+                  <span>{this.state.shareFolderName}</span>
+                  <Header size='tiny'>Share with other users, Enter user emails separated by a comma.</Header>
+                </Container>
+                <Input placeholder="harden@rockets.com, cp3@rockets.com, ..." name="shareUsers" value={this.state.shareUsers} onChange={(e) => { this.handleChange(e); }} />
+                
+              </Form.Field>
+              <Button basic type="submit">Can view</Button>
+            </Form>
+          </Modal.Content>
+        </Modal>
+
+
+
 
       </Container>
     );
@@ -239,6 +299,7 @@ const mapDispatchToProps = (dispatch) => {
     axiosStarFolder: (data) => { dispatch(axiosStarFolder(data)); },
     axiosFetchContentsByFolderId: (data) => { dispatch(axiosFetchContentsByFolderId(data)); },
     axiosFileShareAdd: (users, file_id) => { dispatch(axiosFileShareAdd(users, file_id)); },
+    axiosFolderShareAdd: (users, folder_id) => { dispatch(axiosFolderShareAdd(users, folder_id)); },
   };
 };
 
