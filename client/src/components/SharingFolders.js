@@ -138,7 +138,9 @@ class Listing extends Component {
         {/* Listing
         <ul>{listItems}</ul> */}
 
-        <FolderBreadcrumb />
+        {/* <FolderBreadcrumb /> */}
+
+        <Header as='h5'>Shared folders let you collaborate on a set of files. When someone adds a shared folder to their Dropbox, they’ll always have the latest version of those files.</Header>
 
         {
           (this.props.shareFolders.length === 0 && this.props.files.length === 0 ) ?
@@ -150,7 +152,7 @@ class Listing extends Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Modified</Table.HeaderCell>
+              <Table.HeaderCell>Last invited</Table.HeaderCell>
               <Table.Cell><Icon name='ellipsis horizontal' /></Table.Cell>
 
             </Table.Row>
@@ -174,8 +176,8 @@ class Listing extends Component {
 
                     {/* Actions */}
                     <Table.HeaderCell>
-                      <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
-                      <Button primary content='Share' onClick={ () => this.handleModalShareFolderOpen(true, folder)} />
+                      {/* <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
+                      <Button primary content='Share' onClick={ () => this.handleModalShareFolderOpen(true, folder)} /> */}
                       
                     </Table.HeaderCell>
                   </Table.Row>

@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import { Container, Form, Button } from 'semantic-ui-react';
+import {
+  Container,
+  Form,
+  Button,
+  Input,
+} from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 import {
@@ -30,6 +35,10 @@ class CreateFolder extends Component {
     }
 
     this.props.axiosCreateFolderOnCurrentPath(this.state, currentPath);
+
+    this.setState({
+      folderName: '',
+    });
   }
 
   handleChange(e) {
@@ -45,11 +54,11 @@ class CreateFolder extends Component {
       <Container>
         <Form onSubmit={(e) => { this.handleSubmit(e); }} >
           <Form.Field>
-            <label>New Folder</label>
-            <input placeholder="" name="folderName" value={this.state.folderName} onChange={(e) => { this.handleChange(e); }} />
+            <label>Create new folder</label>
+            <Input placeholder="new folder" name="folderName" value={this.state.folderName} onChange={(e) => { this.handleChange(e); }} />
           </Form.Field>
 
-          <Button type="submit">Add</Button>
+          <Button basic color="blue" type="submit">Add</Button>
         </Form>
       </Container>
     );

@@ -5,9 +5,12 @@ import { connect } from 'react-redux';
 import { userSignOut } from '../actions';
 
 class Navbar extends Component {
-  state = { activeItem: 'home' }
+  state = { activeItem: '' }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  handleItemClick = (e, { name }) => {
+    console.log('handleItemClick');
+    // this.setState({ activeItem: name })
+  }
 
   handleSignOut = () => this.props.userSignOut();
 
