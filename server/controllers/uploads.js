@@ -44,6 +44,7 @@ exports.uploadFile = (req, res) => {
       size: req.file.size,
       is_starred: false,
       user_id: req.decoded._id,
+      is_deleted: false,
     };
     db.File.create(new_file)
     .then( file => {
@@ -123,6 +124,7 @@ exports.uploadFileToPath = (req, res) => {
         size: req.file.size,
         is_starred: false,
         user_id: req.decoded._id,
+        is_deleted: false,
       };
       db.File.create(new_file)
         .then((file) => {

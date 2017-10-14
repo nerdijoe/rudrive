@@ -72,6 +72,34 @@ exports.starFile = (req, res) => {
     })
 };
 
+exports.deleteFile = (req, res) => {
+  console.log('deleteFile', req.decoded._id);
+  console.log('req.body', req.body);
+  const file = req.body;
+  console.log(`typeof file.is_deleted=${typeof file.is_deleted}`);
+
+  const delete_status = (file.is_deleted == 'true');
+  console.log(`starFile is_deleted=${file.is_deleted}, delete_status = ${delete_status}, typeof ${typeof delete_status}`);
+
+  // !file.is_deleted
+  db.File.update({ 
+    is_deleted: !file.is_deleted,
+  }, {
+    where: { id: file.id },
+  })
+    .then((updatedFile) => {
+      console.log('after deleteFile updatedFile=', updatedFile);
+      if (updatedFile[0] === 1) {
+        console.log(`file [${file.name}]is deleted successfully`);
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+};
+
 // add users for file sharing
 exports.addFileSharing = (req, res) => {
   console.log('addFileSharing', req.decoded._id);

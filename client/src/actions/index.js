@@ -417,6 +417,35 @@ export const axiosStarFile = (data) => (dispatch) => {
   });
 } 
 
+export const deleteFile = (data) => {
+  return {
+    type: actionType.DELETE_FILE,
+    data,
+  };
+};
+
+export const axiosDeleteFile = (data) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosDeleteFile data', data);
+  axios.put('http://localhost:3000/files/delete', {
+    ...data,
+  },{
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('--- after axiosDeleteFile');
+    console.log(res.data);
+
+    dispatch(deleteFile(data));
+
+  }).catch((err) => {
+    console.log(err);
+  });
+} 
+
+
+
 export const fetchFolders = (data) => {
   return {
     type: actionType.FETCH_FOLDERS,

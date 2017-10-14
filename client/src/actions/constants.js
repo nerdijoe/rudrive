@@ -10,6 +10,7 @@ export const FETCH_LISTING = 'FETCH_LISTING';
 export const FETCH_FILES = 'FETCH_FILES';
 export const ADD_NEW_FILE = 'ADD_NEW_FILE';
 export const STAR_FILE = 'STAR_FILE';
+export const DELETE_FILE = 'DELETE_FILE';
 
 export const FETCH_FOLDERS = 'FETCH_FOLDERS';
 export const ADD_NEW_FOLDER = 'ADD_NEW_FOLDER';

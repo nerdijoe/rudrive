@@ -20,6 +20,7 @@ import FolderBreadcrumb from './FolderBreadcrumb';
 import {
   axiosStarFile,
   axiosStarFolder,
+  axiosDeleteFile,
   axiosFetchContentsByFolderId,
   axiosFileShareAdd,
   axiosFolderShareAdd,
@@ -79,6 +80,11 @@ class Listing extends Component {
   handleClick(file) {
     console.log('Listing handleClick', file);
     this.props.axiosStarFile(file);
+  }
+
+  handleDeleteFile(file) {
+    console.log('Listing handleDeleteFile', file);
+    this.props.axiosDeleteFile(file);
   }
 
   handleStarFolder(folder) {
@@ -243,7 +249,7 @@ class Listing extends Component {
               })}
 
             { // Files
-              this.props.files.map( (file) => {
+              this.props.files.filter( file => file.is_deleted !== true ).map( (file) => {
                 let re = new RegExp('./public/')
                 const downloadLink = homeAddress + file.full_path.replace(re, '');
                 // console.log(downloadLink);
@@ -285,8 +291,16 @@ class Listing extends Component {
                     </Table.Cell>
 
                     <Table.HeaderCell>
-                      <Button basic color="blue" onClick={() => {this.handleClick(file)}}>Star</Button>
+                      <Button basic color="blue" onClick={() => {this.handleClick(file)}} >Star </Button>
                       <Button primary content='Share' onClick={ () => this.handleModalShareFileOpen(true, file)} />
+                      
+                      <Popup
+                      trigger={<Button color='red'>Delete</Button>}
+                      content={<Button color='green' content='Confirm' onClick={ () => {this.handleDeleteFile(file)}}/>}
+                      on='click'
+                      position='right center'
+                    />
+
 
                     </Table.HeaderCell>
                   </Table.Row>
@@ -456,6 +470,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     axiosStarFile: (data) => { dispatch(axiosStarFile(data)); },
+    axiosDeleteFile: (data) => { dispatch(axiosDeleteFile(data)); },
     axiosStarFolder: (data) => { dispatch(axiosStarFolder(data)); },
     axiosFetchContentsByFolderId: (data) => { dispatch(axiosFetchContentsByFolderId(data)); },
     axiosFileShareAdd: (users, file_id) => { dispatch(axiosFileShareAdd(users, file_id)); },

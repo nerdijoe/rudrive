@@ -7,6 +7,7 @@ router.get('/', helper.auth, filesController.fetchFiles);
 router.get('/root', helper.auth, filesController.fetchRootFilesWithShare);
 
 router.put('/star', helper.auth, filesController.starFile);
+router.put('/delete', helper.auth, filesController.deleteFile);
 
 // File Sharing
 router.post('/share', helper.auth, filesController.addFileSharing);
