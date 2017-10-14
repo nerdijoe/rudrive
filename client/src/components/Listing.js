@@ -162,9 +162,13 @@ class Listing extends Component {
               this.props.folders.map( (folder) => {
                 const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length} ${(folder.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
                 
-                const members = folder.Users.map( (item) => {
-                  return <div>{`${item.firstname} ${item.lastname}`}</div>;
-                })
+                let members = '';
+                if( folder.Users ) {
+                  members = folder.Users.map( (item) => {
+                    return <div>{`${item.firstname} ${item.lastname}`}</div>;
+                  })
+                }
+
                 
                 return (
                   <Table.Row key={folder.id}>
@@ -206,9 +210,13 @@ class Listing extends Component {
 
                 const membersMsg = (file.Users && file.Users.length > 0 ) ? `${file.Users.length} ${(file.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
 
-                const members = file.Users.map( (item) => {
-                  return <div>{`${item.firstname} ${item.lastname}`}</div>;
-                })
+                let members = '';
+                if( file.Users ) {
+                  members = file.Users.map( (item) => {
+                    return <div>{`${item.firstname} ${item.lastname}`}</div>;
+                  });
+                }
+
                 
                 return (
                   <Table.Row key={file.id}>
