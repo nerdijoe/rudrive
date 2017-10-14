@@ -168,7 +168,7 @@ class Listing extends Component {
                       <a onClick={() => {this.handleClickFolder(folder)}}>
                         <Icon name='blue folder' />{folder.name} {' '}
                       </a>
-                      {folder.is_starred ? <Icon name='blue star' /> : ''}
+                      
                     </Table.Cell>
                     <Table.Cell>
                       {Moment(folder.FolderSharing.updatedAt).format('L LT')}
