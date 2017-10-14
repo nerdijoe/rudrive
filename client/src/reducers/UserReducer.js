@@ -102,8 +102,8 @@ const UserReducer = (state = initialState, action) => {
     case actionType.STAR_FILE: {
       console.log('*** reducer STAR_FILE action.data', action.data);
       const updatedFiles = [...state.files];
-      let pos = updatedFiles.findIndex( i => i.id === action.data.id )
-      if(pos !== -1) {
+      const pos = updatedFiles.findIndex(i => i.id === action.data.id);
+      if (pos !== -1) {
         console.log(typeof updatedFiles[pos].is_starred);
         console.log(`--> updatedFiles[${pos}].is_starred=${updatedFiles[pos].is_starred}`);
         // const star_status = (updatedFiles[pos].is_starred == 'true');
@@ -112,7 +112,22 @@ const UserReducer = (state = initialState, action) => {
       return {
         ...state,
         files: updatedFiles,
+      };
+    }
+    case actionType.DELETE_FILE: {
+      console.log('*** reducer DELETE_FILE action.data', action.data);
+      const updatedFiles = [...state.files];
+      const pos = updatedFiles.findIndex(i => i.id === action.data.id);
+      if (pos !== -1) {
+        console.log(typeof updatedFiles[pos].is_deleted);
+        console.log(`--> updatedFiles[${pos}].is_deleted=${updatedFiles[pos].is_deleted}`);
+
+        updatedFiles[pos].is_deleted = !updatedFiles[pos].is_deleted;
       }
+      return {
+        ...state,
+        files: updatedFiles,
+      };
     }
     case actionType.FETCH_FOLDERS: {
       console.log('*** reducer FETCH_FOLDERS', action);
@@ -137,6 +152,21 @@ const UserReducer = (state = initialState, action) => {
         console.log(`--> updatedFolders[${pos}].is_starred=${updatedFolders[pos].is_starred}`);
         // const star_status = (updatedFiles[pos].is_starred == 'true');
         updatedFolders[pos].is_starred = !updatedFolders[pos].is_starred;
+      }
+      return {
+        ...state,
+        folders: updatedFolders,
+      };
+    }
+    case actionType.DELETE_FOLDER: {
+      console.log('*** reducer DELETE_FOLDER action.data', action.data);
+      const updatedFolders = [...state.folders];
+      const pos = updatedFolders.findIndex(i => i.id === action.data.id);
+      if (pos !== -1) {
+        console.log(typeof updatedFolders[pos].is_deleted);
+        console.log(`--> updatedFolders[${pos}].is_deleted=${updatedFolders[pos].is_deleted}`);
+
+        updatedFolders[pos].is_deleted = !updatedFolders[pos].is_deleted;
       }
       return {
         ...state,

@@ -4,9 +4,10 @@ const helper = require('../helpers/authVerifyHelper');
 const foldersController = require('../controllers/folders');
 
 router.get('/', helper.auth, foldersController.fetchFolders);
-router.put('/star', helper.auth, foldersController.starFolder);
 router.get('/root', helper.auth, foldersController.fetchRootFoldersWithShare);
 
+router.put('/star', helper.auth, foldersController.starFolder);
+router.put('/delete', helper.auth, foldersController.deleteFolder);
 
 router.post('/share', helper.auth, foldersController.addFolderSharing);
 router.get('/share', helper.auth, foldersController.fetchFolderSharing);

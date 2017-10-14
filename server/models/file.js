@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.STRING,
     size: DataTypes.INTEGER,
     is_starred: DataTypes.BOOLEAN,
-    user_id: DataTypes.INTEGER
+    user_id: DataTypes.INTEGER,
+    is_deleted: DataTypes.BOOLEAN,
   }, {
     classMethods: {
       associate: function(models) {

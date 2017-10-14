@@ -159,7 +159,7 @@ class Listing extends Component {
                   <Table.Row key={file.id}>
                     <Table.Cell>
                       <a href={downloadLink} target="_blank" >{file.name}</a>{' '}
-                      {file.is_starred ? <Icon name='blue star' /> : ''}
+                      
 
                     </Table.Cell>
                     <Table.Cell>
