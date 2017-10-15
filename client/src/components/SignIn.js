@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Form, Button } from 'semantic-ui-react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { axiosSignIn } from '../actions';
@@ -9,8 +10,18 @@ import LandingNavbar from './LandingNavbar';
 const styles = {
   customContainer: {
     marginTop: 10,
+    marginLeft: 0,
   },
 }
+
+const MyContainer = styled.div`
+width: 100%;
+height: 100%;
+margin-left: -7.5px;
+padding: 0px;
+${'' /* background: #0099FF; */}
+
+`;
 
 class SignIn extends Component {
   constructor(props) {
@@ -52,7 +63,8 @@ class SignIn extends Component {
 
   render() {
     return (
-      <div>
+      <MyContainer>
+
         <LandingNavbar />
         <p></p>
         <Container style={styles.customContainer}>
@@ -72,7 +84,7 @@ class SignIn extends Component {
           </Form>
         </Container>
 
-      </div>
+      </MyContainer>
 
     );
   }
