@@ -171,6 +171,16 @@ exports.createDir = (req, res) => {
       .then( (folder) => {
         console.log('>>>> DB inserted a new folder', folder);
         res.json(folder);
+
+        // need to return the newly created folder with the Users
+        // db.Folder.findAll({
+        //   where: { id: folder_id },
+        //   include: [{ model: db.User }],
+        // }).then((shareInfo) => {
+        //   console.log('shareInfo', shareInfo);
+        //   res.json(shareInfo);
+        // });
+
       })
   } else {
     const msg = {
