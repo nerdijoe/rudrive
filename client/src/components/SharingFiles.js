@@ -129,12 +129,6 @@ class Listing extends Component {
 
         <Header as='h5'>Shared files let you collaborate on individual files. When someone shares a file with you, you’ll have private view-only access to that file.</Header>
 
-        {
-          (this.props.shareFiles.length === 0 ) ?
-          <Header as='h3' content='This folder is empty' subheader="Please upload some files." /> :
-          ''
-        }
-
 
         <Table basic="very">
           <Table.Header>
@@ -177,6 +171,12 @@ class Listing extends Component {
 
           </Table.Body>
         </Table>
+
+        {
+          (this.props.shareFiles.length === 0 ) ?
+          <Header as='h3' content='This folder is empty' subheader="Please upload some files." /> :
+          ''
+        }
 
         <Modal dimmer='inverted' open={this.state.open} onClose={this.close}>
           <Modal.Content>

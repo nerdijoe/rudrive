@@ -43,9 +43,11 @@ class Listing extends Component {
       shareFileId: 0,
       shareFileName: '',
       shareFileUsers: [],
+      shareFile: {},
       shareFolderId: 0,
       shareFolderName: '',
       shareFolderUsers: [],
+      shareFolder: {},
     }
   }
 
@@ -63,6 +65,7 @@ class Listing extends Component {
       shareFileId: file.id,
       shareFileName: file.name,
       shareFileUsers: file.Users,
+      shareFile: file,
     });
 
   }
@@ -74,6 +77,7 @@ class Listing extends Component {
       shareFolderId: folder.id,
       shareFolderName: folder.name,
       shareFolderUsers: folder.Users,
+      shareFolder: folder,
     });
 
   }
@@ -142,23 +146,23 @@ class Listing extends Component {
 
   handleFileShareRemove(user) {
     console.log(`handleFileShareRemove user_id=${user.id}, shareFileId=${this.state.shareFileId}`);
-    this.props.axiosFileShareRemove(user.id, this.state.shareFileId);
+    this.props.axiosFileShareRemove(user, this.state.shareFile);
 
-    this.close();
+    // this.close();
     this.setState({
       shareUsers: '',
-      shareFileId: 0,
+      // shareFileId: 0,
     })
   }
 
   handleFolderShareRemove(user) {
     console.log(`handleFolderShareRemove user_id=${user.id}, shareFileId=${this.state.shareFolderId}`);
-    this.props.axiosFolderShareRemove(user.id, this.state.shareFolderId);
+    this.props.axiosFolderShareRemove(user, this.state.shareFolder);
 
-    this.closeFolder();
+    // this.closeFolder();
     this.setState({
       shareUsers: '',
-      shareFolderId: 0,
+      // shareFolderId: 0,
     })
   }
 
@@ -166,7 +170,7 @@ class Listing extends Component {
 
   handleChange(e) {
     const target = e.target;
-    console.log(`handleChange ${target.name}=[${target.value}]`);
+    // console.log(`handleChange ${target.name}=[${target.value}]`);
     
     this.setState({
       [target.name]: target.value,
@@ -176,7 +180,7 @@ class Listing extends Component {
 
 
   render() {
-    const listItems = this.props.list.map((item) => <li>{item}</li>);
+    // const listItems = this.props.list.map((item) => <li>{item}</li>);
     const user_id = localStorage.getItem('user_id');
     // console.log(`render listing user_id=${user_id}`);
     const user_email = localStorage.getItem('user_email');
@@ -211,11 +215,10 @@ class Listing extends Component {
                 let members = '';
                 if( folder.Users ) {
                   members = folder.Users.map( (item) => {
-                    return <div>{`${item.firstname} ${item.lastname}`}</div>;
+                    return <div key={item.id}>{`${item.firstname} ${item.lastname}`}</div>;
                   })
                 }
 
-                
                 return (
                   <Table.Row key={folder.id}>
                     <Table.Cell>
@@ -274,7 +277,7 @@ class Listing extends Component {
                   });
                 }
 
-                console.log('$$$ members', members);
+                {/* console.log('$$$ members', members); */}
 
                 
                 return (
@@ -379,7 +382,7 @@ class Listing extends Component {
                       trigger={<Button color='red' icon='flask' content='Remove' />}
                       content={<Button color='green' content='Confirm' onClick={ () => {this.handleFileShareRemove(user)}}/>}
                       on='click'
-                      position='top right'
+                      position='right center'
                     />
                     </Table.Cell>
                   </Table.Row>
@@ -433,7 +436,7 @@ class Listing extends Component {
 
                 { this.state.shareFolderUsers.map( (user) => {
                 return (
-                  <Table.Row>
+                  <Table.Row key={user.id}>
                     <Table.Cell>
                       <Header as='h4' image>
                         <Image src={ProfilePhoto} shape='rounded' size='mini' />
@@ -448,7 +451,7 @@ class Listing extends Component {
                       trigger={<Button color='red' icon='flask' content='Remove' />}
                       content={<Button color='green' content='Confirm' onClick={ () => {this.handleFolderShareRemove(user)}}/>}
                       on='click'
-                      position='top right'
+                      position='right center'
                     />
                     </Table.Cell>
                   </Table.Row>
@@ -490,8 +493,8 @@ const mapDispatchToProps = (dispatch) => {
     axiosFetchContentsByFolderId: (data) => { dispatch(axiosFetchContentsByFolderId(data)); },
     axiosFileShareAdd: (users, file_id) => { dispatch(axiosFileShareAdd(users, file_id)); },
     axiosFolderShareAdd: (users, folder_id) => { dispatch(axiosFolderShareAdd(users, folder_id)); },
-    axiosFileShareRemove: (user_id, file_id) => { dispatch(axiosFileShareRemove(user_id, file_id));},
-    axiosFolderShareRemove: (user_id, folder_id) => { dispatch(axiosFolderShareRemove(user_id, folder_id));},
+    axiosFileShareRemove: (user, file) => { dispatch(axiosFileShareRemove(user, file));},
+    axiosFolderShareRemove: (user, folder) => { dispatch(axiosFolderShareRemove(user, folder));},
   };
 };
 

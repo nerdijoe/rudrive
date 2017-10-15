@@ -142,12 +142,6 @@ class Listing extends Component {
 
         <Header as='h5'>Shared folders let you collaborate on a set of files. When someone adds a shared folder to their Dropbox, they’ll always have the latest version of those files.</Header>
 
-        {
-          (this.props.shareFolders.length === 0 && this.props.files.length === 0 ) ?
-          <Header as='h3' content='This folder is empty' subheader="Please upload some files." /> :
-          ''
-        }
-
         <Table basic="very">
           <Table.Header>
             <Table.Row>
@@ -186,6 +180,12 @@ class Listing extends Component {
 
           </Table.Body>
         </Table>
+
+        {
+          (this.props.shareFolders.length === 0 && this.props.files.length === 0 ) ?
+          <Header as='h3' content='This folder is empty' subheader="Please upload some files." /> :
+          ''
+        }
 
         <Modal dimmer='inverted' open={this.state.open} onClose={this.close}>
           <Modal.Content>
