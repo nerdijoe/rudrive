@@ -189,12 +189,6 @@ class Listing extends Component {
 
         <FolderBreadcrumb />
 
-        {
-          (this.props.folders.length === 0 && this.props.files.length === 0 ) ?
-          <Header as='h3' content='This folder is empty' subheader="Please upload some files." /> :
-          ''
-        }
-
         <Table basic="very">
           <Table.Header>
             <Table.Row>
@@ -323,6 +317,12 @@ class Listing extends Component {
 
           </Table.Body>
         </Table>
+
+        {
+          (this.props.folders.length === 0 && this.props.files.length === 0 ) ?
+          <Header as='h3' content='This folder is empty' subheader="Please upload some files." /> :
+          ''
+        }
 
         {/* File Share Modal */}
         <Modal size='tiny' dimmer='inverted' open={this.state.open} onClose={this.close}>

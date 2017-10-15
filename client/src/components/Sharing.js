@@ -131,29 +131,29 @@ class Listing extends Component {
     const { activeItem } = this.state
     
     return (
-      <Router>
+
       <Container>
         <div></div>
         <Header as='h3'>Sharing</Header>
         {/* Listing
         <ul>{listItems}</ul> */}
         <Menu pointing secondary>
-          <Link to='/sharing/folders'>
+          <Link to='/home/sharing/folders'>
             <Menu.Item name='folders' active={activeItem === 'folders'} onClick={this.handleItemClick} />
           </Link>
-          <Link to='/sharing/files'>
+          <Link to='/home/sharing/files'>
             <Menu.Item name='files' active={activeItem === 'files'} onClick={this.handleItemClick} />
           </Link>
         </Menu>
 
         <Container>
-          <Route exact path='/sharing/folders' component={SharingFolders} />
-          <Route path='/sharing/files' component={SharingFiles} />
+          <Route exact path='/home/sharing/folders' component={SharingFolders} />
+          <Route path='/home/sharing/files' component={SharingFiles} />
         </Container>
 
 
       </Container>
-      </Router>
+
     );
   }
 }

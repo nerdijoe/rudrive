@@ -1,22 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import {
+  withRouter,
+} from 'react-router-dom';
+
 import {
   Container,
   Divider,
 } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  withRouter,
-} from 'react-router-dom';
-
-import Nav from './Navbar';
-import Files from './Files';
-import About from './UserAbout';
-import Interest from './UserInterest';
-import Sharing from './Sharing';
-
 import FileUpload from './FileUpload';
 import Listing from './Listing';
 import CreateFolder from './CreateFolder';
@@ -34,37 +25,37 @@ import {
   axiosFetchShareFolders,
 } from '../actions';
 
-class Home extends Component {
+class Files extends Component {
   componentDidMount() {
-    if(localStorage.getItem('token') == null) {
-      this.props.history.push('/');
-    }
-  
-    // this.props.checkAuthentication();
-    // this.props.axiosFetchListing();
-    // this.props.axiosFetchUserAbout();
-    // this.props.axiosFetchUserInterest();
-    // // this.props.axiosFetchFiles();
-    // // this.props.axiosFetchFolders();
-    // this.props.axiosFetchRootFolders();
-    // this.props.axiosFetchRootFiles();
-    // this.props.axiosFetchShareFiles();
-    // this.props.axiosFetchShareFolders();
+    // if(localStorage.getItem('token') == null) {
+    //   this.props.history.push('/');
+    // }
+
+    this.props.checkAuthentication();
+    this.props.axiosFetchListing();
+    this.props.axiosFetchUserAbout();
+    this.props.axiosFetchUserInterest();
+    // this.props.axiosFetchFiles();
+    // this.props.axiosFetchFolders();
+    this.props.axiosFetchRootFolders();
+    this.props.axiosFetchRootFiles();
+    this.props.axiosFetchShareFiles();
+    this.props.axiosFetchShareFolders();
   }
 
   render() {
     return (
+      <Container>
+        <p></p>
+        <FileUpload />
+        <p></p>
+        <CreateFolder />
 
-        <Container>
-          <Nav />
-        
-          <Route exact path='/home' component={Files} />
-          <Route path='/home/about' component={About} />
-          <Route path='/home/interest' component={Interest} />
-          <Route path='/home/sharing' component={Sharing} />
+        <p></p><p></p><p></p>
+        <Divider />
+        <Listing />
 
-        </Container>
-
+      </Container>
     );
   }
 }
@@ -84,5 +75,6 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const connectedHome = withRouter(connect(null, mapDispatchToProps)(Home));
-export default connectedHome;
+const connectedFiles = withRouter(connect(null, mapDispatchToProps)(Files));
+export default connectedFiles;
+

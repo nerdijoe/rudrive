@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Menu } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userSignOut } from '../actions';
 
@@ -12,7 +12,12 @@ class Navbar extends Component {
     // this.setState({ activeItem: name })
   }
 
-  handleSignOut = () => this.props.userSignOut();
+  handleSignOut = () => {
+    console.log('handleSignOut this.props.history', this.props.history);
+    // this.props.history.push('/signin');
+    
+    this.props.userSignOut()
+  };
 
   render() {
     const { activeItem } = this.state
@@ -29,14 +34,14 @@ class Navbar extends Component {
               <Link to='/home'>
                 <Menu.Item name='files' onClick={this.handleItemClick} />
               </Link>
-              <Link to='/sharing/folders'>
+              <Link to='/home/sharing/folders'>
                 <Menu.Item name='sharing' onClick={this.handleItemClick} />
               </Link>
 
-              <Link to='/about'>
+              <Link to='/home/about'>
                 <Menu.Item name='about' onClick={this.handleItemClick} />
               </Link>
-              <Link to='/interest'>
+              <Link to='/home/interest'>
                 <Menu.Item name='interest' onClick={this.handleItemClick} />
               </Link>
 
@@ -73,6 +78,6 @@ const mapDispatchToProps = dispatch => {
   }
 };
 
-const connectedNavbar = connect(mapStateToProps, mapDispatchToProps)(Navbar);
+const connectedNavbar = withRouter(connect(mapStateToProps, mapDispatchToProps)(Navbar));
 
 export default connectedNavbar;

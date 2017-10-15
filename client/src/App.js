@@ -5,9 +5,10 @@ import {
   Route,
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import styled from 'styled-components';
 
 // import logo from './logo.svg';
-import './App.css';
+// import './App.css';
 
 import store from './store/manageStore';
 
@@ -19,6 +20,28 @@ import Home from './components/Home';
 import About from './components/UserAbout';
 import Interest from './components/UserInterest';
 import Sharing from './components/Sharing';
+
+const styles = {
+  containerMain: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    
+    // marginRight: 0,
+
+  },
+
+};
+
+const MyContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  ${'' /* background: #0099FF; */}
+  
+`;
+
 
 class App extends Component {
   render() {
@@ -35,17 +58,24 @@ class App extends Component {
 
       <Provider store={store}>
         <Router>
-          <Container>
-            <Nav />
+          <MyContainer>
+            {/* <Nav /> */}
 
-            <Route exact path='/' component={Landing} />
+            {/* <Route exact path='/' component={Landing} />
             <Route path='/signin' component={SignIn} />
             <Route path='/signup' component={SignUp} />
             <Route path='/home' component={Home} />
             <Route path='/about' component={About} />
             <Route path='/interest' component={Interest} />
-            <Route path='/sharing' component={Sharing} />
-          </Container>
+            <Route path='/sharing' component={Sharing} /> */}
+
+
+            {/* <Landing /> */}
+            <Route exact path='/' component={Landing} />
+            <Route path='/signin' component={SignIn} />
+            <Route path='/signup' component={SignUp} />
+            <Route path='/home' component={Home} />
+          </MyContainer>
         </Router>
       </Provider>
     );

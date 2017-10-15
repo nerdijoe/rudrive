@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { axiosSignUp } from '../actions';
 
+import LandingNavbar from './LandingNavbar';
+
 class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -41,6 +43,7 @@ class SignUp extends Component {
   render() {
     return (
       <Container>
+        <LandingNavbar />
         <Form onSubmit={ (e) => { this.handleSignUp(e) }} >
         <Form.Field>
               <label>First Name</label>

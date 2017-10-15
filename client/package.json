@@ -16,6 +16,7 @@
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "^0.74.2",
+    "styled-components": "^2.2.1",
     "tslint": "^5.7.0"
   },
   "scripts": {
