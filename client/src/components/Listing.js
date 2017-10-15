@@ -273,7 +273,7 @@ class Listing extends Component {
                 let members = '';
                 if( file.Users ) {
                   members = file.Users.map( (item) => {
-                    return <div>{`${item.firstname} ${item.lastname}`}</div>;
+                    return <div key={item.id}>{`${item.firstname} ${item.lastname}`}</div>;
                   });
                 }
 
