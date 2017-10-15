@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import {
   axiosFetchUserAbout,
   axiosUpdateUserAbout,
+  checkAuthentication,
 } from '../actions';
 
 class UserAbout extends Component {
@@ -19,6 +20,10 @@ class UserAbout extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.checkAuthentication();
+    this.props.axiosFetchUserAbout();
+  }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -75,10 +80,11 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    axiosFetchUserAbout: () => { dispatch(axiosFetchUserAbout()) },
-    axiosUpdateUserAbout: (data) => { dispatch(axiosUpdateUserAbout(data)) },
+    checkAuthentication: () => { dispatch(checkAuthentication()); },
+    axiosFetchUserAbout: () => { dispatch(axiosFetchUserAbout()); },
+    axiosUpdateUserAbout: (data) => { dispatch(axiosUpdateUserAbout(data)); },
   };
 };
 

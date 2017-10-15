@@ -22,6 +22,7 @@ const initialState = {
   breadcrumb: [],
   shareFiles: [],
   shareFolders: [],
+  activities: [],
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -94,9 +95,11 @@ const UserReducer = (state = initialState, action) => {
     }
     case actionType.ADD_NEW_FILE: {
       console.log('*** reducer ADD_NEW_FILE');
+      const newFile = { ...action.data, Users: [] };
+
       return {
         ...state,
-        files: [...state.files, action.data],
+        files: [...state.files, newFile],
       };
     }
     case actionType.STAR_FILE: {
@@ -138,9 +141,10 @@ const UserReducer = (state = initialState, action) => {
     }
     case actionType.ADD_NEW_FOLDER: {
       console.log('*** reducer ADD_NEW_FOLDER');
+      const newFolder = { ...action.data, Users: [] };
       return {
         ...state,
-        folders: [...state.folders, action.data],
+        folders: [...state.folders, newFolder],
       };
     }
     case actionType.STAR_FOLDER: {
@@ -290,7 +294,20 @@ const UserReducer = (state = initialState, action) => {
         shareFolders: [...action.data],
       };
     }
-
+    case actionType.FETCH_ACTIVITIES: {
+      console.log('*** reducer FETCH_ACTIVITIES', action);
+      return {
+        ...state,
+        activities: [...action.data],
+      };
+    }
+    case actionType.ADD_ACTIVITY: {
+      console.log('*** reducer ADD_ACTIVITY', action);
+      return {
+        ...state,
+        activities: [...state.activities, action.data],
+      };
+    }
     default:
       return state;
   }
