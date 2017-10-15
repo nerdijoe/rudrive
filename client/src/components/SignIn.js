@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Form, Button, Message } from 'semantic-ui-react';
+import { Container, Form, Button, Message, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -12,7 +12,7 @@ const styles = {
     marginTop: 10,
     marginLeft: 0,
   },
-}
+};
 
 const MyContainer = styled.div`
 width: 100%;
@@ -35,8 +35,6 @@ const ErrorMessage = ({formErrors}) => (
           </Message>
 
         );
-      } else {
-        return '';
       }
     })}
   </Container>
@@ -76,11 +74,11 @@ class SignIn extends Component {
   }
 
   validateField(fieldName, value) {
-    let formErrorsValidation = this.state.formErrors;
+    const formErrorsValidation = this.state.formErrors;
     let emailValid = this.state.emailValid;
     let passwordValid = this.state.passwordValid;
 
-    switch(fieldName) {
+    switch (fieldName) {
       case 'email':
         emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
         formErrorsValidation.email = emailValid ? '' : ' is invalid';
@@ -122,7 +120,7 @@ class SignIn extends Component {
         <LandingNavbar />
         <p></p>
         <Container style={styles.customContainer}>
-
+          <Header as='h3'>Sign in</Header>
 
           <Form onSubmit={ (e) => { this.handleSignIn(e) }} >
             <Form.Field>
