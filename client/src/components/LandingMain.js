@@ -149,7 +149,7 @@ class LandingMain extends Component {
         </BannerWrapper>
 
         <InfoWrapper>
-        
+{/*         
           <Grid columns='equal'>
             <Grid.Column>
               <Applet>
@@ -175,7 +175,7 @@ class LandingMain extends Component {
               <Icon name='user' />
               4 Friends
             </Card.Content>
-          </Card>
+          </Card> */}
         </InfoWrapper>
       </div>
     );

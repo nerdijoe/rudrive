@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
 import { Container, Form, Button } from 'semantic-ui-react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 
 import { axiosSignUp } from '../actions';
 
 import LandingNavbar from './LandingNavbar';
+
+const MyContainer = styled.div`
+width: 100%;
+height: 100%;
+margin-left: -7.5px;
+padding: 0px;
+${'' /* background: #0099FF; */}
+
+`;
 
 class SignUp extends Component {
   constructor(props) {
@@ -42,8 +52,10 @@ class SignUp extends Component {
 
   render() {
     return (
+      <MyContainer>
+      <LandingNavbar />
       <Container>
-        <LandingNavbar />
+
         <Form onSubmit={ (e) => { this.handleSignUp(e) }} >
         <Form.Field>
               <label>First Name</label>
@@ -65,7 +77,7 @@ class SignUp extends Component {
           <Button type='submit'>Sign In</Button>
         </Form>
       </Container>
-
+      </MyContainer>
     );
   }
 }
