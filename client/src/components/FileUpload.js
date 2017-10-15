@@ -4,6 +4,8 @@ import {
   Form,
   Button,
   Input,
+  Icon,
+  Label,
 } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
@@ -11,6 +13,16 @@ import {
   axiosUpload,
   axiosUploadToPath,
 } from '../actions';
+
+const styles = {
+  myinput: {
+    display: 'none',
+  },
+  blue: {
+    background: '#0070E0',
+    color: 'white',
+  }
+};
 
 class FileUpload extends Component {
 
@@ -60,9 +72,13 @@ class FileUpload extends Component {
 
           <Button type='submit'>Upload</Button>
         </Form> */}
-
-        <Input type="file" name="doc" onChange={ e => {this.handleFileUpload(e)} } />
-
+        <div>
+          <label for="file" class="ui icon button" style={styles.blue}>
+            <Icon name='cloud upload' /><span>  </span>
+            Upload a file
+          </label>
+          <Input type="file" name="doc" id="file" style={styles.myinput} onChange={(e) => { this.handleFileUpload(e); }} />
+        </div>
 
       </Container>
     );

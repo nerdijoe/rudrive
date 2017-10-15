@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {
   Container,
   Divider,
+  Image,
+  Grid,
 } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import {
@@ -12,6 +14,7 @@ import {
 } from 'react-router-dom';
 
 import Nav from './Navbar';
+import NavSide from './NavbarSide';
 import Files from './Files';
 import About from './UserAbout';
 import Interest from './UserInterest';
@@ -20,6 +23,8 @@ import Sharing from './Sharing';
 import FileUpload from './FileUpload';
 import Listing from './Listing';
 import CreateFolder from './CreateFolder';
+
+import Logo from '../assets/images/logo/dropbox_logo.svg';
 
 import {
   checkAuthentication,
@@ -56,12 +61,34 @@ class Home extends Component {
     return (
 
         <Container>
-          <Nav />
-        
-          <Route exact path='/home' component={Files} />
-          <Route path='/home/about' component={About} />
-          <Route path='/home/interest' component={Interest} />
-          <Route path='/home/sharing' component={Sharing} />
+
+        <Grid celled>
+          <Grid.Row>
+            <Grid.Column width={3}>
+              <Image size='mini' src={Logo} />
+            </Grid.Column>
+            <Grid.Column width={13}>
+              <Nav />
+
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={3}>
+              <NavSide />
+            </Grid.Column>
+            <Grid.Column width={10}>
+              <Route exact path='/home' component={Files} />
+              <Route path='/home/about' component={About} />
+              <Route path='/home/interest' component={Interest} />
+              <Route path='/home/sharing' component={Sharing} />
+  
+            </Grid.Column>
+            <Grid.Column width={3}>
+              
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
 
         </Container>
 

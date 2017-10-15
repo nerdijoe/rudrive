@@ -121,7 +121,7 @@ class LandingMain extends Component {
   render() {
     return (
       <div>
-        <LandingNavbar />
+        {/* <LandingNavbar /> */}
         <BannerWrapper>
         <Banner>
             <Container>
