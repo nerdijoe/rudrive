@@ -121,6 +121,7 @@ exports.fetchById = (req, res) => {
         // user_id: req.decoded._id,
         path: folder.full_path,
       },
+      include: [{ model: db.User }],
     }).then((folders) => {
       console.log(`----> folders in '${folder.full_path}'`, folders);
 
