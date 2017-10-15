@@ -4,6 +4,7 @@ import {
   Form,
   Button,
   Input,
+  Message,
 } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
@@ -12,11 +13,32 @@ import {
   axiosCreateFolderOnCurrentPath,
 } from '../actions';
 
+const ErrorMessage = ({formErrors}) => (
+  <Container>
+    <div></div>
+    {Object.keys(formErrors).map((fieldName, i) => {
+      if (formErrors[fieldName].length > 0) {
+        return (
+         
+          <Message negative>
+            <p key={i}>{fieldName} {formErrors[fieldName]}</p>
+          </Message>
+
+        );
+      }
+    })}
+  </Container>
+);
+
 class CreateFolder extends Component {
   constructor(props) {
     super(props);
     this.state = {
       folderName: '',
+      formErrors: { folderName: '' },
+      folderNameValid: false,
+      formValid: false,
+
     };
   }
 
@@ -38,14 +60,41 @@ class CreateFolder extends Component {
 
     this.setState({
       folderName: '',
+      folderNameValid: false,
+      formValid: false,
     });
   }
+
+  validateField(fieldName, value) {
+    const formErrorsValidation = this.state.formErrors;
+    let folderNameValid = this.state.folderNameValid;
+
+    switch (fieldName) {
+      case 'folderName':
+        folderNameValid = value.length > 0;
+        formErrorsValidation.email = folderNameValid ? '' : ' is blank';
+        break;
+      default:
+        break;
+    }
+    this.setState({
+      formErrors: formErrorsValidation,
+      folderNameValid,
+    }, this.validateForm);
+  }
+
+  validateForm() {
+    this.setState({ formValid: this.state.folderNameValid });
+  }
+
 
   handleChange(e) {
     const target = e.target;
 
     this.setState({
       [target.name]: target.value,
+    }, () => {
+      this.validateField(target.name, target.value);
     });
   }
 
@@ -58,8 +107,10 @@ class CreateFolder extends Component {
             <Input placeholder="new folder" name="folderName" value={this.state.folderName} onChange={(e) => { this.handleChange(e); }} />
           </Form.Field>
 
-          <Button basic color="blue" type="submit">Add</Button>
+          <Button basic color="blue" type="submit" disabled={!this.state.formValid}>Add</Button>
         </Form>
+        {/* <ErrorMessage formErrors={this.state.formErrors} /> */}
+
       </Container>
     );
   }

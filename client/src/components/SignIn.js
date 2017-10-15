@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Form, Button } from 'semantic-ui-react';
+import { Container, Form, Button, Message, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -12,7 +12,7 @@ const styles = {
     marginTop: 10,
     marginLeft: 0,
   },
-}
+};
 
 const MyContainer = styled.div`
 width: 100%;
@@ -23,13 +23,34 @@ ${'' /* background: #0099FF; */}
 
 `;
 
+const ErrorMessage = ({formErrors}) => (
+  <Container>
+    <div></div>
+    {Object.keys(formErrors).map((fieldName, i) => {
+      if (formErrors[fieldName].length > 0) {
+        return (
+         
+          <Message negative>
+            <p key={i}>{fieldName} {formErrors[fieldName]}</p>
+          </Message>
+
+        );
+      }
+    })}
+  </Container>
+);
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
       password: '',
-    }
+      formErrors: { email: '', password: '' },
+      emailValid: false,
+      passwordValid: false,
+      formValid: false,
+    };
   }
 
   componentDidMount() {
@@ -52,14 +73,45 @@ class SignIn extends Component {
 
   }
 
+  validateField(fieldName, value) {
+    const formErrorsValidation = this.state.formErrors;
+    let emailValid = this.state.emailValid;
+    let passwordValid = this.state.passwordValid;
+
+    switch (fieldName) {
+      case 'email':
+        emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        formErrorsValidation.email = emailValid ? '' : ' is invalid';
+        break;
+      case 'password':
+        passwordValid = value.length >= 4;
+        formErrorsValidation.password = passwordValid ? '' : ' is too short';
+        break;
+      default:
+        break;
+    }
+    this.setState({
+      formErrors: formErrorsValidation,
+      emailValid,
+      passwordValid,
+    }, this.validateForm);
+  }
+
+  validateForm() {
+    this.setState({ formValid: this.state.emailValid && this.state.passwordValid });
+  }
+
   handleChange(e) {
     const target = e.target;
     console.log(`handleChange ${target.name}=[${target.value}]`);
     
     this.setState({
       [target.name]: target.value,
+    }, () => {
+      this.validateField(target.name, target.value);
     });
   }
+
 
   render() {
     return (
@@ -68,7 +120,7 @@ class SignIn extends Component {
         <LandingNavbar />
         <p></p>
         <Container style={styles.customContainer}>
-
+          <Header as='h3'>Sign in</Header>
 
           <Form onSubmit={ (e) => { this.handleSignIn(e) }} >
             <Form.Field>
@@ -80,8 +132,11 @@ class SignIn extends Component {
               <input type='password' placeholder='Password' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e) } } />
             </Form.Field>
 
-            <Button type='submit'>Sign In</Button>
+            <Button primary type='submit' disabled={!this.state.formValid}>Sign In</Button>
           </Form>
+
+          <ErrorMessage formErrors={this.state.formErrors} />
+
         </Container>
 
       </MyContainer>
