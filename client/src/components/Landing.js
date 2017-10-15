@@ -141,7 +141,7 @@ class Landing extends Component {
 
         <MyContainer>
 
-          {/* <LandingNavbar /> */}
+          <LandingNavbar />
 
           <LandingMain/>
 

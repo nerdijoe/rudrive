@@ -10,7 +10,7 @@ import LandingNavbar from './LandingNavbar';
 const MyContainer = styled.div`
 width: 100%;
 height: 100%;
-margin-left: -7.5px;
+margin-left: 0px;
 padding: 0px;
 ${'' /* background: #0099FF; */}
 
