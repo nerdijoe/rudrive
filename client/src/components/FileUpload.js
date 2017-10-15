@@ -73,10 +73,11 @@ class FileUpload extends Component {
           <Button type='submit'>Upload</Button>
         </Form> */}
         <div>
-        <label for="file" class="ui icon button" style={styles.blue}>
+          <label for="file" class="ui icon button" style={styles.blue}>
             <Icon name='cloud upload' /><span>  </span>
-            Upload a file</label>
-            <Input type="file" name="doc" id="file" style={styles.myinput} onChange={(e) => { this.handleFileUpload(e); }} />
+            Upload a file
+          </label>
+          <Input type="file" name="doc" id="file" style={styles.myinput} onChange={(e) => { this.handleFileUpload(e); }} />
         </div>
 
       </Container>
