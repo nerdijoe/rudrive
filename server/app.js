@@ -13,7 +13,25 @@ const path = require('path');
 
 const env = process.env.NODE_ENV || "development";
 const config = require(path.join(__dirname, 'config', 'config.json'))[env];
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+const pool = {
+  max: 5,
+  min: 0,
+  idle: 10000,
+};
+const configWithPooling = {
+  username: 'root',
+  password: 'damnit',
+  database: '273_lab1_dropbox',
+  host: '127.0.0.1',
+  dialect: 'mysql',
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 10000,
+  },
+};
+
+const sequelize = new Sequelize(config.database, config.username, config.password, configWithPooling);
 
 sequelize
   .authenticate()
