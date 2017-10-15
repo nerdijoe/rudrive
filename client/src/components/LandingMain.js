@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
 import {
-  BrowserRouter as Router,
-  Route,
-} from 'react-router-dom';
-import {
   Container,
   Grid,
   Segment,
@@ -15,14 +11,7 @@ import {
 import styled from 'styled-components';
 
 import LandingNavbar from './LandingNavbar';
-import LandingHeaderMenu from './LandingHeaderMenu';
-import LandingMain from './LandingMain';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
 
-import Logo from '../assets/images/logo/dropbox_logo.svg';
-import LogoText from '../assets/images/logo/dropbox_logo_text.svg';
-import LogoCombined from '../assets/images/logo/dropbox_logo_v2.png';
 import BannerBusiness from '../assets/images/banner/banner_business_background.jpg';
 
 const styles = {
@@ -128,32 +117,69 @@ const Applet = styled.div`
   background: #EFDC05;
 `;
 
-
-class Landing extends Component {
-  componentDidMount() {
-    if(localStorage.getItem('token') != null) {
-      this.props.history.push('/home');
-    }
-  }
-
+class LandingMain extends Component {
   render() {
     return (
+      <div>
+        <LandingNavbar />
+        <BannerWrapper>
+        <Banner>
+            <Container>
+              <BannerText>
+              Boost productivity
+                <br/><br/><br/>
+              with Dropbox Business
+              </BannerText>
+              <BannerTextSub>
+                The secure file sharing and storage solution
+                <br/><br/>
+                that employees and IT admins trust.
+              </BannerTextSub>
+              
+              <Button primary size='huge' style={styles.buttonBanner}>
+                Try Dropbox Now
+              </Button>
 
-        <MyContainer>
+              <Button primary basic size='huge' style={styles.buttonBanner}>
+                Get Dropbox Basic
+              </Button>
+            </Container>
+          </Banner>
 
-          {/* <LandingNavbar /> */}
+        </BannerWrapper>
 
-          <LandingMain/>
+        <InfoWrapper>
+        
+          <Grid columns='equal'>
+            <Grid.Column>
+              <Applet>
+                <span>test</span>
+              </Applet>
+            </Grid.Column>
+            <Grid.Column>
+              <Applet>
+                <span>2</span>
+              </Applet>
+            </Grid.Column>
+            <Grid.Column>
+              <Applet>
+                <span>3</span>
+              </Applet>
+            </Grid.Column>
+          </Grid>
 
-          {/* <Route exact path='/' component={LandingMain} />
-          <Route path='/signin' component={SignIn} />
-          <Route path='/signup' component={SignUp} /> */}
-
-
-        </MyContainer>
-
+          <Card>
+            <Card.Content header='About Amy' />
+            <Card.Content description='bro' />
+            <Card.Content extra>
+              <Icon name='user' />
+              4 Friends
+            </Card.Content>
+          </Card>
+        </InfoWrapper>
+      </div>
     );
   }
 }
 
-export default Landing;
+export default LandingMain;

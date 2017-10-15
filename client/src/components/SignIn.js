@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import { Container, Form, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-
+import { withRouter } from 'react-router-dom';
 import { axiosSignIn } from '../actions';
+
+import LandingNavbar from './LandingNavbar';
+
+const styles = {
+  customContainer: {
+    marginTop: 10,
+  },
+}
 
 class SignIn extends Component {
   constructor(props) {
@@ -44,20 +52,28 @@ class SignIn extends Component {
 
   render() {
     return (
-      <Container>
-        <Form onSubmit={ (e) => { this.handleSignIn(e) }} >
-          <Form.Field>
-              <label>Email</label>
-              <input placeholder='tyrion@.teamdany.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e) } }/>
-          </Form.Field>
-          <Form.Field>
-            <label>Password</label>
-            <input type='password' placeholder='Password' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e) } } />
-          </Form.Field>
+      <div>
+        <LandingNavbar />
+        <p></p>
+        <Container style={styles.customContainer}>
 
-          <Button type='submit'>Sign In</Button>
-        </Form>
-      </Container>
+
+          <Form onSubmit={ (e) => { this.handleSignIn(e) }} >
+            <Form.Field>
+                <label>Email</label>
+                <input placeholder='tyrion@.teamdany.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e) } }/>
+            </Form.Field>
+            <Form.Field>
+              <label>Password</label>
+              <input type='password' placeholder='Password' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e) } } />
+            </Form.Field>
+
+            <Button type='submit'>Sign In</Button>
+          </Form>
+        </Container>
+
+      </div>
+
     );
   }
 }
@@ -75,6 +91,6 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const connectedSignIn = connect(mapStateToProps, mapDispatchToProps)(SignIn);
+const connectedSignIn = withRouter(connect(mapStateToProps, mapDispatchToProps)(SignIn));
 
 export default connectedSignIn;

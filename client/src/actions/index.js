@@ -94,6 +94,8 @@ export const userSignOut = () => {
   localStorage.removeItem('user_firstname');
   localStorage.removeItem('user_lastname');
 
+  // router.push('/');
+
   return {
     type: actionType.USER_SIGN_OUT,
   };

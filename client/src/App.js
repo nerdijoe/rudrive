@@ -59,15 +59,22 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <MyContainer>
-            <Nav />
+            {/* <Nav /> */}
 
-            <Route exact path='/' component={Landing} />
+            {/* <Route exact path='/' component={Landing} />
             <Route path='/signin' component={SignIn} />
             <Route path='/signup' component={SignUp} />
             <Route path='/home' component={Home} />
             <Route path='/about' component={About} />
             <Route path='/interest' component={Interest} />
-            <Route path='/sharing' component={Sharing} />
+            <Route path='/sharing' component={Sharing} /> */}
+
+
+            {/* <Landing /> */}
+            <Route exact path='/' component={Landing} />
+            <Route path='/signin' component={SignIn} />
+            <Route path='/signup' component={SignUp} />
+            <Route path='/home' component={Home} />
           </MyContainer>
         </Router>
       </Provider>
