@@ -2,12 +2,6 @@
 
 # Dropbox
 
-## Directory structure
-
-root
-|--server
-|--client
-
 ## How to run the application
 
 Server
@@ -29,6 +23,8 @@ $ cd client
 $ yarn install
 
 $ yarn start
+// open localhost:3001
+
 ```
 
 
