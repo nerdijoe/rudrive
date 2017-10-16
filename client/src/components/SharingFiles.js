@@ -135,8 +135,6 @@ class Listing extends Component {
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Modified</Table.HeaderCell>
-              <Table.Cell><Icon name='ellipsis horizontal' /></Table.Cell>
-
             </Table.Row>
           </Table.Header>
 
@@ -160,11 +158,6 @@ class Listing extends Component {
                       {Moment(file.FileSharing.updatedAt).format('L LT')}
                     </Table.Cell>
 
-                    <Table.HeaderCell>
-                      {/* <Button basic color="blue" onClick={() => {this.handleClick(file)}}>Star</Button>
-                      <Button primary content='Share' onClick={ () => this.handleModalShareFileOpen(true, file)} /> */}
-
-                    </Table.HeaderCell>
                   </Table.Row>
                 ); // end of return
               })}

@@ -31,7 +31,10 @@ const pool = {
 //   },
 // };
 
-// const sequelize = new Sequelize(config.database, config.username, config.password, configWithPooling);
+// ** TESTING using Mocha **
+// use this for testing
+// const sequelize = new Sequelize(config.database, config.username, config.password, config);
+// ***************
 const sequelize = new Sequelize(config.database, config.username, config.password, {
   host: '127.0.0.1',
   dialect: 'mysql',

@@ -62,6 +62,7 @@ exports.fetchActivities = (req, res) => {
     where: {
       user_id: req.decoded._id,
     },
+    order: [['createdAt', 'ASC']],
   }).then((activities) => {
     console.log('after fetchActivities activities=', activities);
     res.json(activities);

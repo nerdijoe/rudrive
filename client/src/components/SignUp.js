@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { Container, Form, Button, Message, Header } from 'semantic-ui-react';
+import { Container, Form, Button, Message, Header, Grid, Image } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { axiosSignUp } from '../actions';
 
 import LandingNavbar from './LandingNavbar';
+
+import signin_pic from '../assets/images/sign_in.png';
 
 const styles = {
   customContainer: {
@@ -67,7 +70,7 @@ class SignUp extends Component {
     e.preventDefault();
     console.log('handleSignUp', this.state);
     this.props.axiosSignUp(this.state);
-    this.props.history.push('/');
+    this.props.history.push('/signin');
   }
 
   validateField(fieldName, value) {
@@ -128,30 +131,53 @@ class SignUp extends Component {
         <LandingNavbar />
         <p></p>
         <Container style={styles.customContainer}>
-          <Header as='h3'>Sign up</Header>
 
-          <Form onSubmit={ (e) => { this.handleSignUp(e) }} >
-            <Form.Field>
-              <label>First Name</label>
-              <input placeholder='John' name='firstname' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
-            </Form.Field>
-            <Form.Field>
-              <label>Last Name</label>
-              <input placeholder='Snow' name='lastname' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
-            </Form.Field>
-            <Form.Field>
-              <label>Email</label>
-              <input placeholder='john.snow@winterfell.com' name='email' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
-            </Form.Field>
-            <Form.Field>
-              <label>Password</label>
-              <input type='password' placeholder='Password' name='password' value={this.state.name} onChange={ (e) => { this.handleChange(e); }}/>
-            </Form.Field>
+          <Grid>
+            <Grid.Row />
+          </Grid>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={2}>
+                
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <Image src={signin_pic} />
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <p><span style={{fontSize: 20}}>Create an account</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or  <Link to='/signin'>log in</Link> </p>
 
-            <Button primary type='submit' disabled={!this.state.formValid}>Sign In</Button>
-          </Form>
+                <Form onSubmit={ (e) => { this.handleSignUp(e) }} >
+                  <Form.Field>
+                    <label>First Name</label>
+                    <input placeholder='John' name='firstname' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Last Name</label>
+                    <input placeholder='Snow' name='lastname' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Email</label>
+                    <input placeholder='john.snow@winterfell.com' name='email' value={this.state.name} onChange={ (e) => { this.handleChange(e); }} />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Password</label>
+                    <input type='password' placeholder='Password' name='password' value={this.state.name} onChange={ (e) => { this.handleChange(e); }}/>
+                  </Form.Field>
+      
+                  <Button primary type='submit' disabled={!this.state.formValid}>Sign In</Button>
+                </Form>
+      
+                <ErrorMessage formErrors={this.state.formErrors} />
+              </Grid.Column>
 
-          <ErrorMessage formErrors={this.state.formErrors} />
+              <Grid.Column width={2}>
+                
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+
+
+
         </Container>
       </MyContainer>
     );

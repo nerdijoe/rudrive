@@ -22,9 +22,9 @@ class LandingHeaderMenu extends Component {
         <Menu secondary>
 
           <Menu.Menu position='right'>
-            <Link to='/signup'>
+            {/* <Link to='/signup'>
               <Menu.Item name='signUp' active={activeItem === 'signUp'} onClick={this.handleItemClick} />
-            </Link>
+            </Link> */}
             <Link to='/signin'>
               <Menu.Item name='signIn' active={activeItem === 'signIn'} onClick={this.handleItemClick} />
             </Link>
