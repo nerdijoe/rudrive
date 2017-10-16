@@ -31,7 +31,7 @@ const configWithPooling = {
   },
 };
 
-const sequelize = new Sequelize(config.database, config.username, config.password, configWithPooling);
+const sequelize = new Sequelize(config.database, config.username, config.password, config, pool);
 
 sequelize
   .authenticate()

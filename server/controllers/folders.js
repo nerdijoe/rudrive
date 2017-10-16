@@ -114,37 +114,39 @@ exports.fetchById = (req, res) => {
     },
   }).then((folder) => {
     console.log('after fetchByPath folders=', folder);
-
-    // after get the folder, we need to get the contents of this folder
-    db.Folder.findAll({
-      where: {
-        // user_id: req.decoded._id,
-        path: folder.full_path,
-      },
-      include: [{ model: db.User }],
-    }).then((folders) => {
-      console.log(`----> folders in '${folder.full_path}'`, folders);
-
-      // res.json(folders);
-
-      db.File.findAll({
+    if (folder) {
+      // after get the folder, we need to get the contents of this folder
+      db.Folder.findAll({
         where: {
           // user_id: req.decoded._id,
           path: folder.full_path,
         },
         include: [{ model: db.User }],
-      }).then((files) => {
-        console.log(`----> files in '${folder.full_path}'`, files);
+      }).then((folders) => {
+        console.log(`----> folders in '${folder.full_path}'`, folders);
 
-        res.json({
-          files,
-          folders,
+        // res.json(folders);
+
+        db.File.findAll({
+          where: {
+            // user_id: req.decoded._id,
+            path: folder.full_path,
+          },
+          include: [{ model: db.User }],
+        }).then((files) => {
+          console.log(`----> files in '${folder.full_path}'`, files);
+
+          res.json({
+            files,
+            folders,
+          });
         });
       });
-
-
-    });
-
+    } else {
+      res.json({
+        msg: 'folder id is invalid.'
+      });
+    }
     // res.json(folder);
   });
 };

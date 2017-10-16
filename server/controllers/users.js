@@ -19,8 +19,9 @@ exports.getAbout = (req, res) => {
       user_id: req.decoded._id,
     }
   }).then( about => {
-    // console.log('getAbout', about);
+    console.log('getAbout', about);
     if (!about) {
+      console.log('--------> about null');
       about = {
         overview: '',
         work_edu: '',
