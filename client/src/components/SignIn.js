@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Container, Form, Button, Message, Header } from 'semantic-ui-react';
+import { Container, Form, Button, Message, Header, Grid, Image } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { axiosSignIn } from '../actions';
 
 import LandingNavbar from './LandingNavbar';
+
+import signin_pic from '../assets/images/sign_in.png';
 
 const styles = {
   customContainer: {
@@ -63,7 +65,7 @@ class SignIn extends Component {
     e.preventDefault();
     console.log('handleSignIn', this.state);
 
-    this.props.axiosSignIn(this.state, this.props.history );
+    this.props.axiosSignIn(this.state, this.props.history);
 
     // if(this.props.is_authenticated) {
     //   this.props.history.push('/home');
@@ -120,22 +122,43 @@ class SignIn extends Component {
         <LandingNavbar />
         <p></p>
         <Container style={styles.customContainer}>
-          <Header as='h3'>Sign in</Header>
+          <Grid>
+            <Grid.Row></Grid.Row>
+          </Grid>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={2}>
+                
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <Image src={signin_pic} />
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <p><span style={{fontSize: 20}}>Sign in</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or  <Link to='/signup'>create an account</Link> </p>
 
-          <Form onSubmit={ (e) => { this.handleSignIn(e) }} >
-            <Form.Field>
-                <label>Email</label>
-                <input placeholder='tyrion@.teamdany.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e) } }/>
-            </Form.Field>
-            <Form.Field>
-              <label>Password</label>
-              <input type='password' placeholder='Password' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e) } } />
-            </Form.Field>
+                <Form onSubmit={ (e) => { this.handleSignIn(e) }} >
+                  <Form.Field>
+                    <label>Email</label>
+                    <input placeholder='tyrion@.teamdany.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e) } }/>
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Password</label>
+                    <input type='password' placeholder='Password' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e) } } />
+                  </Form.Field>
 
-            <Button primary type='submit' disabled={!this.state.formValid}>Sign In</Button>
-          </Form>
+                  <Button primary type='submit' disabled={!this.state.formValid}>Sign In</Button>
+                </Form>
 
-          <ErrorMessage formErrors={this.state.formErrors} />
+                <ErrorMessage formErrors={this.state.formErrors} />
+
+              </Grid.Column>
+
+              <Grid.Column width={2}>
+                
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+
 
         </Container>
 

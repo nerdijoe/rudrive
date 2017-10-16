@@ -25,6 +25,7 @@ import FolderBreadcrumb from './FolderBreadcrumb';
 
 import SharingFiles from './SharingFiles';
 import SharingFolders from './SharingFolders';
+import SharingFoldersV2 from './SharingFoldersV2';
 
 import {
   axiosStarFile,

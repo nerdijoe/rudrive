@@ -11,6 +11,7 @@ import {
   Input,
   Form,
   Popup,
+  Grid,
 } from 'semantic-ui-react';
 
 import FolderBreadcrumb from './FolderBreadcrumb';
@@ -138,9 +139,10 @@ class Listing extends Component {
         {/* Listing
         <ul>{listItems}</ul> */}
 
-        <FolderBreadcrumb />
 
         <Header as='h5'>Shared folders let you collaborate on a set of files. When someone adds a shared folder to their Dropbox, they’ll always have the latest version of those files.</Header>
+       
+        <FolderBreadcrumb />
 
         <Table basic="very">
           <Table.Header>
@@ -151,22 +153,157 @@ class Listing extends Component {
           </Table.Header>
 
           <Table.Body>
-            { // Folders
-              this.props.shareFolders.map( (folder) => {
+          { // Folders
+              this.props.shareFolders.filter(folder => folder.is_deleted !== true).map( (folder) => {
+                // const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length} ${(folder.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
+
+                const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length + 1} members` : 'Only you';
                 
+                let owner = <div>{`${localStorage.getItem('user_firstname')} ${localStorage.getItem('user_lastname')}`}</div>;                
+                let members = '';
+                if( folder.Users ) {
+                  members = folder.Users.map( (item) => {
+                    return <div key={item.id}>{`${item.firstname} ${item.lastname}`}</div>;
+                  })
+                }
+
                 return (
                   <Table.Row key={folder.id}>
                     <Table.Cell>
                       <a onClick={() => {this.handleClickFolder(folder)}}>
                         <Icon name='blue folder' />{folder.name} {' '}
                       </a>
-                      
+                      {folder.is_starred ? <Icon name='blue star' /> : ''}
                     </Table.Cell>
                     <Table.Cell>
-                      {Moment(folder.FolderSharing.updatedAt).format('L LT')}
+                      {Moment(folder.updatedAt).format('L LT')}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Popup
+                        trigger={<span>{ membersMsg }</span>}
+                        content={<span>{ owner }{ members }</span>}
+                        size='tiny'
+                        position='bottom center'
+                        inverted
+                      />
+
                     </Table.Cell>
 
                     {/* Actions */}
+                    <Table.HeaderCell>
+                      {/* <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
+                      <Button primary content='Share' onClick={ () => this.handleModalShareFolderOpen(true, folder)} />
+                      
+                      <Popup
+                      trigger={<Button color='red'>Delete</Button>}
+                      content={<Button color='green' content='Confirm' onClick={ () => {this.handleDeleteFolder(folder)}}/>}
+                      on='click'
+                      position='right center'
+                    /> */}
+
+                      <Popup wide trigger={<Button basic icon content={<Icon name='ellipsis horizontal'/>} />} position='right center' on='click'>
+                        <Grid columns='equal'>
+                          <Grid.Column>
+                            <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
+                          </Grid.Column>
+                          <Grid.Column>
+                            <Button primary content='Share' onClick={ () => this.handleModalShareFolderOpen(true, folder)} />
+                          </Grid.Column>
+                          <Grid.Column>
+                          <Popup
+                            trigger={<Button color='red'>Delete</Button>}
+                            content={<Button color='green' content='Confirm' onClick={ () => {this.handleDeleteFolder(folder)}}/>}
+                            on='click'
+                            position='top center'
+                          />
+
+                          </Grid.Column>
+                        </Grid>
+                      </Popup>
+
+
+
+                    </Table.HeaderCell>
+                  </Table.Row>
+                ); // end of return
+              })}
+
+            { // Files
+              this.props.files.filter( file => file.is_deleted !== true ).map( (file) => {
+                let re = new RegExp('./public/')
+                const downloadLink = homeAddress + file.full_path.replace(re, '');
+                // console.log(downloadLink);
+
+                // const membersMsg = (file.Users && file.Users.length > 0 ) ? `${file.Users.length} ${(file.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
+
+                const membersMsg = (file.Users && file.Users.length > 0 ) ? `${file.Users.length + 1} members` : 'Only you';
+                
+                let owner = <div>{`${localStorage.getItem('user_firstname')} ${localStorage.getItem('user_lastname')}`}</div>;
+                let members = '';
+                if( file.Users ) {
+                  members = file.Users.map( (item) => {
+                    return <div key={item.id}>{`${item.firstname} ${item.lastname}`}</div>;
+                  });
+                }
+
+                {/* console.log('$$$ members', members); */}
+
+                
+                return (
+                  <Table.Row key={file.id}>
+                    <Table.Cell>
+                      <a href={downloadLink} target="_blank" >{file.name}</a>{' '}
+                      {file.is_starred ? <Icon name='blue star' /> : ''}
+
+                    </Table.Cell>
+                    <Table.Cell>
+                      {Moment(file.updatedAt).format('L LT')}
+                    </Table.Cell>
+                    <Table.Cell>
+
+                      <Popup
+                        trigger={<span>{ membersMsg }</span>}
+                        content={<span>{ owner }{ members }</span>}
+                        size='tiny'
+                        position='bottom center'
+                        inverted
+                      />
+                    </Table.Cell>
+
+                    <Table.HeaderCell>
+                      {/* <Button basic color="blue" onClick={() => {this.handleClick(file)}} >Star </Button>
+                      <Button primary content='Share' onClick={ () => this.handleModalShareFileOpen(true, file)} />
+                      
+                      <Popup
+                      trigger={<Button color='red'>Delete</Button>}
+                      content={<Button color='green' content='Confirm' onClick={ () => {this.handleDeleteFile(file)}}/>}
+                      on='click'
+                      position='right center'
+                    /> */}
+
+                      <Popup wide trigger={<Button basic icon content={<Icon name='ellipsis horizontal'/>} />} position='right center' on='click'>
+                          <Grid columns='equal'>
+                            <Grid.Column>
+                              <Button basic color="blue" onClick={() => {this.handleClick(file)}} >Star </Button>
+                            </Grid.Column>
+                            <Grid.Column>
+                            <Button primary content='Share' onClick={ () => this.handleModalShareFileOpen(true, file)} />
+                            </Grid.Column>
+                            <Grid.Column>
+                            <Popup
+                              trigger={<Button color='red'>Delete</Button>}
+                              content={<Button color='green' content='Confirm' onClick={ () => {this.handleDeleteFile(file)}}/>}
+                              on='click'
+                              position='top center'
+                            />
+
+                            </Grid.Column>
+                          </Grid>
+                        </Popup>
+
+
+
+                    </Table.HeaderCell>
                   </Table.Row>
                 ); // end of return
               })}

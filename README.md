@@ -15,7 +15,9 @@ Server
 $ cd server
 $ yarn install
 
-// db migration
+// MySQL database
+// In most case, you need to create a database manually.
+// Please change the db config accordingly, for example: username, password, db name,
 $ sequelize db:migrate
 
 $ yarn start
@@ -28,6 +30,20 @@ $ yarn install
 
 $ yarn start
 ```
+
+
+## Testing
+
+Server
+
+Please take a look at /server/app.js
+
+and uncomment this line
+```
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
+```
+Don't forget to comment the other one.
+
 
 ## Server
 
