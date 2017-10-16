@@ -2,7 +2,34 @@
 
 # Dropbox
 
-## Server 2
+## Directory structure
+
+root
+|--server
+|--client
+
+## How to run the application
+
+Server
+```
+$ cd server
+$ yarn install
+
+// db migration
+$ sequelize db:migrate
+
+$ yarn start
+```
+
+Client
+```
+$ cd client
+$ yarn install
+
+$ yarn start
+```
+
+## Server
 
 ### User Model
 
@@ -87,7 +114,7 @@ Will upload to './public/uploads/<user@email.com>'
 ### Files
 **Need user authentication**
 ```
-Fetch user files - GET - localhost:3000/files
+Fetch user files - GET - localhost:3000/files/root
 
 ```
 
@@ -96,14 +123,27 @@ Star a file  - PUT - localhost:3000/files/star
 
 ```
 
+### Folders
+**Need user authentication**
+```
+Fetch user files - GET - localhost:3000/folders/root
+
+```
+
+```
+Star a file  - PUT - localhost:3000/folders/star
+
+```
 
 
 
 ---
-## Client 2
+## Client
 
 * React.js
 * React Semantic UI
 * React Redux
 * React Router Dom
 * Axios
+
+

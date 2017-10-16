@@ -18,20 +18,29 @@ const pool = {
   min: 0,
   idle: 10000,
 };
-const configWithPooling = {
-  username: 'root',
-  password: 'damnit',
-  database: '273_lab1_dropbox',
+// const configWithPooling = {
+//   username: 'root',
+//   password: 'damnit',
+//   database: '273_lab1_dropbox',
+//   host: '127.0.0.1',
+//   dialect: 'mysql',
+//   pool: {
+//     max: 10,
+//     min: 0,
+//     idle: 10000,
+//   },
+// };
+
+// const sequelize = new Sequelize(config.database, config.username, config.password, configWithPooling);
+const sequelize = new Sequelize(config.database, config.username, config.password, {
   host: '127.0.0.1',
   dialect: 'mysql',
   pool: {
-    max: 5,
+    max: 10,
     min: 0,
     idle: 10000,
   },
-};
-
-const sequelize = new Sequelize(config.database, config.username, config.password, config, pool);
+});
 
 sequelize
   .authenticate()
