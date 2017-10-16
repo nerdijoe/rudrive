@@ -90,7 +90,7 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer FETCH_FILES', action);
       return {
         ...state,
-        files: [...action.data],
+        files: [...action.data.filter(file => file.is_deleted !== true)],
       };
     }
     case actionType.ADD_NEW_FILE: {
@@ -136,7 +136,7 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer FETCH_FOLDERS', action);
       return {
         ...state,
-        folders: [...action.data],
+        folders: [...action.data.filter(folder => folder.is_deleted !== true )],
       };
     }
     case actionType.ADD_NEW_FOLDER: {
@@ -254,7 +254,7 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer FETCH_SHARE_FILES', action);
       return {
         ...state,
-        shareFiles: [...action.data],
+        shareFiles: [...action.data.filter(file => file.is_deleted !== true)],
       };
     }
     case actionType.FOLDER_SHARING_ADD: {
@@ -291,7 +291,7 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer FETCH_SHARE_FOLDERS', action);
       return {
         ...state,
-        shareFolders: [...action.data],
+        shareFolders: [...action.data.filter(folder => folder.is_deleted !== true)],
       };
     }
     case actionType.FETCH_ACTIVITIES: {

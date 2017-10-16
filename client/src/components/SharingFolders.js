@@ -147,8 +147,6 @@ class Listing extends Component {
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Last invited</Table.HeaderCell>
-              <Table.Cell><Icon name='ellipsis horizontal' /></Table.Cell>
-
             </Table.Row>
           </Table.Header>
 
@@ -169,11 +167,6 @@ class Listing extends Component {
                     </Table.Cell>
 
                     {/* Actions */}
-                    <Table.HeaderCell>
-                      {/* <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
-                      <Button primary content='Share' onClick={ () => this.handleModalShareFolderOpen(true, folder)} /> */}
-                      
-                    </Table.HeaderCell>
                   </Table.Row>
                 ); // end of return
               })}

@@ -13,6 +13,7 @@ import {
   Popup,
   Divider,
   Image,
+  Grid,
 } from 'semantic-ui-react';
 
 import FolderBreadcrumb from './FolderBreadcrumb';
@@ -243,7 +244,7 @@ class Listing extends Component {
 
                     {/* Actions */}
                     <Table.HeaderCell>
-                      <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
+                      {/* <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
                       <Button primary content='Share' onClick={ () => this.handleModalShareFolderOpen(true, folder)} />
                       
                       <Popup
@@ -251,7 +252,28 @@ class Listing extends Component {
                       content={<Button color='green' content='Confirm' onClick={ () => {this.handleDeleteFolder(folder)}}/>}
                       on='click'
                       position='right center'
-                    />
+                    /> */}
+
+                      <Popup wide trigger={<Button basic icon content={<Icon name='ellipsis horizontal'/>} />} position='right center' on='click'>
+                        <Grid columns='equal'>
+                          <Grid.Column>
+                            <Button basic color="blue" onClick={() => {this.handleStarFolder(folder)}}>Star</Button>
+                          </Grid.Column>
+                          <Grid.Column>
+                            <Button primary content='Share' onClick={ () => this.handleModalShareFolderOpen(true, folder)} />
+                          </Grid.Column>
+                          <Grid.Column>
+                          <Popup
+                            trigger={<Button color='red'>Delete</Button>}
+                            content={<Button color='green' content='Confirm' onClick={ () => {this.handleDeleteFolder(folder)}}/>}
+                            on='click'
+                            position='top center'
+                          />
+
+                          </Grid.Column>
+                        </Grid>
+                      </Popup>
+
 
 
                     </Table.HeaderCell>
@@ -302,7 +324,7 @@ class Listing extends Component {
                     </Table.Cell>
 
                     <Table.HeaderCell>
-                      <Button basic color="blue" onClick={() => {this.handleClick(file)}} >Star </Button>
+                      {/* <Button basic color="blue" onClick={() => {this.handleClick(file)}} >Star </Button>
                       <Button primary content='Share' onClick={ () => this.handleModalShareFileOpen(true, file)} />
                       
                       <Popup
@@ -310,7 +332,28 @@ class Listing extends Component {
                       content={<Button color='green' content='Confirm' onClick={ () => {this.handleDeleteFile(file)}}/>}
                       on='click'
                       position='right center'
-                    />
+                    /> */}
+
+                      <Popup wide trigger={<Button basic icon content={<Icon name='ellipsis horizontal'/>} />} position='right center' on='click'>
+                          <Grid columns='equal'>
+                            <Grid.Column>
+                              <Button basic color="blue" onClick={() => {this.handleClick(file)}} >Star </Button>
+                            </Grid.Column>
+                            <Grid.Column>
+                            <Button primary content='Share' onClick={ () => this.handleModalShareFileOpen(true, file)} />
+                            </Grid.Column>
+                            <Grid.Column>
+                            <Popup
+                              trigger={<Button color='red'>Delete</Button>}
+                              content={<Button color='green' content='Confirm' onClick={ () => {this.handleDeleteFile(file)}}/>}
+                              on='click'
+                              position='top center'
+                            />
+
+                            </Grid.Column>
+                          </Grid>
+                        </Popup>
+
 
 
                     </Table.HeaderCell>
@@ -367,7 +410,7 @@ class Listing extends Component {
 
                 { this.state.shareFileUsers.map( (user) => {
                 return (
-                  <Table.Row>
+                  <Table.Row key={user.id}>
                     <Table.Cell>
                       <Header as='h4' image>
                         <Image src={ProfilePhoto} shape='rounded' size='mini' />
