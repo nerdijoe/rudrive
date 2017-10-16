@@ -11,6 +11,7 @@ import {
   Switch,
   Route,
   withRouter,
+  Link,
 } from 'react-router-dom';
 
 import Nav from './Navbar';
@@ -19,10 +20,12 @@ import Files from './Files';
 import About from './UserAbout';
 import Interest from './UserInterest';
 import Sharing from './Sharing';
+import Main from './Main';
+import Activities from './Activities';
 
-import FileUpload from './FileUpload';
-import Listing from './Listing';
-import CreateFolder from './CreateFolder';
+// import FileUpload from './FileUpload';
+// import Listing from './Listing';
+// import CreateFolder from './CreateFolder';
 
 import Logo from '../assets/images/logo/dropbox_logo.svg';
 
@@ -62,7 +65,7 @@ class Home extends Component {
 
         <Container>
 
-        <Grid celled>
+        <Grid>
           <Grid.Row>
             <Grid.Column width={3}>
               <Image size='mini' src={Logo} />
@@ -82,7 +85,9 @@ class Home extends Component {
               <Route path='/home/about' component={About} />
               <Route path='/home/interest' component={Interest} />
               <Route path='/home/sharing' component={Sharing} />
-  
+              <Route path='/home/starred' component={Main} />
+              <Route path='/home/activities' component={Activities} />
+              
             </Grid.Column>
             <Grid.Column width={3}>
               

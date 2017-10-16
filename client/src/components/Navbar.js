@@ -25,18 +25,18 @@ class Navbar extends Component {
     return (
       <Container>
         <Menu secondary>
-          <Link to='/'>
+          {/* <Link to='/'>
             <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick} />
-          </Link>
+          </Link> */}
         
           { this.props.is_authenticated ? (
             <Menu.Menu position='right'>
-              <Link to='/home'>
+              {/* <Link to='/home'>
                 <Menu.Item name='files' onClick={this.handleItemClick} />
               </Link>
               <Link to='/home/sharing/folders'>
                 <Menu.Item name='sharing' onClick={this.handleItemClick} />
-              </Link>
+              </Link> */}
 
               <Link to='/home/about'>
                 <Menu.Item name='about' onClick={this.handleItemClick} />
