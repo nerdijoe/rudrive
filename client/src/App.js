@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container } from 'semantic-ui-react';
+import { } from 'semantic-ui-react';
 import {
   BrowserRouter as Router,
   Route,
@@ -12,26 +12,26 @@ import styled from 'styled-components';
 
 import store from './store/manageStore';
 
-import Nav from './components/Navbar';
+// import Nav from './components/Navbar';
 import Landing from './components/Landing';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Home from './components/Home';
-import About from './components/UserAbout';
-import Interest from './components/UserInterest';
-import Sharing from './components/Sharing';
+// import About from './components/UserAbout';
+// import Interest from './components/UserInterest';
+// import Sharing from './components/Sharing';
 
-const styles = {
-  containerMain: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
+// const styles = {
+//   containerMain: {
+//     position: 'absolute',
+//     left: 0,
+//     right: 0,
     
-    // marginRight: 0,
+//     // marginRight: 0,
 
-  },
+//   },
 
-};
+// };
 
 const MyContainer = styled.div`
   width: 100%;
