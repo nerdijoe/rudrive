@@ -165,6 +165,7 @@ exports.createDir = (req, res) => {
       path: currentPath,
       full_path: newDirPath,
       is_starred: false,
+      is_deleted: false,
       user_id: req.decoded._id,
     };
     db.Folder.create(new_folder)
