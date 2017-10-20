@@ -81,15 +81,23 @@ export const breadcrumbClear = () => {
 };
 
 
-export const axiosSignUp = data => (dispatch) => {
+export const axiosSignUp = (data, router) => (dispatch) => {
   axios.post('http://localhost:3000/auth/signup', {
     firstname: data.firstname,
     lastname: data.lastname,
     email: data.email,
     password: data.password,
-  }).then ( (res) => {
-    console.log('axiosSignUp', res);
-    dispatch(userSignUp(data));
+  }).then((res) => {
+    console.log('===> axiosSignUp res.data', res.data);
+    if (res.data.message) {
+      dispatch(signUpError({ message: res.data.message }));
+    }
+    else {
+      console.log('axiosSignUp', res);
+      dispatch(userSignUp(data));
+      dispatch(signUpSuccess({ message: `You have created an account using ${data.email}. Please sign in.` }));
+      router.push('/signin');
+    }
 
   }).catch( (err) => {
     console.log(err);
@@ -101,6 +109,38 @@ export const userSignUp = (data) => {
   return {
     type: actionType.USER_SIGN_UP,
     data,
+  };
+};
+
+export const signUpError = (data) => {
+  return {
+    type: actionType.SIGN_UP_ERROR,
+    data,
+  };
+};
+
+export const signUpSuccess = (data) => {
+  return {
+    type: actionType.SIGN_UP_SUCCESS,
+    data,
+  };
+};
+
+export const signUpErrorClear = () => {
+  return {
+    type: actionType.SIGN_UP_ERROR_CLEAR,
+  };
+};
+
+export const signUpSuccessClear = () => {
+  return {
+    type: actionType.SIGN_UP_SUCCESS_CLEAR,
+  };
+};
+
+export const signInErrorClear = () => {
+  return {
+    type: actionType.SIGN_IN_ERROR_CLEAR,
   };
 };
 
@@ -122,6 +162,11 @@ export const axiosSignIn = (data, router) => (dispatch) => {
     router.push('/home');
 
     dispatch(userSignIn(data));
+    
+    dispatch(signInErrorClear());
+    dispatch(signUpErrorClear());
+    dispatch(signUpSuccessClear());
+
     dispatch(axiosAddActivity(actionType.USER_SIGN_IN, 'User sign in'));
   }).catch( (err) => {
     console.log('Error when signin', err);

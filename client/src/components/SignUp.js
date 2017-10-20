@@ -4,7 +4,10 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { axiosSignUp } from '../actions';
+import {
+  axiosSignUp,
+  signUpErrorClear,
+} from '../actions';
 
 import LandingNavbar from './LandingNavbar';
 
@@ -64,13 +67,15 @@ class SignUp extends Component {
     if(localStorage.getItem('token') != null) {
       this.props.history.push('/home');
     }
+    this.props.signUpErrorClear();
   }
 
   handleSignUp(e) {
     e.preventDefault();
     console.log('handleSignUp', this.state);
-    this.props.axiosSignUp(this.state);
-    this.props.history.push('/signin');
+    this.props.axiosSignUp(this.state, this.props.history);
+
+    // this.props.history.push('/signin');
   }
 
   validateField(fieldName, value) {
@@ -167,6 +172,16 @@ class SignUp extends Component {
                   <Button primary type='submit' disabled={!this.state.formValid}>Sign up</Button>
                 </Form>
       
+                {
+                  // display sign in error message
+                  (this.props.signUpErrorMsg.length > 0) ? 
+                    <Message negative>
+                      {this.props.signUpErrorMsg}
+                    </Message>
+                    :
+                    ''
+                }
+
                 <ErrorMessage formErrors={this.state.formErrors} />
               </Grid.Column>
 
@@ -184,12 +199,19 @@ class SignUp extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = (state) => {
   return {
-    axiosSignUp: (data) => { dispatch(axiosSignUp(data)) },
-  }
-}
+    signUpErrorMsg: state.UserReducer.signUpErrorMsg,
+  };
+};
 
-const connectedSignUp = connect(null, mapDispatchToProps)(SignUp);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    axiosSignUp: (data, router) => { dispatch(axiosSignUp(data, router)); },
+    signUpErrorClear: () => { dispatch(signUpErrorClear()); },
+  };
+};
+
+const connectedSignUp = connect(mapStateToProps, mapDispatchToProps)(SignUp);
 
 export default connectedSignUp;

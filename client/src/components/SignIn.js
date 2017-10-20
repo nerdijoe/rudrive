@@ -3,7 +3,11 @@ import { Container, Form, Button, Message, Header, Grid, Image } from 'semantic-
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { axiosSignIn } from '../actions';
+import {
+  axiosSignIn,
+  signInErrorClear,
+  signUpSuccessClear,
+} from '../actions';
 
 import LandingNavbar from './LandingNavbar';
 
@@ -59,6 +63,9 @@ class SignIn extends Component {
     if(localStorage.getItem('token') != null) {
       this.props.history.push('/home');
     }
+
+    this.props.signInErrorClear();
+    // this.props.signUpSuccessClear();
   }
 
   handleSignIn(e) {
@@ -150,6 +157,16 @@ class SignIn extends Component {
                 </Form>
 
                 {
+                  // display sign up success message
+                  (this.props.signUpSuccessMsg.length > 0) ? 
+                    <Message positive>
+                      {this.props.signUpSuccessMsg}
+                    </Message>
+                    :
+                    ''
+                }
+
+                {
                   // display sign in error message
                   (this.props.signInErrorMsg.length > 0) ? 
                     <Message negative>
@@ -179,19 +196,22 @@ class SignIn extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   console.log('mapStateToProps', state);
   return {
     is_authenticated: state.UserReducer.is_authenticated,
     signInErrorMsg: state.UserReducer.signInErrorMsg,
-  }
-}
+    signUpSuccessMsg: state.UserReducer.signUpSuccessMsg,
+  };
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    axiosSignIn: (data, router) => { dispatch(axiosSignIn(data, router)) },
-  }
-}
+    axiosSignIn: (data, router) => { dispatch(axiosSignIn(data, router)); },
+    signInErrorClear: () => { dispatch(signInErrorClear()); },
+    signUpSuccessClear: () => { dispatch(signUpSuccessClear()); },
+  };
+};
 
 const connectedSignIn = withRouter(connect(mapStateToProps, mapDispatchToProps)(SignIn));
 
