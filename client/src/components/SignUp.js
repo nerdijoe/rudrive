@@ -164,7 +164,7 @@ class SignUp extends Component {
                     <input type='password' placeholder='Password' name='password' value={this.state.name} onChange={ (e) => { this.handleChange(e); }}/>
                   </Form.Field>
       
-                  <Button primary type='submit' disabled={!this.state.formValid}>Sign In</Button>
+                  <Button primary type='submit' disabled={!this.state.formValid}>Sign up</Button>
                 </Form>
       
                 <ErrorMessage formErrors={this.state.formErrors} />

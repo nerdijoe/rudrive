@@ -170,13 +170,16 @@ passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'passwor
     email: username,
   }, function(err, user) {
     if (err) cb(err)
-    if(!user)
-      cb('User does not exist')
+    if(!user) {
+      cb(null, false, { message: 'User does not exist'});
+      // cb.json({ message: 'User does not exist'})
+    }
     else {
       if (passwordHash.verify(password, user.password)) {
         cb(null, user)
       } else {
-        cb('Password is not correct !')
+        // cb(null, false, {message: 'Password is not correct !'})
+        cb(null, false);
       }
     }
 

@@ -100,19 +100,21 @@ exports.signin = (req, res) => {
   console.log('auth.signin');
   console.log(user);
 
-  const email = req.user.email;
+  const email = user.email;
   const token = jwt.sign({
-    firstname: req.user.firstname,
-    lastname: req.user.lastname,
-    email: req.user.email,
-    mysql_id: req.user.mysql_id,
-    _id: req.user._id,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    email: user.email,
+    mysql_id: user.mysql_id,
+    _id: user.mysql_id,
   }, process.env.JWT_KEY);
 
   res.send({
     token,
     email,
-    mysql_id: req.user.mysql_id,
-    _id: req.user._id,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    mysql_id: user.mysql_id,
+    _id: user.mysql_id,
   });
 };

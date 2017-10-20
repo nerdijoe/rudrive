@@ -149,7 +149,18 @@ class SignIn extends Component {
                   <Button primary type='submit' disabled={!this.state.formValid}>Sign In</Button>
                 </Form>
 
+                {
+                  // display sign in error message
+                  (this.props.signInErrorMsg.length > 0) ? 
+                    <Message negative>
+                      {this.props.signInErrorMsg}
+                    </Message>
+                    :
+                    ''
+                }
+
                 <ErrorMessage formErrors={this.state.formErrors} />
+
 
               </Grid.Column>
 
@@ -172,6 +183,7 @@ const mapStateToProps = state => {
   console.log('mapStateToProps', state);
   return {
     is_authenticated: state.UserReducer.is_authenticated,
+    signInErrorMsg: state.UserReducer.signInErrorMsg,
   }
 }
 

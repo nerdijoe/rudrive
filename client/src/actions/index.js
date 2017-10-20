@@ -82,7 +82,7 @@ export const breadcrumbClear = () => {
 
 
 export const axiosSignUp = data => (dispatch) => {
-  axios.post('http://localhost:3000/authseq/signup', {
+  axios.post('http://localhost:3000/auth/signup', {
     firstname: data.firstname,
     lastname: data.lastname,
     email: data.email,
@@ -106,7 +106,7 @@ export const userSignUp = (data) => {
 
 
 export const axiosSignIn = (data, router) => (dispatch) => {
-  axios.post('http://localhost:3000/authseq/signin', {
+  axios.post('http://localhost:3000/auth/signin', {
     email: data.email,
     password: data.password,
   }).then((res) => {
@@ -117,6 +117,7 @@ export const axiosSignIn = (data, router) => (dispatch) => {
     localStorage.setItem('user_email', res.data.email);
     localStorage.setItem('user_firstname', res.data.firstname);
     localStorage.setItem('user_lastname', res.data.lastname);
+    localStorage.setItem('user_mysql_id', res.data.mysql_id);
 
     router.push('/home');
 
@@ -125,8 +126,17 @@ export const axiosSignIn = (data, router) => (dispatch) => {
   }).catch( (err) => {
     console.log('Error when signin', err);
     // display the error message
+    dispatch(signInError({ message: 'Sign in failed. Please check your username and password.' }));
   });
 };
+
+export const signInError = (data) => {
+  return {
+    type: actionType.SIGN_IN_ERROR,
+    data,
+  };
+};
+
 
 export const userSignIn = (data) => {
   return {

@@ -23,6 +23,7 @@ const initialState = {
   shareFiles: [],
   shareFolders: [],
   activities: [],
+  signInErrorMsg: '',
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -32,6 +33,13 @@ const UserReducer = (state = initialState, action) => {
       return {
         ...state,
         is_authenticated: true,
+      };
+    }
+    case actionType.SIGN_IN_ERROR: {
+      // not sure what to do here
+      return {
+        ...state,
+        signInErrorMsg: action.data.message,
       };
     }
     case actionType.USER_SIGN_UP: {
