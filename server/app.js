@@ -103,27 +103,27 @@ app.use('./public/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(passport.initialize());
 
-passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (username, password, done) => {
-  console.log(`passport----> ${username}, ${password}`);
-  let db = require('./models');
+// passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (username, password, done) => {
+//   console.log(`passport----> ${username}, ${password}`);
+//   let db = require('./models');
 
-  db.User.findOne({
-    where: {
-      email: username
-    }
-  }).then( user => {
-    if(!user) {
-      done('User does not exist');
-    } else {
-      if (passwordHash.verify(password, user.password)) {
-        done(null, user);
-      } else {
-        done ('Email and password do not match');
-      }
-    }
-  }).catch (err => {
-    done('Error')
-  })
+//   db.User.findOne({
+//     where: {
+//       email: username
+//     }
+//   }).then( user => {
+//     if(!user) {
+//       done('User does not exist');
+//     } else {
+//       if (passwordHash.verify(password, user.password)) {
+//         done(null, user);
+//       } else {
+//         done ('Email and password do not match');
+//       }
+//     }
+//   }).catch (err => {
+//     done('Error')
+//   })
 
   // User.findOne({ email: username }, (err, user) => {
   //   if (err) { return done(err); }
@@ -140,7 +140,8 @@ passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'passwor
   //     }
   //   }
   // });
-}));
+
+// }));
 
 // mongoose
 // passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (username, password, done) => {
@@ -163,24 +164,24 @@ passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'passwor
 //   });
 // }));
 
-// passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, function(username, password, cb) {
-//   let User = require('./models/user');
-//   User.findOne({
-//     username
-//   }, function(err, user) {
-//     if (err) cb(err)
-//     if(!user)
-//       cb('User does not exist')
-//     else {
-//       if (passwordHash.verify(password, user.password)) {
-//         cb(null, user)
-//       } else {
-//         cb('Password is not correct !')
-//       }
-//     }
+passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, function(username, password, cb) {
+  let User = require('./models/mongoose_user');
+  User.findOne({
+    email: username,
+  }, function(err, user) {
+    if (err) cb(err)
+    if(!user)
+      cb('User does not exist')
+    else {
+      if (passwordHash.verify(password, user.password)) {
+        cb(null, user)
+      } else {
+        cb('Password is not correct !')
+      }
+    }
 
-//   })
-// }));
+  })
+}));
 
 const port = process.env.PORT || '3000';
 
