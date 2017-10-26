@@ -1,4 +1,6 @@
-# 273 Lab 1
+# 273 Lab 2 - Kafka and MongoDB
+
+## 🚀 Migrating previous Lab 1 MySQL Database structure to MongoDB
 
 # Dropbox
 
