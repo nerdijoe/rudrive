@@ -2,6 +2,8 @@
 
 ## 🚀 Migrating previous Lab 1 MySQL Database structure to MongoDB
 
+## 💀 Client and Server should communicate via Kafka Streams
+
 # Dropbox
 
 ## How to run the application
