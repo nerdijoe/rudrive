@@ -81,15 +81,23 @@ export const breadcrumbClear = () => {
 };
 
 
-export const axiosSignUp = data => (dispatch) => {
-  axios.post('http://localhost:3000/authseq/signup', {
+export const axiosSignUp = (data, router) => (dispatch) => {
+  axios.post('http://localhost:3000/auth/signup', {
     firstname: data.firstname,
     lastname: data.lastname,
     email: data.email,
     password: data.password,
-  }).then ( (res) => {
-    console.log('axiosSignUp', res);
-    dispatch(userSignUp(data));
+  }).then((res) => {
+    console.log('===> axiosSignUp res.data', res.data);
+    if (res.data.message) {
+      dispatch(signUpError({ message: res.data.message }));
+    }
+    else {
+      console.log('axiosSignUp', res);
+      dispatch(userSignUp(data));
+      dispatch(signUpSuccess({ message: `You have created an account using ${data.email}. Please sign in.` }));
+      router.push('/signin');
+    }
 
   }).catch( (err) => {
     console.log(err);
@@ -104,9 +112,41 @@ export const userSignUp = (data) => {
   };
 };
 
+export const signUpError = (data) => {
+  return {
+    type: actionType.SIGN_UP_ERROR,
+    data,
+  };
+};
+
+export const signUpSuccess = (data) => {
+  return {
+    type: actionType.SIGN_UP_SUCCESS,
+    data,
+  };
+};
+
+export const signUpErrorClear = () => {
+  return {
+    type: actionType.SIGN_UP_ERROR_CLEAR,
+  };
+};
+
+export const signUpSuccessClear = () => {
+  return {
+    type: actionType.SIGN_UP_SUCCESS_CLEAR,
+  };
+};
+
+export const signInErrorClear = () => {
+  return {
+    type: actionType.SIGN_IN_ERROR_CLEAR,
+  };
+};
+
 
 export const axiosSignIn = (data, router) => (dispatch) => {
-  axios.post('http://localhost:3000/authseq/signin', {
+  axios.post('http://localhost:3000/auth/signin', {
     email: data.email,
     password: data.password,
   }).then((res) => {
@@ -117,16 +157,31 @@ export const axiosSignIn = (data, router) => (dispatch) => {
     localStorage.setItem('user_email', res.data.email);
     localStorage.setItem('user_firstname', res.data.firstname);
     localStorage.setItem('user_lastname', res.data.lastname);
+    localStorage.setItem('user_mysql_id', res.data.mysql_id);
 
     router.push('/home');
 
     dispatch(userSignIn(data));
+    
+    dispatch(signInErrorClear());
+    dispatch(signUpErrorClear());
+    dispatch(signUpSuccessClear());
+
     dispatch(axiosAddActivity(actionType.USER_SIGN_IN, 'User sign in'));
   }).catch( (err) => {
     console.log('Error when signin', err);
     // display the error message
+    dispatch(signInError({ message: 'Sign in failed. Please check your username and password.' }));
   });
 };
+
+export const signInError = (data) => {
+  return {
+    type: actionType.SIGN_IN_ERROR,
+    data,
+  };
+};
+
 
 export const userSignIn = (data) => {
   return {

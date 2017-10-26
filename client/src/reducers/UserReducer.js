@@ -23,6 +23,9 @@ const initialState = {
   shareFiles: [],
   shareFolders: [],
   activities: [],
+  signInErrorMsg: '',
+  signUpErrorMsg: '',
+  signUpSuccessMsg: '',
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -34,6 +37,20 @@ const UserReducer = (state = initialState, action) => {
         is_authenticated: true,
       };
     }
+    case actionType.SIGN_IN_ERROR: {
+      // not sure what to do here
+      return {
+        ...state,
+        signInErrorMsg: action.data.message,
+      };
+    }
+    case actionType.SIGN_IN_ERROR_CLEAR: {
+      // not sure what to do here
+      return {
+        ...state,
+        signInErrorMsg: '',
+      };
+    }
     case actionType.USER_SIGN_UP: {
       return {
         ...state,
@@ -42,6 +59,34 @@ const UserReducer = (state = initialState, action) => {
           lastname: action.data.lastname,
           email: action.data.email,
         },
+      };
+    }
+    case actionType.SIGN_UP_ERROR: {
+      // not sure what to do here
+      return {
+        ...state,
+        signUpErrorMsg: action.data.message,
+      };
+    }
+    case actionType.SIGN_UP_ERROR_CLEAR: {
+      // not sure what to do here
+      return {
+        ...state,
+        signUpErrorMsg: '',
+      };
+    }
+    case actionType.SIGN_UP_SUCCESS: {
+      // not sure what to do here
+      return {
+        ...state,
+        signUpSuccessMsg: action.data.message,
+      };
+    }
+    case actionType.SIGN_UP_SUCCESS_CLEAR: {
+      // not sure what to do here
+      return {
+        ...state,
+        signUpSuccessMsg: '',
       };
     }
     case actionType.USER_SIGN_OUT: {
