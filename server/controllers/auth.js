@@ -106,6 +106,7 @@ exports.signin = (req, res) => {
     lastname: user.lastname,
     email: user.email,
     mysql_id: user.mysql_id,
+    mongo_id: user._id,
     _id: user.mysql_id,
   }, process.env.JWT_KEY);
 
@@ -115,6 +116,7 @@ exports.signin = (req, res) => {
     firstname: user.firstname,
     lastname: user.lastname,
     mysql_id: user.mysql_id,
+    mongo_id: user._id,
     _id: user.mysql_id,
   });
 };

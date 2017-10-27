@@ -1,4 +1,6 @@
+const mongoose = require('mongoose');
 const db = require('../models');
+const File = require('../models/mongoose_file');
 
 exports.fetchFiles = (req, res) => {
   console.log('fetchFiles', req.decoded._id);
@@ -17,32 +19,57 @@ exports.fetchFiles = (req, res) => {
 exports.fetchRootFiles = (req, res) => {
   console.log('fetchRootFiles', req.decoded._id);
 
-  db.File.findAll({
-    where: {
-      user_id: req.decoded._id,
-      path: process.env.ROOT_FOLDER + req.decoded.email,
-    }
-  }).then((files) => {
-    console.log('after fetchRootFiles files=', files);
+  // db.File.findAll({
+  //   where: {
+  //     user_id: req.decoded._id,
+  //     path: process.env.ROOT_FOLDER + req.decoded.email,
+  //   }
+  // }).then((files) => {
+  //   console.log('after fetchRootFiles files=', files);
 
-    res.json(files);
-  });
+  //   res.json(files);
+  // });
+
+  File
+    .find({
+      user: mongoose.Types.ObjectId(req.decoded.mongo_id),
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    })
+    .populate('user')
+    .exec((err, files) => {
+      console.log('after fetchRootFiles files=', files);
+
+      res.json(files);
+    });
 };
 
 exports.fetchRootFilesWithShare = (req, res) => {
   console.log('fetchRootFilesWithShare', req.decoded._id);
 
-  db.File.findAll({
-    where: {
-      user_id: req.decoded._id,
-      path: process.env.ROOT_FOLDER + req.decoded.email,
-    },
-    include: [{ model: db.User }],
-  }).then((files) => {
-    // console.log('after fetchRootFilesWithShare files=', files);
+  // db.File.findAll({
+  //   where: {
+  //     user_id: req.decoded._id,
+  //     path: process.env.ROOT_FOLDER + req.decoded.email,
+  //   },
+  //   include: [{ model: db.User }],
+  // }).then((files) => {
+  //   // console.log('after fetchRootFilesWithShare files=', files);
 
-    res.json(files);
-  });
+  //   res.json(files);
+  // });
+
+  File
+    .find({
+      user: mongoose.Types.ObjectId(req.decoded.mongo_id),
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    })
+    .populate('user')
+    .exec((err, files) => {
+      console.log('after fetchRootFilesWithShare files=', files);
+
+      res.json(files);
+    });
+
 };
 
 exports.starFile = (req, res) => {

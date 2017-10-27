@@ -1,3 +1,7 @@
+const mongoose = require('mongoose');
+const Folder = require('../models/mongoose_folder');
+const File = require('../models/mongoose_file');
+
 const db = require('../models');
 require('dotenv').config();
 
@@ -33,17 +37,29 @@ exports.fetchRootFolders = (req, res) => {
 exports.fetchRootFoldersWithShare = (req, res) => {
   console.log('fetchRootFoldersWithShare', req.decoded._id);
 
-  db.Folder.findAll({
-    where: {
-      user_id: req.decoded._id,
-      path: process.env.ROOT_FOLDER + req.decoded.email,
-    },
-    include: [{ model: db.User }],
-  }).then((folders) => {
-    // console.log('after fetchRootFolder folders=', folders);
+  // db.Folder.findAll({
+  //   where: {
+  //     user_id: req.decoded._id,
+  //     path: process.env.ROOT_FOLDER + req.decoded.email,
+  //   },
+  //   include: [{ model: db.User }],
+  // }).then((folders) => {
+  //   // console.log('after fetchRootFolder folders=', folders);
 
-    res.json(folders);
-  });
+  //   res.json(folders);
+  // });
+
+  Folder
+    .find({
+      user: mongoose.Types.ObjectId(req.decoded.mongo_id),
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    })
+    .populate('user')
+    .exec((err, folders) => {
+      console.log('after fetchRootFolder folders=', folders);
+
+      res.json(folders);
+    });
 };
 
 

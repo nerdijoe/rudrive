@@ -158,7 +158,8 @@ export const axiosSignIn = (data, router) => (dispatch) => {
     localStorage.setItem('user_firstname', res.data.firstname);
     localStorage.setItem('user_lastname', res.data.lastname);
     localStorage.setItem('user_mysql_id', res.data.mysql_id);
-
+    localStorage.setItem('user_mongo_id', res.data.mongo_id);
+    
     router.push('/home');
 
     dispatch(userSignIn(data));
@@ -273,6 +274,7 @@ export const axiosUpload = (data) => (dispatch) => {
   })
 };
 
+// using this on components/FileUpload.js
 export const axiosUploadToPath = (data, currentPath) => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosUploadToPath get token=', token);
@@ -304,6 +306,40 @@ export const axiosUploadToPath = (data, currentPath) => (dispatch) => {
     console.log(err);
   })
 };
+
+export const axiosUploadToPathMongo = (data, currentPath) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosUploadToPath get token=', token);
+  console.log("currentPath", currentPath);
+  console.log("data", data);
+  
+  axios.post(`http://localhost:3000/uploads/${currentPath}`, data, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('axiosUploadToPath');
+    console.log(res);
+
+    // update the list state
+    dispatch(axiosFetchListing());
+    dispatch(addNewFile(res.data));
+
+
+    // Log activity
+    const user_email = localStorage.getItem('user_email');
+    const re = new RegExp(`./public/uploads/${user_email}(/?)`);
+    const path = res.data.path.replace(re, './');
+    // console.log(`newaddress = [${path}]`);
+
+    dispatch(axiosAddActivity(actionType.ADD_NEW_FILE, `Upload a new file [${res.data.name}] on path [${path}]`));
+    
+  }).catch((err) => {
+    console.log(err);
+  })
+};
+
+
 
 export const axiosFetchListing = () => (dispatch) => {
   const token = localStorage.getItem('token');

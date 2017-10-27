@@ -8,6 +8,8 @@ const userSchema = new Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   mysql_id: { type: Number, required: true },
+  // files: [{ type: Schema.Types.ObjectId, ref: 'File' }],
+  // folders: [{ type: Schema.Types.ObjectId, ref: 'Folder' }],
 });
 
 const User = mongoose.model('User', userSchema);
