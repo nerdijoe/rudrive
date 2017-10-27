@@ -299,3 +299,40 @@ exports.starFolderMongo = (req, res) => {
     }
   );
 };
+
+exports.deleteFolderMongo = (req, res) => {
+  console.log('deleteFolderMongo', req.decoded._id);
+  console.log('req.body', req.body);
+  const folder = req.body;
+  console.log(`typeof folder.is_deleted=${typeof folder.is_deleted}`);
+
+  let delete_status = folder.is_deleted;
+  if ((typeof folder.is_deleted) !== 'boolean') {
+    delete_status = (folder.is_deleted === 'true');
+  }
+  console.log(`deleteFolder is_deleted=${folder.is_deleted}, delete_status = ${delete_status}, typeof ${typeof delete_status}`);
+
+  // format date to ISO
+  const d = new Date();
+  const n = d.toISOString();
+
+  Folder.findByIdAndUpdate(
+    folder._id,
+    {
+      $set: {
+        is_deleted: !delete_status,
+        updatedAt: n,
+      },
+    },
+    (err, result) => {
+      console.log('after deleteFolderMongo result=', result);
+      if (result.nModified === 1) {
+        console.log(`folder [${folder.name}]is deleted successfully`);
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }
+  );
+};
+

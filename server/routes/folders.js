@@ -7,7 +7,7 @@ router.get('/', helper.auth, foldersController.fetchFolders);
 router.get('/root', helper.auth, foldersController.fetchRootFoldersWithShare);
 
 router.put('/star', helper.auth, foldersController.starFolderMongo);
-router.put('/delete', helper.auth, foldersController.deleteFolder);
+router.put('/delete', helper.auth, foldersController.deleteFolderMongo);
 
 router.post('/share', helper.auth, foldersController.addFolderSharing);
 router.get('/share', helper.auth, foldersController.fetchFolderSharing);
