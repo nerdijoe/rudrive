@@ -12,7 +12,7 @@ router.put('/about', helper.auth, userController.updateAbout);
 router.get('/interest', helper.auth, userController.getInterest);
 router.put('/interest', helper.auth, userController.updateInterest);
 
-router.post('/activities', helper.auth, activityController.insertActivity);
-router.get('/activities', helper.auth, activityController.fetchActivities);
+router.post('/activities', helper.auth, activityController.insertActivityMongo);
+router.get('/activities', helper.auth, activityController.fetchActivitiesMongo);
 
 module.exports = router;

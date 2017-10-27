@@ -1,4 +1,6 @@
 const User = require('../models/mongoose_user');
+const About = require('../models/mongoose_about');
+const Interest = require('../models/mongoose_interest');
 const passwordHash = require('password-hash');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
@@ -8,6 +10,7 @@ const fs = require('fs');
 //mysql
 const db = require('../models');
 
+// hybrid: mysql + mongoDB
 exports.signup = (req, res, next) => {
   const data = req.body;
   data.password = passwordHash.generate(req.body.password);
@@ -94,7 +97,7 @@ exports.signup = (req, res, next) => {
   // });
 };
 
-
+// only using MongoDB
 exports.signupMongo = (req, res, next) => {
   const data = req.body;
   data.password = passwordHash.generate(req.body.password);
@@ -115,7 +118,26 @@ exports.signupMongo = (req, res, next) => {
       }, (err2, newUser) => {
         if (err2) res.json(err2);
 
-        res.json(newUser);
+        const newAbout = About({
+          overview: '',
+          work_edu: '',
+          contact_info: '',
+          life_events: '',
+          user: newUser._id,
+        });
+
+        newAbout.save((err3, about) => {
+          const newInterest = Interest({
+            music: '',
+            shows: '',
+            sports: '',
+            fav_teams: '',
+            user: newUser._id,
+          });
+          newInterest.save((err4, interest) => {
+            res.json(newUser);
+          });
+        }); // end of newAbout.save
       });
     } // end of else
   });

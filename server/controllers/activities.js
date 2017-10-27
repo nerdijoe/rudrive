@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+const Activity = require('../models/mongoose_activity');
+
 const db = require('../models');
 
 // export const USER_SIGN_UP = 'USER_SIGN_UP';
@@ -67,4 +70,41 @@ exports.fetchActivities = (req, res) => {
     console.log('after fetchActivities activities=', activities);
     res.json(activities);
   });
+};
+
+// MongoDb
+exports.insertActivityMongo = (req, res) => {
+  console.log('insertActivityMongo req.decoded._id=', req.decoded._id)
+  const data = req.body;
+  console.log('req.body', data);
+
+  // action
+  // description
+  // user
+  const newActivity = Activity({
+    action: data.action,
+    description: data.description,
+    user: mongoose.Types.ObjectId(req.decoded._id),
+  });
+
+  newActivity.save((err, item) => {
+    console.log('activity inserted', item);
+    res.json(item);
+  });
+};
+
+exports.fetchActivitiesMongo = (req, res) => {
+  console.log('fetchActivities', req.decoded._id);
+
+  Activity
+    .find({
+      user: mongoose.Types.ObjectId(req.decoded._id),
+    })
+    .sort({
+      createdAt: 'desc',
+    })
+    .exec((err, activities) => {
+      console.log('after fetchActivitiesMongo activities=', activities);
+      res.json(activities);
+    });
 };

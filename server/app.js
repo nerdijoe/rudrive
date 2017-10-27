@@ -65,6 +65,7 @@ const dbConfig = {
 };
 
 const appEnv = app.settings.env;
+mongoose.Promise = global.Promise;
 mongoose.connect(dbConfig[appEnv], { useMongoClient: true }, (err, res) => {
   console.log(`Connected to DB: ${dbConfig[appEnv]}`);
 });

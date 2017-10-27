@@ -9,6 +9,8 @@ const folderSchema = new Schema({
   is_starred: { type: Boolean, default: false },
   is_deleted: { type: Boolean, default: false },
   user: { type: Schema.Types.ObjectId, ref: 'User' },
+  createdAt: { type: Date, required: false, default: Date.now },
+  updatedAt: { type: Date, required: false, default: Date.now },
 });
 
 var Folder = mongoose.model('Folder', folderSchema);
