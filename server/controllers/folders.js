@@ -51,7 +51,7 @@ exports.fetchRootFoldersWithShare = (req, res) => {
 
   Folder
     .find({
-      user: mongoose.Types.ObjectId(req.decoded.mongo_id),
+      user: mongoose.Types.ObjectId(req.decoded._id),
       path: process.env.ROOT_FOLDER + req.decoded.email,
     })
     .populate('user')
@@ -251,10 +251,14 @@ exports.fetchFolderSharing = (req, res) => {
     },
     include: [{ model: db.Folder }],
   }).then((user) => {
-    console.log('after fetchFolderSharing user=', user.dataValues);
 
-    // only return the files array that have been shared to the signed in user.
-    res.json(user.Folders);
+    if (!user) {
+      res.json([]);
+    } else {
+      console.log('after fetchFolderSharing user=', user.dataValues);
+      // only return the files array that have been shared to the signed in user.
+      res.json(user.Folders);
+    }
   });
 };
 

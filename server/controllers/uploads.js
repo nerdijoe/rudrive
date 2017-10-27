@@ -251,7 +251,7 @@ exports.uploadFileToPathMongo = (req, res) => {
         size: 5740 }
       */
 
-      const user_id = mongoose.Types.ObjectId(req.decoded.mongo_id);
+      const user_id = mongoose.Types.ObjectId(req.decoded._id);
       // todo.tasks.push(task_id);
 
       const newFile = File({
@@ -296,7 +296,7 @@ exports.createDirMongo = (req, res) => {
       full_path: newDirPath,
       is_starred: false,
       is_deleted: false,
-      user: mongoose.Types.ObjectId(req.decoded.mongo_id),
+      user: mongoose.Types.ObjectId(req.decoded._id),
     });
 
     newFolder.save((err, folder) => {

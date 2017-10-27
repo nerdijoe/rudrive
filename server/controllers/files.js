@@ -32,7 +32,7 @@ exports.fetchRootFiles = (req, res) => {
 
   File
     .find({
-      user: mongoose.Types.ObjectId(req.decoded.mongo_id),
+      user: mongoose.Types.ObjectId(req.decoded._id),
       path: process.env.ROOT_FOLDER + req.decoded.email,
     })
     .populate('user')
@@ -60,7 +60,7 @@ exports.fetchRootFilesWithShare = (req, res) => {
 
   File
     .find({
-      user: mongoose.Types.ObjectId(req.decoded.mongo_id),
+      user: mongoose.Types.ObjectId(req.decoded._id),
       path: process.env.ROOT_FOLDER + req.decoded.email,
     })
     .populate('user')
@@ -211,9 +211,13 @@ exports.fetchFileSharing = (req, res) => {
     },
     include: [{ model: db.File }],
   }).then((user) => {
-    console.log('after fetchFileSharing user=', user.dataValues);
+    if (!user) {
+      res.json([]);
+    } else {
+      console.log('after fetchFileSharing user=', user.dataValues);
 
-    // only return the files array that have been shared to the signed in user.
-    res.json(user.Files);
+      // only return the files array that have been shared to the signed in user.
+      res.json(user.Files);
+    }
   });
 };

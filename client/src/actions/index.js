@@ -153,12 +153,12 @@ export const axiosSignIn = (data, router) => (dispatch) => {
     // if signin is successful, then save the token in the local storage
     console.log('axiosSignIn done', res);
     localStorage.setItem('token', res.data.token);
-    localStorage.setItem('user_id', res.data.id);
+    localStorage.setItem('user_id', res.data._id);
     localStorage.setItem('user_email', res.data.email);
     localStorage.setItem('user_firstname', res.data.firstname);
     localStorage.setItem('user_lastname', res.data.lastname);
-    localStorage.setItem('user_mysql_id', res.data.mysql_id);
-    localStorage.setItem('user_mongo_id', res.data.mongo_id);
+    // localStorage.setItem('user_mysql_id', res.data.mysql_id);
+    // localStorage.setItem('user_mongo_id', res.data.mongo_id);
     
     router.push('/home');
 
@@ -214,6 +214,8 @@ export const userSignOut = () => (dispatch) => {
   localStorage.removeItem('user_email');
   localStorage.removeItem('user_firstname');
   localStorage.removeItem('user_lastname');
+  // localStorage.removeItem('user_mysql_id');
+  // localStorage.removeItem('user_mongo_id');
 
   // router.push('/');
   dispatch(userSignOutReducer());

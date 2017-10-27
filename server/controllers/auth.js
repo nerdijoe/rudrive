@@ -94,6 +94,41 @@ exports.signup = (req, res, next) => {
   // });
 };
 
+
+exports.signupMongo = (req, res, next) => {
+  const data = req.body;
+  data.password = passwordHash.generate(req.body.password);
+
+  User.findOne({ email: data.email }, (err, user) => {
+    if (user) {
+      const errorMsg = {
+        message: 'Email is already used. Please sign up using different email.',
+      };
+      res.json(errorMsg);
+    } else {
+      User.create({
+        firstname: data.firstname,
+        lastname: data.lastname,
+        email: data.email,
+        password: data.password,
+        // mysql_id: 0,
+      }, (err2, newUser) => {
+        if (err2) res.json(err2);
+
+        res.json(newUser);
+      });
+    } // end of else
+  });
+
+  // User.create(data, (err, user) => {
+  //   if (err) {
+  //     res.json(err);
+  //   } else {
+  //     res.json(user);
+  //   }
+  // });
+};
+
 exports.signin = (req, res) => {
   // req.user is passed from passport
   const user = req.user;
@@ -105,9 +140,9 @@ exports.signin = (req, res) => {
     firstname: user.firstname,
     lastname: user.lastname,
     email: user.email,
-    mysql_id: user.mysql_id,
-    mongo_id: user._id,
-    _id: user.mysql_id,
+    // mysql_id: user.mysql_id,
+    // mongo_id: user._id,
+    _id: user._id,
   }, process.env.JWT_KEY);
 
   res.send({
@@ -115,8 +150,8 @@ exports.signin = (req, res) => {
     email,
     firstname: user.firstname,
     lastname: user.lastname,
-    mysql_id: user.mysql_id,
-    mongo_id: user._id,
-    _id: user.mysql_id,
+    // mysql_id: user.mysql_id,
+    // mongo_id: user._id,
+    _id: user._id,
   });
 };
