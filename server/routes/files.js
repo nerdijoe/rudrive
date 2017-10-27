@@ -6,7 +6,7 @@ const filesController = require('../controllers/files');
 router.get('/', helper.auth, filesController.fetchFiles);
 router.get('/root', helper.auth, filesController.fetchRootFilesWithShare);
 
-router.put('/star', helper.auth, filesController.starFile);
+router.put('/star', helper.auth, filesController.starFileMongo);
 router.put('/delete', helper.auth, filesController.deleteFile);
 
 // File Sharing

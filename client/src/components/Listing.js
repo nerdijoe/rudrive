@@ -221,7 +221,7 @@ class Listing extends Component {
                 }
 
                 return (
-                  <Table.Row key={folder.id}>
+                  <Table.Row key={folder._id}>
                     <Table.Cell>
                       <a onClick={() => {this.handleClickFolder(folder)}}>
                         <Icon name='blue folder' />{folder.name} {' '}
@@ -303,7 +303,7 @@ class Listing extends Component {
 
                 
                 return (
-                  <Table.Row key={file.id}>
+                  <Table.Row key={file._id}>
                     <Table.Cell>
                       <a href={downloadLink} target="_blank" >{file.name}</a>{' '}
                       {file.is_starred ? <Icon name='blue star' /> : ''}

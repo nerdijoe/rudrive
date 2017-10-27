@@ -150,7 +150,7 @@ const UserReducer = (state = initialState, action) => {
     case actionType.STAR_FILE: {
       console.log('*** reducer STAR_FILE action.data', action.data);
       const updatedFiles = [...state.files];
-      const pos = updatedFiles.findIndex(i => i.id === action.data.id);
+      const pos = updatedFiles.findIndex(i => i._id === action.data._id);
       if (pos !== -1) {
         console.log(typeof updatedFiles[pos].is_starred);
         console.log(`--> updatedFiles[${pos}].is_starred=${updatedFiles[pos].is_starred}`);
@@ -195,7 +195,7 @@ const UserReducer = (state = initialState, action) => {
     case actionType.STAR_FOLDER: {
       console.log('*** reducer STAR_FOLDER action.data', action.data);
       const updatedFolders = [...state.folders];
-      const pos = updatedFolders.findIndex(i => i.id === action.data.id);
+      const pos = updatedFolders.findIndex(i => i._id === action.data._id);
       if (pos !== -1) {
         console.log(typeof updatedFolders[pos].is_starred);
         console.log(`--> updatedFolders[${pos}].is_starred=${updatedFolders[pos].is_starred}`);

@@ -38,7 +38,6 @@ const db = require('../models');
 // export const FOLDER_SHARING_REMOVE = 'FOLDER_SHARING_REMOVE';
 // export const FETCH_SHARE_FOLDERS = 'FETCH_SHARE_FOLDERS';
 
-
 exports.insertActivity = (req, res) => {
   console.log('insertActivity req.decoded._id=', req.decoded._id)
   const data = req.body;
@@ -72,7 +71,8 @@ exports.fetchActivities = (req, res) => {
   });
 };
 
-// MongoDb
+
+//---------- MongoDb
 exports.insertActivityMongo = (req, res) => {
   console.log('insertActivityMongo req.decoded._id=', req.decoded._id)
   const data = req.body;

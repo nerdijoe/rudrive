@@ -6,7 +6,7 @@ const foldersController = require('../controllers/folders');
 router.get('/', helper.auth, foldersController.fetchFolders);
 router.get('/root', helper.auth, foldersController.fetchRootFoldersWithShare);
 
-router.put('/star', helper.auth, foldersController.starFolder);
+router.put('/star', helper.auth, foldersController.starFolderMongo);
 router.put('/delete', helper.auth, foldersController.deleteFolder);
 
 router.post('/share', helper.auth, foldersController.addFolderSharing);

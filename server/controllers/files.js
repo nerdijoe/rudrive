@@ -221,3 +221,42 @@ exports.fetchFileSharing = (req, res) => {
     }
   });
 };
+
+
+// MongoDB ---------------------------------------------------------------
+
+exports.starFileMongo = (req, res) => {
+  console.log('starFile', req.decoded._id);
+  const file = req.body;
+  console.log(`typeof file.is_starred=${typeof file.is_starred}`);
+
+  let star_status = file.is_starred;
+  if ((typeof file.is_starred) !== 'boolean') {
+    star_status = (file.is_starred === 'true');
+  }
+  console.log(`starFile is_starred=${file.is_starred}, star_status = ${star_status}, typeof ${typeof star_status}`);
+
+  // format date to ISO
+  const d = new Date();
+  const n = d.toISOString();
+
+  File.findByIdAndUpdate(
+    file._id,
+    {
+      $set: {
+        is_starred: !star_status,
+        updatedAt: n,
+      },
+    },
+    (err, result) => {
+      console.log('after starFile result=', result);
+      if (result.nModified === 1) {
+        console.log("file is starred successfully");
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }
+  );
+};
+

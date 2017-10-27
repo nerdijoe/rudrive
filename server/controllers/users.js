@@ -1,14 +1,6 @@
-// const User = require('../models/user');
-
-// exports.getAll = (req, res) => {
-//   User.find({}, (err, users) => {
-//     if (err) {
-//       res.json(err);
-//     } else {
-//       res.json(users);
-//     }
-//   });
-// };
+const mongoose = require('mongoose');
+const About = require('../models/mongoose_about');
+const Interest = require('../models/mongoose_interest');
 
 const db = require('../models');
 
@@ -33,8 +25,6 @@ exports.getAbout = (req, res) => {
     res.json(about);
   });
 };
-
-
 
 exports.updateAbout = (req, res) => {
   console.log('updateAbout req.decode._id=', req.decoded._id);
@@ -111,3 +101,99 @@ exports.updateInterest = (req, res) => {
       console.log(err);
     })
 };
+
+
+// --- Mongo
+
+exports.getAboutMongo = (req, res) => {
+  console.log('getAbout req.decoded._id=', req.decoded._id);
+  About.findOne({
+    user: mongoose.Types.ObjectId(req.decoded._id),
+  }, (err, about) => {
+    console.log('getAbout', about);
+    if (!about) {
+      console.log('--------> about null');
+      about = {
+        overview: '',
+        work_edu: '',
+        contact_info: '',
+        life_events: '',
+      };
+    }
+
+    res.json(about);
+  });
+};
+
+exports.updateAboutMongo = (req, res) => {
+  console.log('updateAbout req.decode._id=', req.decoded._id);
+  console.log('updateAbout req.body=', req.body);
+  const about = req.body;
+
+  // format date to ISO
+  const d = new Date();
+  const n = d.toISOString();
+  console.log('*** formatted date =', n);
+
+  About.update({
+    user: mongoose.Types.ObjectId(req.decoded._id),
+  }, {
+    $set: {
+      overview: about.overview,
+      work: about.work,
+      education: about.education,
+      contact_info: about.contact_info,
+      life_events: about.life_events,
+      updatedAt: n,
+    },
+  }, (err, updatedAbout) => {
+    console.log('after updateAboutMongo updatedAbout=', updatedAbout);
+    res.json(updatedAbout);
+  });
+};
+
+exports.getInterestMongo = (req, res) => {
+  console.log('getInterest req.decode._id=', req.decoded._id);
+
+  Interest.findOne({
+    user: mongoose.Types.ObjectId(req.decoded._id),
+  }, (err, interest) => {
+    if (!interest) {
+      interest = {
+        music: '',
+        shows: '',
+        sports: '',
+        fav_teams: '',
+      };
+    }
+
+    res.json(interest);
+  });
+};
+
+exports.updateInterestMongo = (req, res) => {
+  console.log('updateInterestMongo req.decode._id=', req.decoded._id);
+  console.log('updateInterestMongo req.body=', req.body);
+  const interest = req.body;
+
+  // format date to ISO
+  const d = new Date();
+  const n = d.toISOString();
+  // console.log('*** formatted date =', n);
+
+  Interest.update({
+    user: mongoose.Types.ObjectId(req.decoded._id),
+  }, {
+    $set: {
+      music: interest.music,
+      shows: interest.shows,
+      sports: interest.sports,
+      fav_teams: interest.fav_teams,
+      updatedAt: n,
+    },
+  }, (err, updatedInterest) => {
+    console.log('after updateInterestMongo updatedAbout=', updatedInterest);
+    res.json(updatedInterest);
+  });
+};
+

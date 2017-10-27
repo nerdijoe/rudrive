@@ -262,3 +262,40 @@ exports.fetchFolderSharing = (req, res) => {
   });
 };
 
+
+// MongoDB ---------------------------------------------------------------
+
+exports.starFolderMongo = (req, res) => {
+  console.log('starFolderMongo', req.decoded._id);
+  const folder = req.body;
+  console.log(`typeof folder.is_starred=${typeof folder.is_starred}`);
+ 
+  let star_status = folder.is_starred;
+  if ((typeof folder.is_starred) !== 'boolean') {
+    star_status = (folder.is_starred === 'true');
+  }
+  console.log(`starFolderMongo is_starred=${folder.is_starred}, star_status = ${star_status}, typeof ${typeof star_status}`);
+
+  // format date to ISO
+  const d = new Date();
+  const n = d.toISOString();
+
+  Folder.findByIdAndUpdate(
+    folder._id,
+    {
+      $set: {
+        is_starred: !star_status,
+        updatedAt: n,
+      },
+    },
+    (err, result) => {
+      console.log('after starFolderMongo result=', result);
+      if (result.nModified === 1) {
+        console.log("folder is starred successfully");
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }
+  );
+};
