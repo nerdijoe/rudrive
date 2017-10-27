@@ -165,7 +165,7 @@ const UserReducer = (state = initialState, action) => {
     case actionType.DELETE_FILE: {
       console.log('*** reducer DELETE_FILE action.data', action.data);
       const updatedFiles = [...state.files];
-      const pos = updatedFiles.findIndex(i => i.id === action.data.id);
+      const pos = updatedFiles.findIndex(i => i._id === action.data._id);
       if (pos !== -1) {
         console.log(typeof updatedFiles[pos].is_deleted);
         console.log(`--> updatedFiles[${pos}].is_deleted=${updatedFiles[pos].is_deleted}`);
@@ -210,7 +210,7 @@ const UserReducer = (state = initialState, action) => {
     case actionType.DELETE_FOLDER: {
       console.log('*** reducer DELETE_FOLDER action.data', action.data);
       const updatedFolders = [...state.folders];
-      const pos = updatedFolders.findIndex(i => i.id === action.data.id);
+      const pos = updatedFolders.findIndex(i => i._id === action.data._id);
       if (pos !== -1) {
         console.log(typeof updatedFolders[pos].is_deleted);
         console.log(`--> updatedFolders[${pos}].is_deleted=${updatedFolders[pos].is_deleted}`);

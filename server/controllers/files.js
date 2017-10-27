@@ -260,3 +260,39 @@ exports.starFileMongo = (req, res) => {
   );
 };
 
+exports.deleteFileMongo = (req, res) => {
+  console.log('deleteFileMongo', req.decoded._id);
+  console.log('req.body', req.body);
+  const file = req.body;
+  console.log(`typeof file.is_deleted=${typeof file.is_deleted}`);
+
+
+  let delete_status = file.is_deleted;
+  if ((typeof file.is_deleted) !== 'boolean') {
+    delete_status = (file.is_deleted === 'true');
+  }
+  console.log(`deleteFileMongo is_deleted=${file.is_deleted}, delete_status = ${delete_status}, typeof ${typeof delete_status}`);
+
+  // format date to ISO
+  const d = new Date();
+  const n = d.toISOString();
+
+  File.findByIdAndUpdate(
+    file._id,
+    {
+      $set: {
+        is_deleted: !delete_status,
+        updatedAt: n,
+      },
+    },
+    (err, result) => {
+      console.log('after deleteFileMongo result=', result);
+      if (result.nModified === 1) {
+        console.log(`file [${file.name}]is deleted successfully`);
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }
+  );
+};
