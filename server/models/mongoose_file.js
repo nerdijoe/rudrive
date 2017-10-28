@@ -11,6 +11,7 @@ const fileSchema = new Schema({
   is_starred: { type: Boolean, default: false },
   is_deleted: { type: Boolean, default: false },
   user: { type: Schema.Types.ObjectId, ref: 'User' },
+  users: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
   createdAt: { type: Date, required: false, default: Date.now },
   updatedAt: { type: Date, required: false, default: Date.now },
 });

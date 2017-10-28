@@ -296,3 +296,59 @@ exports.deleteFileMongo = (req, res) => {
     }
   );
 };
+
+exports.addFileSharingMongo = (req, res) => {
+  console.log('addFileSharing', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  let users = req.body.users.split(/[,]\s/);
+  console.log('users=', users);
+  let file_id = req.body.file_id;
+
+  db.User.findAll({
+    where: {
+      email: users,
+    },
+  }).then((fetchedUsers) => {
+    console.log('fetchUsers', fetchedUsers);
+
+
+    let bulkContent = fetchedUsers.map((i) => {
+      return { user_id: i.id, file_id: file_id };
+    });
+
+    console.log('bulkContent', bulkContent);
+    db.FileSharing.bulkCreate(bulkContent)
+      .then(() => {
+
+        // db.FileSharing.findAll({
+        //   where: {
+        //     file_id: file_id,
+        //   }
+        // }).then((finalResult) => {
+        //   console.log('finalResult', finalResult);
+        //   res.json(finalResult);
+        // });
+
+        // db.File.getUsers({
+        //   where: {
+        //     id: file_id,
+        //   },
+        // }).then((shareInfo) => {
+        //   console.log('shareInfo', shareInfo);
+        //   res.json(shareInfo);
+        // });
+
+        db.File.findAll({
+          where: { id: file_id },
+          include: [{ model: db.User }],
+        }).then((shareInfo) => {
+          console.log('shareInfo', shareInfo);
+          res.json(shareInfo);
+        });
+
+      });
+  });
+
+  // res.json('addFileSharing');
+}

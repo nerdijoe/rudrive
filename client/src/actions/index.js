@@ -757,7 +757,7 @@ export const axiosFetchContentsByFolderId = data => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosFetchContentsByFolderId data=', data);
 
-  axios.get(`http://localhost:3000/folders/${data.id}`, {
+  axios.get(`http://localhost:3000/folders/${data._id}`, {
     headers: {
       token,
     },

@@ -336,3 +336,43 @@ exports.deleteFolderMongo = (req, res) => {
   );
 };
 
+exports.fetchByIdMongo = (req, res) => {
+  console.log('fetchByIdMongo', req.decoded._id);
+  console.log('fetchByIdMongo req.params.id=', req.params.id);
+
+  Folder.findOne({
+    _id: mongoose.Types.ObjectId(req.params.id),
+  }, (err, folder) => {
+    console.log('after finding folder', folder);
+
+    if (folder) {
+      Folder
+        .find({
+          path: folder.full_path,
+        })
+        .populate('user')
+        .populate('users')
+        .exec((err2, folders) => {
+          console.log('getting the content of folder, folders', folders);
+
+          File
+            .find({
+              path: folder.full_path,
+            })
+            .populate('user')
+            .populate('users')
+            .exec((err3, files) => {
+              console.log('getting the content of folder, files', files);
+              res.json({
+                files,
+                folders,
+              });
+            });
+        });
+    } else {
+      res.json({
+        msg: 'folder id is invalid',
+      });
+    }
+  });
+};
