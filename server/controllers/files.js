@@ -9,76 +9,50 @@ exports.fetchFiles = (req, res) => {
   db.File.findAll({
     where: {
       user_id: req.decoded._id,
-    }
-  }).then ( files => {
+    },
+  }).then((files) => {
     console.log('after fetchFiles files=', files);
 
     res.json(files);
-  })
+  });
 };
 
 exports.fetchRootFiles = (req, res) => {
   console.log('fetchRootFiles', req.decoded._id);
 
-  // db.File.findAll({
-  //   where: {
-  //     user_id: req.decoded._id,
-  //     path: process.env.ROOT_FOLDER + req.decoded.email,
-  //   }
-  // }).then((files) => {
-  //   console.log('after fetchRootFiles files=', files);
-
-  //   res.json(files);
-  // });
-
-  File
-    .find({
-      user: mongoose.Types.ObjectId(req.decoded._id),
+  db.File.findAll({
+    where: {
+      user_id: req.decoded._id,
       path: process.env.ROOT_FOLDER + req.decoded.email,
-    })
-    .populate('user')
-    .exec((err, files) => {
-      console.log('after fetchRootFiles files=', files);
+    }
+  }).then((files) => {
+    console.log('after fetchRootFiles files=', files);
 
-      res.json(files);
-    });
+    res.json(files);
+  });
 };
 
 exports.fetchRootFilesWithShare = (req, res) => {
   console.log('fetchRootFilesWithShare', req.decoded._id);
 
-  // db.File.findAll({
-  //   where: {
-  //     user_id: req.decoded._id,
-  //     path: process.env.ROOT_FOLDER + req.decoded.email,
-  //   },
-  //   include: [{ model: db.User }],
-  // }).then((files) => {
-  //   // console.log('after fetchRootFilesWithShare files=', files);
-
-  //   res.json(files);
-  // });
-
-  File
-    .find({
-      user: mongoose.Types.ObjectId(req.decoded._id),
+  db.File.findAll({
+    where: {
+      user_id: req.decoded._id,
       path: process.env.ROOT_FOLDER + req.decoded.email,
-    })
-    .populate('user')
-    .populate('users')
-    .exec((err, files) => {
-      console.log('after fetchRootFilesWithShare files=', files);
+    },
+    include: [{ model: db.User }],
+  }).then((files) => {
+    // console.log('after fetchRootFilesWithShare files=', files);
 
-      res.json(files);
-    });
-
+    res.json(files);
+  });
 };
 
 exports.starFile = (req, res) => {
   console.log('starFile', req.decoded._id);
   const file = req.body;
   console.log(`typeof file.is_starred=${typeof file.is_starred}`);
- 
+
   const star_status = (file.is_starred == 'true');
   console.log(`starFile is_starred=${file.is_starred}, star_status = ${star_status}, typeof ${typeof star_status}`);
 
@@ -87,18 +61,17 @@ exports.starFile = (req, res) => {
   }, {
     where: { id: file.id },
   })
-    .then(updatedFile => {
+    .then((updatedFile) => {
       console.log('after starFile updatedFile=', updatedFile);
-      if(updatedFile[0] === 1)
-      {
+      if (updatedFile[0] === 1) {
         console.log("file is starred successfully");
         res.json(true);
       } else {
         res.json(false);
       }
-    }).catch(err => {
+    }).catch((err) => {
       console.log(err);
-    })
+    });
 };
 
 exports.deleteFile = (req, res) => {
@@ -226,6 +199,51 @@ exports.fetchFileSharing = (req, res) => {
 
 
 // MongoDB ---------------------------------------------------------------
+
+exports.fetchFilesMongo = (req, res) => {
+  console.log('fetchFilesMongo', req.decoded._id);
+
+  File.find({
+    user: mongoose.Types.ObjectId(req.decoded._id),
+  }, (err, files) => {
+    console.log('after fetchFilesMongo files=', files);
+
+    res.json(files);
+  });
+};
+
+exports.fetchRootFilesMongo = (req, res) => {
+  console.log('fetchRootFilesMongo', req.decoded._id);
+
+  File
+    .find({
+      user: mongoose.Types.ObjectId(req.decoded._id),
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    })
+    .populate('user')
+    .exec((err, files) => {
+      console.log('after fetchRootFilesMongo files=', files);
+
+      res.json(files);
+    });
+};
+
+exports.fetchRootFilesWithShareMongo = (req, res) => {
+  console.log('fetchRootFilesWithShareMongo', req.decoded._id);
+
+  File
+    .find({
+      user: mongoose.Types.ObjectId(req.decoded._id),
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    })
+    .populate('user')
+    .populate('users')
+    .exec((err, files) => {
+      console.log('after fetchRootFilesWithShareMongo files=', files);
+
+      res.json(files);
+    });
+};
 
 exports.starFileMongo = (req, res) => {
   console.log('starFile', req.decoded._id);

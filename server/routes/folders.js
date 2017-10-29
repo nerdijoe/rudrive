@@ -3,8 +3,8 @@ const router = require('express').Router();
 const helper = require('../helpers/authVerifyHelper');
 const foldersController = require('../controllers/folders');
 
-router.get('/', helper.auth, foldersController.fetchFolders);
-router.get('/root', helper.auth, foldersController.fetchRootFoldersWithShare);
+router.get('/', helper.auth, foldersController.fetchFoldersMongo);
+router.get('/root', helper.auth, foldersController.fetchRootFoldersWithShareMongo);
 
 router.put('/star', helper.auth, foldersController.starFolderMongo);
 router.put('/delete', helper.auth, foldersController.deleteFolderMongo);

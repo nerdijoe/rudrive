@@ -38,30 +38,17 @@ exports.fetchRootFolders = (req, res) => {
 exports.fetchRootFoldersWithShare = (req, res) => {
   console.log('fetchRootFoldersWithShare', req.decoded._id);
 
-  // db.Folder.findAll({
-  //   where: {
-  //     user_id: req.decoded._id,
-  //     path: process.env.ROOT_FOLDER + req.decoded.email,
-  //   },
-  //   include: [{ model: db.User }],
-  // }).then((folders) => {
-  //   // console.log('after fetchRootFolder folders=', folders);
-
-  //   res.json(folders);
-  // });
-
-  Folder
-    .find({
-      user: mongoose.Types.ObjectId(req.decoded._id),
+  db.Folder.findAll({
+    where: {
+      user_id: req.decoded._id,
       path: process.env.ROOT_FOLDER + req.decoded.email,
-    })
-    .populate('user')
-    .populate('users')
-    .exec((err, folders) => {
-      console.log('after fetchRootFolder folders=', folders);
+    },
+    include: [{ model: db.User }],
+  }).then((folders) => {
+    // console.log('after fetchRootFolder folders=', folders);
 
-      res.json(folders);
-    });
+    res.json(folders);
+  });
 };
 
 
@@ -266,6 +253,49 @@ exports.fetchFolderSharing = (req, res) => {
 
 
 // MongoDB ---------------------------------------------------------------
+
+exports.fetchFoldersMongo = (req, res) => {
+  console.log('fetchFoldersMongo', req.decoded._id);
+
+  Folder.find({
+    user: mongoose.Types.ObjectId(req.decoded._id),
+  }, (err, folders) => {
+    console.log('after fetchFoldersMongo folders=', folders);
+
+    res.json(folders);
+  });
+};
+
+exports.fetchRootFoldersMongo = (req, res) => {
+  console.log('fetchRootFoldersMongo', req.decoded._id);
+
+  Folder.find({
+    user: mongoose.Types.ObjectId(req.decoded._id),
+    path: process.env.ROOT_FOLDER + req.decoded.email,
+  }, (err, folders) => {
+    console.log('after fetchRootFoldersMongo folders=', folders);
+
+    res.json(folders);
+  });
+};
+
+exports.fetchRootFoldersWithShareMongo = (req, res) => {
+  console.log('fetchRootFoldersWithShare', req.decoded._id);
+
+  Folder
+    .find({
+      user: mongoose.Types.ObjectId(req.decoded._id),
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    })
+    .populate('user')
+    .populate('users')
+    .exec((err, folders) => {
+      console.log('after fetchRootFolder folders=', folders);
+
+      res.json(folders);
+    });
+};
+
 
 exports.starFolderMongo = (req, res) => {
   console.log('starFolderMongo', req.decoded._id);
