@@ -778,7 +778,7 @@ export const axiosFetchContentsByFolderIdBackward = data => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosFetchContentsByFolderId data=', data);
 
-  axios.get(`http://localhost:3000/folders/${data.id}`, {
+  axios.get(`http://localhost:3000/folders/${data._id}`, {
     headers: {
       token,
     },
@@ -836,12 +836,12 @@ export const fileShareRemove = (data) => {
 
 export const axiosFileShareRemove = (user, file) => (dispatch) => {
   const token = localStorage.getItem('token');
-  console.log(`axiosFileShareRemove user.id='${user.id}', file.id=${file.id}`);
+  console.log(`axiosFileShareRemove user._id='${user._id}', file._id=${file._id}`);
   console.log('token=', token);
 
   axios.put(`http://localhost:3000/files/share`, {
-    user_id: user.id,
-    file_id: file.id,
+    user_id: user._id,
+    file_id: file._id,
   }, {
     headers: {
       token,
@@ -851,7 +851,7 @@ export const axiosFileShareRemove = (user, file) => (dispatch) => {
     console.log('%%%%%% ',res.data);
 
     // update state
-    dispatch(fileShareRemove({ user_id: user.id, file_id: file.id }));
+    dispatch(fileShareRemove({ user_id: user._id, file_id: file._id }));
 
     const email = localStorage.getItem('user_email');
     const re = new RegExp(`./public/uploads/${email}(/?)`);
@@ -925,12 +925,12 @@ export const folderShareRemove = (data) => {
 
 export const axiosFolderShareRemove = (user, folder) => (dispatch) => {
   const token = localStorage.getItem('token');
-  console.log(`axiosFolderShareRemove user.id='${user.id}', folder.id=${folder.id}`);
+  console.log(`axiosFolderShareRemove user._id='${user._id}', folder._id=${folder._id}`);
   console.log('token=', token);
 
   axios.put(`http://localhost:3000/folders/share`, {
-    user_id: user.id,
-    folder_id: folder.id,
+    user_id: user._id,
+    folder_id: folder._id,
   }, {
     headers: {
       token,
@@ -940,7 +940,7 @@ export const axiosFolderShareRemove = (user, folder) => (dispatch) => {
     console.log('%%%%%% ', res.data);
 
     // update state
-    dispatch(folderShareRemove({ user_id: user.id, folder_id: folder.id }));
+    dispatch(folderShareRemove({ user_id: user._id, folder_id: folder._id }));
 
     const email = localStorage.getItem('user_email');
     const re = new RegExp(`./public/uploads/${email}(/?)`);

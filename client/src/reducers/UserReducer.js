@@ -242,7 +242,7 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer BREADCRUMB_POP', action);
 
       let updated = [...state.breadcrumb];
-      const pos = updated.findIndex(i => i.id === action.data.id);
+      const pos = updated.findIndex(i => i._id === action.data._id);
       if (pos !== -1) {
         console.log('updated[pos]=', updated[pos]);
         updated.splice(pos + 1);
@@ -265,7 +265,7 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer FILE_SHARING_ADD', action);
 
       const updatedFiles = [...state.files];
-      const pos = updatedFiles.findIndex(i => i.id === action.data[0].id);
+      const pos = updatedFiles.findIndex(i => i._id === action.data[0]._id);
       if (pos !== -1) {
         // console.log(typeof updatedFiles[pos].is_starred);
         // console.log(`--> updatedFiles[${pos}].is_starred=${updatedFiles[pos].is_starred}`);
@@ -282,11 +282,11 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer FILE_SHARING_REMOVE', action);
 
       const updatedFiles = [...state.files];
-      const pos = updatedFiles.findIndex(i => i.id === action.data.file_id);
+      const pos = updatedFiles.findIndex(i => i._id === action.data.file_id);
       if (pos !== -1) {
-        const userPos = updatedFiles[pos].Users.findIndex(user => user.id === action.data.user_id);
+        const userPos = updatedFiles[pos].users.findIndex(user => user._id === action.data.user_id);
         if (userPos !== -1) {
-          updatedFiles[pos].Users.splice(userPos, 1);
+          updatedFiles[pos].users.splice(userPos, 1);
         }
       }
 
@@ -306,7 +306,7 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer FOLDER_SHARING_ADD', action);
 
       const updatedFolders = [...state.folders];
-      const pos = updatedFolders.findIndex(i => i.id === action.data[0].id);
+      const pos = updatedFolders.findIndex(i => i._id === action.data[0]._id);
       if (pos !== -1) {
         updatedFolders.splice(pos, 1, action.data[0]);
       }
@@ -319,11 +319,11 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer FOLDER_SHARING_REMOVE', action);
 
       const updatedFolders = [...state.folders];
-      const pos = updatedFolders.findIndex(i => i.id === action.data.folder_id);
+      const pos = updatedFolders.findIndex(i => i._id === action.data.folder_id);
       if (pos !== -1) {
-        const userPos = updatedFolders[pos].Users.findIndex(user => user.id === action.data.user_id);
+        const userPos = updatedFolders[pos].users.findIndex(user => user._id === action.data.user_id);
         if (userPos !== -1) {
-          updatedFolders[pos].Users.splice(userPos, 1);
+          updatedFolders[pos].users.splice(userPos, 1);
         }
       }
 

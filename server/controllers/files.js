@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const db = require('../models');
 const File = require('../models/mongoose_file');
+const User = require('../models/mongoose_user');
 
 exports.fetchFiles = (req, res) => {
   console.log('fetchFiles', req.decoded._id);
@@ -64,6 +65,7 @@ exports.fetchRootFilesWithShare = (req, res) => {
       path: process.env.ROOT_FOLDER + req.decoded.email,
     })
     .populate('user')
+    .populate('users')
     .exec((err, files) => {
       console.log('after fetchRootFilesWithShare files=', files);
 
@@ -303,52 +305,82 @@ exports.addFileSharingMongo = (req, res) => {
 
   let users = req.body.users.split(/[,]\s/);
   console.log('users=', users);
-  let file_id = req.body.file_id;
+  const file_id = mongoose.Types.ObjectId(req.body.file_id);
 
-  db.User.findAll({
-    where: {
-      email: users,
+  User.find({
+    email: {
+      $in: users,
     },
-  }).then((fetchedUsers) => {
-    console.log('fetchUsers', fetchedUsers);
-
-
-    let bulkContent = fetchedUsers.map((i) => {
-      return { user_id: i.id, file_id: file_id };
-    });
-
-    console.log('bulkContent', bulkContent);
-    db.FileSharing.bulkCreate(bulkContent)
-      .then(() => {
-
-        // db.FileSharing.findAll({
-        //   where: {
-        //     file_id: file_id,
-        //   }
-        // }).then((finalResult) => {
-        //   console.log('finalResult', finalResult);
-        //   res.json(finalResult);
-        // });
-
-        // db.File.getUsers({
-        //   where: {
-        //     id: file_id,
-        //   },
-        // }).then((shareInfo) => {
-        //   console.log('shareInfo', shareInfo);
-        //   res.json(shareInfo);
-        // });
-
-        db.File.findAll({
-          where: { id: file_id },
-          include: [{ model: db.User }],
-        }).then((shareInfo) => {
-          console.log('shareInfo', shareInfo);
-          res.json(shareInfo);
-        });
-
+  }, (err, fetchedUsers) => {
+    // fetch the file
+    File.findById(file_id, (err2, fetchedFile) => {
+      fetchedUsers.map((user) => {
+        fetchedFile.users.push(user._id);
       });
-  });
 
-  // res.json('addFileSharing');
-}
+      fetchedFile.save( (err3, savedFile) => {
+        if (err3) res.json(err3);
+        console.log('***** savedFile', savedFile);
+
+        savedFile
+          .populate({
+            path: 'users',
+            model: 'User',
+          })
+          .populate({
+            path: 'user',
+            model: 'User',
+          }, (err4, file) => {
+            if (err4) res.json(err4);
+            res.json(file);
+          });
+      });
+    });
+  });
+};
+
+exports.removeFileSharingMongo = (req, res) => {
+  console.log('removeFileSharingMongo', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  const user_id = mongoose.Types.ObjectId(req.body.user_id);
+  const file_id = mongoose.Types.ObjectId(req.body.file_id);
+
+  File.findById(
+    file_id,
+    (err, file) => {
+      // console.log(' **** file.users[0]', file.users[0]);
+      // console.log(`typeof user_id=`, typeof user_id);
+      // console.log(`typeof file.users[0]= ${typeof file.users[0]}`);
+      // const pos = file.users.findIndex(i => i === file_id);
+      const pos = file.users.indexOf(user_id);
+      // console.log('******* pos=', pos);      
+      if (pos !== -1) {
+        file.users.splice(pos, 1);
+        file.save((err, savedFile) => {
+          // console.log('******* savedFile=', savedFile);
+          if (err) res.json(err);
+          res.json({ msg: 'Remove file share is successful.' });
+        });
+      } else {
+        res.json({ msg: 'error' });
+      }
+    }
+  );
+};
+
+exports.fetchFileSharingMongo = (req, res) => {
+  console.log('fetchFileSharingMongo', req.decoded._id);
+
+  File
+    .find({
+      users:  mongoose.Types.ObjectId(req.decoded._id),
+    })
+    .populate('users')
+    .populate('users')
+    .exec((err, files) => {
+      if (err) res.json(err);
+      console.log('after fetchFileSharingMongo files=', files);
+      res.json(files);
+    });
+};

@@ -55,6 +55,7 @@ exports.fetchRootFoldersWithShare = (req, res) => {
       path: process.env.ROOT_FOLDER + req.decoded.email,
     })
     .populate('user')
+    .populate('users')
     .exec((err, folders) => {
       console.log('after fetchRootFolder folders=', folders);
 

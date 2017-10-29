@@ -58,26 +58,26 @@ class Listing extends Component {
   closeFolder = () => this.setState({ openFolder: false });
   
   handleModalShareFileOpen(openValue, file) {
-    console.log(`handleModalShareFileOpen openValue=${openValue}, file.id=${file.id}`);
-    console.log('file.Users', file.Users);
+    console.log(`handleModalShareFileOpen openValue=${openValue}, file._id=${file._id}`);
+    console.log('file.users', file.users);
 
     this.setState({
       open: openValue,
-      shareFileId: file.id,
+      shareFileId: file._id,
       shareFileName: file.name,
-      shareFileUsers: file.Users,
+      shareFileUsers: file.users,
       shareFile: file,
     });
 
   }
 
   handleModalShareFolderOpen(openValue, folder) {
-    console.log(`handleModalShareFolderOpen openValue=${openValue}, folder.id=${folder.id}`);
+    console.log(`handleModalShareFolderOpen openValue=${openValue}, folder._id=${folder._id}`);
     this.setState({
       openFolder: openValue,
-      shareFolderId: folder.id,
+      shareFolderId: folder._id,
       shareFolderName: folder.name,
-      shareFolderUsers: folder.Users,
+      shareFolderUsers: folder.users,
       shareFolder: folder,
     });
 
@@ -146,7 +146,7 @@ class Listing extends Component {
 
 
   handleFileShareRemove(user) {
-    console.log(`handleFileShareRemove user_id=${user.id}, shareFileId=${this.state.shareFileId}`);
+    console.log(`handleFileShareRemove user_id=${user._id}, shareFileId=${this.state.shareFileId}`);
     this.props.axiosFileShareRemove(user, this.state.shareFile);
 
     // this.close();
@@ -157,7 +157,7 @@ class Listing extends Component {
   }
 
   handleFolderShareRemove(user) {
-    console.log(`handleFolderShareRemove user_id=${user.id}, shareFileId=${this.state.shareFolderId}`);
+    console.log(`handleFolderShareRemove user_id=${user._id}, shareFileId=${this.state.shareFolderId}`);
     this.props.axiosFolderShareRemove(user, this.state.shareFolder);
 
     // this.closeFolder();
@@ -210,13 +210,13 @@ class Listing extends Component {
               this.props.folders.filter(folder => folder.is_deleted !== true).map( (folder) => {
                 // const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length} ${(folder.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
 
-                const membersMsg = (folder.Users && folder.Users.length > 0 ) ? `${folder.Users.length + 1} members` : 'Only you';
+                const membersMsg = (folder.users && folder.users.length > 0 ) ? `${folder.users.length + 1} members` : 'Only you';
                 
                 let owner = <div>{`${localStorage.getItem('user_firstname')} ${localStorage.getItem('user_lastname')}`}</div>;                
                 let members = '';
-                if( folder.Users ) {
-                  members = folder.Users.map( (item) => {
-                    return <div key={item.id}>{`${item.firstname} ${item.lastname}`}</div>;
+                if( folder.users ) {
+                  members = folder.users.map( (item) => {
+                    return <div key={item._id}>{`${item.firstname} ${item.lastname}`}</div>;
                   })
                 }
 
@@ -289,13 +289,13 @@ class Listing extends Component {
 
                 // const membersMsg = (file.Users && file.Users.length > 0 ) ? `${file.Users.length} ${(file.Users.length > 1 ? 'members' : 'member' )}` : 'Only you';
 
-                const membersMsg = (file.Users && file.Users.length > 0 ) ? `${file.Users.length + 1} members` : 'Only you';
+                const membersMsg = (file.users && file.users.length > 0 ) ? `${file.users.length + 1} members` : 'Only you';
                 
                 let owner = <div>{`${localStorage.getItem('user_firstname')} ${localStorage.getItem('user_lastname')}`}</div>;
                 let members = '';
-                if( file.Users ) {
-                  members = file.Users.map( (item) => {
-                    return <div key={item.id}>{`${item.firstname} ${item.lastname}`}</div>;
+                if( file.users ) {
+                  members = file.users.map( (item) => {
+                    return <div key={item._id}>{`${item.firstname} ${item.lastname}`}</div>;
                   });
                 }
 
@@ -410,7 +410,7 @@ class Listing extends Component {
 
                 { this.state.shareFileUsers.map( (user) => {
                 return (
-                  <Table.Row key={user.id}>
+                  <Table.Row key={user._id}>
                     <Table.Cell>
                       <Header as='h4' image>
                         <Image src={ProfilePhoto} shape='rounded' size='mini' />
@@ -479,7 +479,7 @@ class Listing extends Component {
 
                 { this.state.shareFolderUsers.map( (user) => {
                 return (
-                  <Table.Row key={user.id}>
+                  <Table.Row key={user._id}>
                     <Table.Cell>
                       <Header as='h4' image>
                         <Image src={ProfilePhoto} shape='rounded' size='mini' />

@@ -10,8 +10,8 @@ router.put('/star', helper.auth, filesController.starFileMongo);
 router.put('/delete', helper.auth, filesController.deleteFileMongo);
 
 // File Sharing
-router.post('/share', helper.auth, filesController.addFileSharing);
-router.get('/share', helper.auth, filesController.fetchFileSharing);
-router.put('/share', helper.auth, filesController.removeFileSharing);
+router.post('/share', helper.auth, filesController.addFileSharingMongo);
+router.get('/share', helper.auth, filesController.fetchFileSharingMongo);
+router.put('/share', helper.auth, filesController.removeFileSharingMongo);
 
 module.exports = router;
