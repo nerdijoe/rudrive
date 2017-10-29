@@ -318,7 +318,7 @@ exports.addFileSharingMongo = (req, res) => {
         fetchedFile.users.push(user._id);
       });
 
-      fetchedFile.save( (err3, savedFile) => {
+      fetchedFile.save((err3, savedFile) => {
         if (err3) res.json(err3);
         console.log('***** savedFile', savedFile);
 
@@ -376,7 +376,7 @@ exports.fetchFileSharingMongo = (req, res) => {
     .find({
       users:  mongoose.Types.ObjectId(req.decoded._id),
     })
-    .populate('users')
+    .populate('user')
     .populate('users')
     .exec((err, files) => {
       if (err) res.json(err);

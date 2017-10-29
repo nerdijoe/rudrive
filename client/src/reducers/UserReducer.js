@@ -265,13 +265,13 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer FILE_SHARING_ADD', action);
 
       const updatedFiles = [...state.files];
-      const pos = updatedFiles.findIndex(i => i._id === action.data[0]._id);
+      const pos = updatedFiles.findIndex(i => i._id === action.data._id);
       if (pos !== -1) {
         // console.log(typeof updatedFiles[pos].is_starred);
         // console.log(`--> updatedFiles[${pos}].is_starred=${updatedFiles[pos].is_starred}`);
         // const star_status = (updatedFiles[pos].is_starred == 'true');
         // updatedFiles[pos].Users = action.data.Users;
-        updatedFiles.splice(pos, 1, action.data[0]);
+        updatedFiles.splice(pos, 1, action.data);
       }
       return {
         ...state,
@@ -306,9 +306,9 @@ const UserReducer = (state = initialState, action) => {
       console.log('*** reducer FOLDER_SHARING_ADD', action);
 
       const updatedFolders = [...state.folders];
-      const pos = updatedFolders.findIndex(i => i._id === action.data[0]._id);
+      const pos = updatedFolders.findIndex(i => i._id === action.data._id);
       if (pos !== -1) {
-        updatedFolders.splice(pos, 1, action.data[0]);
+        updatedFolders.splice(pos, 1, action.data);
       }
       return {
         ...state,

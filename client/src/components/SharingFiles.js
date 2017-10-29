@@ -155,7 +155,7 @@ class Listing extends Component {
 
                     </Table.Cell>
                     <Table.Cell>
-                      {Moment(file.FileSharing.updatedAt).format('L LT')}
+                      {/* {Moment(file.FileSharing.updatedAt).format('L LT')} */}
                     </Table.Cell>
 
                   </Table.Row>

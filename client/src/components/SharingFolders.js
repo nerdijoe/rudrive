@@ -163,7 +163,7 @@ class Listing extends Component {
                       
                     </Table.Cell>
                     <Table.Cell>
-                      {Moment(folder.FolderSharing.updatedAt).format('L LT')}
+                      {/* {Moment(folder.FolderSharing.updatedAt).format('L LT')} */}
                     </Table.Cell>
 
                     {/* Actions */}

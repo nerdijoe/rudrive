@@ -820,9 +820,9 @@ export const axiosFileShareAdd = (users, file_id) => (dispatch) => {
 
     const email = localStorage.getItem('user_email');
     const re = new RegExp(`./public/uploads/${email}(/?)`);
-    const path = res.data[0].path.replace(re, './');
+    const path = res.data.path.replace(re, './');
 
-    dispatch(axiosAddActivity(actionType.FILE_SHARING_ADD, `Share a file [${res.data[0].name}] on path [${path}] with [${users}]`));
+    dispatch(axiosAddActivity(actionType.FILE_SHARING_ADD, `Share a file [${res.data.name}] on path [${path}] with [${users}]`));
 
   });
 };
@@ -910,9 +910,9 @@ export const axiosFolderShareAdd = (users, folder_id) => (dispatch) => {
 
     const email = localStorage.getItem('user_email');
     const re = new RegExp(`./public/uploads/${email}(/?)`);
-    const path = res.data[0].path.replace(re, './');
+    const path = res.data.path.replace(re, './');
 
-    dispatch(axiosAddActivity(actionType.FOLDER_SHARING_ADD, `Share a folder [${res.data[0].name}] on path [${path}] with [${users}]`));
+    dispatch(axiosAddActivity(actionType.FOLDER_SHARING_ADD, `Share a folder [${res.data.name}] on path [${path}] with [${users}]`));
   });
 };
 

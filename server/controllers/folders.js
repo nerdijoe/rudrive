@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Folder = require('../models/mongoose_folder');
 const File = require('../models/mongoose_file');
+const User = require('../models/mongoose_user');
 
 const db = require('../models');
 require('dotenv').config();
@@ -377,3 +378,92 @@ exports.fetchByIdMongo = (req, res) => {
     }
   });
 };
+
+exports.addFolderSharingMongo = (req, res) => {
+  console.log('addFolderSharingMongo', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  let users = req.body.users.split(/[,]\s/);
+  console.log('users=', users);
+  let folder_id = mongoose.Types.ObjectId(req.body.folder_id);
+
+  User.find({
+    email: {
+      $in: users,
+    },
+  }, (err, fetchedUsers) => {
+    // fetch the file
+    Folder.findById(folder_id, (err2, fetchedFolder) => {
+      fetchedUsers.map((user) => {
+        fetchedFolder.users.push(user._id);
+      });
+
+      fetchedFolder.save((err3, savedFolder) => {
+        if (err3) res.json(err3);
+        console.log('***** savedFolder', savedFolder);
+
+        savedFolder
+          .populate({
+            path: 'users',
+            model: 'User',
+          })
+          .populate({
+            path: 'user',
+            model: 'User',
+          }, (err4, folder) => {
+            if (err4) res.json(err4);
+            res.json(folder);
+          });
+      });
+    });
+  });
+};
+
+
+exports.removeFolderSharingMongo = (req, res) => {
+  console.log('removeFolderSharingMongo', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  const user_id = mongoose.Types.ObjectId(req.body.user_id);
+  const folder_id = mongoose.Types.ObjectId(req.body.folder_id);
+
+  Folder.findById(
+    folder_id,
+    (err, folder) => {
+      // console.log(' **** file.users[0]', file.users[0]);
+      // console.log(`typeof user_id=`, typeof user_id);
+      // console.log(`typeof file.users[0]= ${typeof file.users[0]}`);
+      // const pos = file.users.findIndex(i => i === file_id);
+      const pos = folder.users.indexOf(user_id);
+      // console.log('******* pos=', pos);      
+      if (pos !== -1) {
+        folder.users.splice(pos, 1);
+        folder.save((err, savedFolder) => {
+          // console.log('******* savedFile=', savedFile);
+          if (err) res.json(err);
+          res.json({ msg: 'Remove folder share is successful.' });
+        });
+      } else {
+        res.json({ msg: 'error' });
+      }
+    }
+  );
+};
+
+
+exports.fetchFolderSharingMongo = (req, res) => {
+  console.log('fetchFolderSharingMongo', req.decoded._id);
+
+  Folder
+    .find({
+      users:  mongoose.Types.ObjectId(req.decoded._id),
+    })
+    .populate('users')
+    .populate('users')
+    .exec((err, folders) => {
+      if (err) res.json(err);
+      console.log('after fetchFolderSharingMongo folders=', folders);
+      res.json(folders);
+    });
+};
+
