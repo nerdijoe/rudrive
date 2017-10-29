@@ -328,12 +328,36 @@ exports.deleteFolderMongo = (req, res) => {
     },
     (err, result) => {
       console.log('after deleteFolderMongo result=', result);
-      if (result.nModified === 1) {
-        console.log(`folder [${folder.name}]is deleted successfully`);
-        res.json(true);
-      } else {
-        res.json(false);
-      }
+
+      // need to delete all the folders and files inside this folder
+      const formatted_path = result.full_path.replace(/\//g, '\\/');
+      console.log('**** formatted_path=', formatted_path);
+
+      Folder.update({
+        path: new RegExp('^(' + formatted_path + ')'),
+      }, {
+        $set: {
+          is_deleted: true,
+          updatedAt: n,
+        },
+      }, {
+        "multi": true,
+      }, (err, folders) => {
+        console.log('**** deleted sub folders=', folders)
+
+        File.update({
+          path: new RegExp('^(' + formatted_path + ')'),
+        }, {
+          $set: {
+            is_deleted: true,
+            updatedAt: n,
+          },
+        }, {
+          "multi": true,
+        }, (err, files) => {
+          res.json(files);
+        });
+      });
     }
   );
 };
