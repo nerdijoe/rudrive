@@ -1,4 +1,7 @@
+const mongoose = require('mongoose');
 const db = require('../models');
+const File = require('../models/mongoose_file');
+const User = require('../models/mongoose_user');
 
 exports.fetchFiles = (req, res) => {
   console.log('fetchFiles', req.decoded._id);
@@ -6,12 +9,12 @@ exports.fetchFiles = (req, res) => {
   db.File.findAll({
     where: {
       user_id: req.decoded._id,
-    }
-  }).then ( files => {
+    },
+  }).then((files) => {
     console.log('after fetchFiles files=', files);
 
     res.json(files);
-  })
+  });
 };
 
 exports.fetchRootFiles = (req, res) => {
@@ -49,7 +52,7 @@ exports.starFile = (req, res) => {
   console.log('starFile', req.decoded._id);
   const file = req.body;
   console.log(`typeof file.is_starred=${typeof file.is_starred}`);
- 
+
   const star_status = (file.is_starred == 'true');
   console.log(`starFile is_starred=${file.is_starred}, star_status = ${star_status}, typeof ${typeof star_status}`);
 
@@ -58,18 +61,17 @@ exports.starFile = (req, res) => {
   }, {
     where: { id: file.id },
   })
-    .then(updatedFile => {
+    .then((updatedFile) => {
       console.log('after starFile updatedFile=', updatedFile);
-      if(updatedFile[0] === 1)
-      {
+      if (updatedFile[0] === 1) {
         console.log("file is starred successfully");
         res.json(true);
       } else {
         res.json(false);
       }
-    }).catch(err => {
+    }).catch((err) => {
       console.log(err);
-    })
+    });
 };
 
 exports.deleteFile = (req, res) => {
@@ -184,9 +186,219 @@ exports.fetchFileSharing = (req, res) => {
     },
     include: [{ model: db.File }],
   }).then((user) => {
-    console.log('after fetchFileSharing user=', user.dataValues);
+    if (!user) {
+      res.json([]);
+    } else {
+      console.log('after fetchFileSharing user=', user.dataValues);
 
-    // only return the files array that have been shared to the signed in user.
-    res.json(user.Files);
+      // only return the files array that have been shared to the signed in user.
+      res.json(user.Files);
+    }
   });
+};
+
+
+// MongoDB ---------------------------------------------------------------
+
+exports.fetchFilesMongo = (req, res) => {
+  console.log('fetchFilesMongo', req.decoded._id);
+
+  File.find({
+    user: mongoose.Types.ObjectId(req.decoded._id),
+  }, (err, files) => {
+    console.log('after fetchFilesMongo files=', files);
+
+    res.json(files);
+  });
+};
+
+exports.fetchRootFilesMongo = (req, res) => {
+  console.log('fetchRootFilesMongo', req.decoded._id);
+
+  File
+    .find({
+      user: mongoose.Types.ObjectId(req.decoded._id),
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    })
+    .populate('user')
+    .exec((err, files) => {
+      console.log('after fetchRootFilesMongo files=', files);
+
+      res.json(files);
+    });
+};
+
+exports.fetchRootFilesWithShareMongo = (req, res) => {
+  console.log('fetchRootFilesWithShareMongo', req.decoded._id);
+
+  File
+    .find({
+      user: mongoose.Types.ObjectId(req.decoded._id),
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    })
+    .populate('user')
+    .populate('users')
+    .exec((err, files) => {
+      console.log('after fetchRootFilesWithShareMongo files=', files);
+
+      res.json(files);
+    });
+};
+
+exports.starFileMongo = (req, res) => {
+  console.log('starFile', req.decoded._id);
+  const file = req.body;
+  console.log(`typeof file.is_starred=${typeof file.is_starred}`);
+
+  let star_status = file.is_starred;
+  if ((typeof file.is_starred) !== 'boolean') {
+    star_status = (file.is_starred === 'true');
+  }
+  console.log(`starFile is_starred=${file.is_starred}, star_status = ${star_status}, typeof ${typeof star_status}`);
+
+  // format date to ISO
+  const d = new Date();
+  const n = d.toISOString();
+
+  File.findByIdAndUpdate(
+    file._id,
+    {
+      $set: {
+        is_starred: !star_status,
+        updatedAt: n,
+      },
+    },
+    (err, result) => {
+      console.log('after starFile result=', result);
+      if (result.nModified === 1) {
+        console.log("file is starred successfully");
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }
+  );
+};
+
+exports.deleteFileMongo = (req, res) => {
+  console.log('deleteFileMongo', req.decoded._id);
+  console.log('req.body', req.body);
+  const file = req.body;
+  console.log(`typeof file.is_deleted=${typeof file.is_deleted}`);
+
+
+  let delete_status = file.is_deleted;
+  if ((typeof file.is_deleted) !== 'boolean') {
+    delete_status = (file.is_deleted === 'true');
+  }
+  console.log(`deleteFileMongo is_deleted=${file.is_deleted}, delete_status = ${delete_status}, typeof ${typeof delete_status}`);
+
+  // format date to ISO
+  const d = new Date();
+  const n = d.toISOString();
+
+  File.findByIdAndUpdate(
+    file._id,
+    {
+      $set: {
+        is_deleted: !delete_status,
+        updatedAt: n,
+      },
+    },
+    (err, result) => {
+      console.log('after deleteFileMongo result=', result);
+      if (result.nModified === 1) {
+        console.log(`file [${file.name}]is deleted successfully`);
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }
+  );
+};
+
+exports.addFileSharingMongo = (req, res) => {
+  console.log('addFileSharing', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  let users = req.body.users.split(/[,]\s/);
+  console.log('users=', users);
+  const file_id = mongoose.Types.ObjectId(req.body.file_id);
+
+  User.find({
+    email: {
+      $in: users,
+    },
+  }, (err, fetchedUsers) => {
+    // fetch the file
+    File.findById(file_id, (err2, fetchedFile) => {
+      fetchedUsers.map((user) => {
+        fetchedFile.users.push(user._id);
+      });
+
+      fetchedFile.save((err3, savedFile) => {
+        if (err3) res.json(err3);
+        console.log('***** savedFile', savedFile);
+
+        savedFile
+          .populate({
+            path: 'users',
+            model: 'User',
+          })
+          .populate({
+            path: 'user',
+            model: 'User',
+          }, (err4, file) => {
+            if (err4) res.json(err4);
+            res.json(file);
+          });
+      });
+    });
+  });
+};
+
+exports.removeFileSharingMongo = (req, res) => {
+  console.log('removeFileSharingMongo', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  const user_id = mongoose.Types.ObjectId(req.body.user_id);
+  const file_id = mongoose.Types.ObjectId(req.body.file_id);
+
+  File.findById(
+    file_id,
+    (err, file) => {
+      // console.log(' **** file.users[0]', file.users[0]);
+      // console.log(`typeof user_id=`, typeof user_id);
+      // console.log(`typeof file.users[0]= ${typeof file.users[0]}`);
+      // const pos = file.users.findIndex(i => i === file_id);
+      const pos = file.users.indexOf(user_id);
+      // console.log('******* pos=', pos);      
+      if (pos !== -1) {
+        file.users.splice(pos, 1);
+        file.save((err, savedFile) => {
+          // console.log('******* savedFile=', savedFile);
+          if (err) res.json(err);
+          res.json({ msg: 'Remove file share is successful.' });
+        });
+      } else {
+        res.json({ msg: 'error' });
+      }
+    }
+  );
+};
+
+exports.fetchFileSharingMongo = (req, res) => {
+  console.log('fetchFileSharingMongo', req.decoded._id);
+
+  File
+    .find({
+      users:  mongoose.Types.ObjectId(req.decoded._id),
+    })
+    .populate('user')
+    .populate('users')
+    .exec((err, files) => {
+      if (err) res.json(err);
+      console.log('after fetchFileSharingMongo files=', files);
+      res.json(files);
+    });
 };

@@ -65,6 +65,7 @@ const dbConfig = {
 };
 
 const appEnv = app.settings.env;
+mongoose.Promise = global.Promise;
 mongoose.connect(dbConfig[appEnv], { useMongoClient: true }, (err, res) => {
   console.log(`Connected to DB: ${dbConfig[appEnv]}`);
 });
@@ -164,26 +165,24 @@ app.use(passport.initialize());
 //   });
 // }));
 
-passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, function(username, password, cb) {
-  let User = require('./models/mongoose_user');
+passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (username, password, cb) => {
+  const User = require('./models/mongoose_user');
   User.findOne({
     email: username,
-  }, function(err, user) {
-    if (err) cb(err)
-    if(!user) {
-      cb(null, false, { message: 'User does not exist'});
+  }, (err, user) => {
+    if (err) cb(err);
+    if (!user) {
+      cb(null, false, { message: 'User does not exist' });
       // cb.json({ message: 'User does not exist'})
-    }
-    else {
+    } else {
       if (passwordHash.verify(password, user.password)) {
-        cb(null, user)
+        cb(null, user);
       } else {
         // cb(null, false, {message: 'Password is not correct !'})
         cb(null, false);
       }
     }
-
-  })
+  });
 }));
 
 const port = process.env.PORT || '3000';

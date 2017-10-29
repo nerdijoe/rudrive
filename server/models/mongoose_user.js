@@ -7,7 +7,11 @@ const userSchema = new Schema({
   lastname: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  mysql_id: { type: Number, required: true },
+  // mysql_id: { type: Number },
+  // files: [{ type: Schema.Types.ObjectId, ref: 'File' }],
+  // folders: [{ type: Schema.Types.ObjectId, ref: 'Folder' }],
+  createdAt: { type: Date, required: false, default: Date.now },
+  updatedAt: { type: Date, required: false, default: Date.now },
 });
 
 const User = mongoose.model('User', userSchema);

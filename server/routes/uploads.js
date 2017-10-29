@@ -25,9 +25,9 @@ router.post('/', [helper.auth, upload.single('doc')], uploadsController.uploadFi
 
 router.get('/listdir', helper.auth, uploadsController.listDir);
 
-router.post('/createfolder', helper.auth, uploadsController.createDir);
+router.post('/createfolder', helper.auth, uploadsController.createDirMongo);
 
-router.post('/:currentPath', [helper.auth, upload.single('doc')], uploadsController.uploadFileToPath);
+router.post('/:currentPath', [helper.auth, upload.single('doc')], uploadsController.uploadFileToPathMongo);
 
 
 module.exports = router;

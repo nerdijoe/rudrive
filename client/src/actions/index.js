@@ -153,12 +153,13 @@ export const axiosSignIn = (data, router) => (dispatch) => {
     // if signin is successful, then save the token in the local storage
     console.log('axiosSignIn done', res);
     localStorage.setItem('token', res.data.token);
-    localStorage.setItem('user_id', res.data.id);
+    localStorage.setItem('user_id', res.data._id);
     localStorage.setItem('user_email', res.data.email);
     localStorage.setItem('user_firstname', res.data.firstname);
     localStorage.setItem('user_lastname', res.data.lastname);
-    localStorage.setItem('user_mysql_id', res.data.mysql_id);
-
+    // localStorage.setItem('user_mysql_id', res.data.mysql_id);
+    // localStorage.setItem('user_mongo_id', res.data.mongo_id);
+    
     router.push('/home');
 
     dispatch(userSignIn(data));
@@ -213,6 +214,8 @@ export const userSignOut = () => (dispatch) => {
   localStorage.removeItem('user_email');
   localStorage.removeItem('user_firstname');
   localStorage.removeItem('user_lastname');
+  // localStorage.removeItem('user_mysql_id');
+  // localStorage.removeItem('user_mongo_id');
 
   // router.push('/');
   dispatch(userSignOutReducer());
@@ -273,6 +276,7 @@ export const axiosUpload = (data) => (dispatch) => {
   })
 };
 
+// using this on components/FileUpload.js
 export const axiosUploadToPath = (data, currentPath) => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosUploadToPath get token=', token);
@@ -304,6 +308,40 @@ export const axiosUploadToPath = (data, currentPath) => (dispatch) => {
     console.log(err);
   })
 };
+
+export const axiosUploadToPathMongo = (data, currentPath) => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('axiosUploadToPath get token=', token);
+  console.log("currentPath", currentPath);
+  console.log("data", data);
+  
+  axios.post(`http://localhost:3000/uploads/${currentPath}`, data, {
+    headers: {
+      token,
+    },
+  }).then((res) => {
+    console.log('axiosUploadToPath');
+    console.log(res);
+
+    // update the list state
+    dispatch(axiosFetchListing());
+    dispatch(addNewFile(res.data));
+
+
+    // Log activity
+    const user_email = localStorage.getItem('user_email');
+    const re = new RegExp(`./public/uploads/${user_email}(/?)`);
+    const path = res.data.path.replace(re, './');
+    // console.log(`newaddress = [${path}]`);
+
+    dispatch(axiosAddActivity(actionType.ADD_NEW_FILE, `Upload a new file [${res.data.name}] on path [${path}]`));
+    
+  }).catch((err) => {
+    console.log(err);
+  })
+};
+
+
 
 export const axiosFetchListing = () => (dispatch) => {
   const token = localStorage.getItem('token');
@@ -719,7 +757,7 @@ export const axiosFetchContentsByFolderId = data => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosFetchContentsByFolderId data=', data);
 
-  axios.get(`http://localhost:3000/folders/${data.id}`, {
+  axios.get(`http://localhost:3000/folders/${data._id}`, {
     headers: {
       token,
     },
@@ -740,7 +778,7 @@ export const axiosFetchContentsByFolderIdBackward = data => (dispatch) => {
   const token = localStorage.getItem('token');
   console.log('axiosFetchContentsByFolderId data=', data);
 
-  axios.get(`http://localhost:3000/folders/${data.id}`, {
+  axios.get(`http://localhost:3000/folders/${data._id}`, {
     headers: {
       token,
     },
@@ -782,9 +820,9 @@ export const axiosFileShareAdd = (users, file_id) => (dispatch) => {
 
     const email = localStorage.getItem('user_email');
     const re = new RegExp(`./public/uploads/${email}(/?)`);
-    const path = res.data[0].path.replace(re, './');
+    const path = res.data.path.replace(re, './');
 
-    dispatch(axiosAddActivity(actionType.FILE_SHARING_ADD, `Share a file [${res.data[0].name}] on path [${path}] with [${users}]`));
+    dispatch(axiosAddActivity(actionType.FILE_SHARING_ADD, `Share a file [${res.data.name}] on path [${path}] with [${users}]`));
 
   });
 };
@@ -798,12 +836,12 @@ export const fileShareRemove = (data) => {
 
 export const axiosFileShareRemove = (user, file) => (dispatch) => {
   const token = localStorage.getItem('token');
-  console.log(`axiosFileShareRemove user.id='${user.id}', file.id=${file.id}`);
+  console.log(`axiosFileShareRemove user._id='${user._id}', file._id=${file._id}`);
   console.log('token=', token);
 
   axios.put(`http://localhost:3000/files/share`, {
-    user_id: user.id,
-    file_id: file.id,
+    user_id: user._id,
+    file_id: file._id,
   }, {
     headers: {
       token,
@@ -813,7 +851,7 @@ export const axiosFileShareRemove = (user, file) => (dispatch) => {
     console.log('%%%%%% ',res.data);
 
     // update state
-    dispatch(fileShareRemove({ user_id: user.id, file_id: file.id }));
+    dispatch(fileShareRemove({ user_id: user._id, file_id: file._id }));
 
     const email = localStorage.getItem('user_email');
     const re = new RegExp(`./public/uploads/${email}(/?)`);
@@ -872,9 +910,9 @@ export const axiosFolderShareAdd = (users, folder_id) => (dispatch) => {
 
     const email = localStorage.getItem('user_email');
     const re = new RegExp(`./public/uploads/${email}(/?)`);
-    const path = res.data[0].path.replace(re, './');
+    const path = res.data.path.replace(re, './');
 
-    dispatch(axiosAddActivity(actionType.FOLDER_SHARING_ADD, `Share a folder [${res.data[0].name}] on path [${path}] with [${users}]`));
+    dispatch(axiosAddActivity(actionType.FOLDER_SHARING_ADD, `Share a folder [${res.data.name}] on path [${path}] with [${users}]`));
   });
 };
 
@@ -887,12 +925,12 @@ export const folderShareRemove = (data) => {
 
 export const axiosFolderShareRemove = (user, folder) => (dispatch) => {
   const token = localStorage.getItem('token');
-  console.log(`axiosFolderShareRemove user.id='${user.id}', folder.id=${folder.id}`);
+  console.log(`axiosFolderShareRemove user._id='${user._id}', folder._id=${folder._id}`);
   console.log('token=', token);
 
   axios.put(`http://localhost:3000/folders/share`, {
-    user_id: user.id,
-    folder_id: folder.id,
+    user_id: user._id,
+    folder_id: folder._id,
   }, {
     headers: {
       token,
@@ -902,7 +940,7 @@ export const axiosFolderShareRemove = (user, folder) => (dispatch) => {
     console.log('%%%%%% ', res.data);
 
     // update state
-    dispatch(folderShareRemove({ user_id: user.id, folder_id: folder.id }));
+    dispatch(folderShareRemove({ user_id: user._id, folder_id: folder._id }));
 
     const email = localStorage.getItem('user_email');
     const re = new RegExp(`./public/uploads/${email}(/?)`);

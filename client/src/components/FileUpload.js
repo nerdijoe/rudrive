@@ -52,7 +52,7 @@ class FileUpload extends Component {
     let currentPath = 0;
     if (this.props.breadcrumb.length > 0) {
       const pos = this.props.breadcrumb.length - 1;
-      currentPath = this.props.breadcrumb[pos].id;
+      currentPath = this.props.breadcrumb[pos]._id;
     }
     this.props.axiosUploadToPath(payload, currentPath);
   }

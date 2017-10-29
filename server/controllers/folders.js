@@ -1,3 +1,8 @@
+const mongoose = require('mongoose');
+const Folder = require('../models/mongoose_folder');
+const File = require('../models/mongoose_file');
+const User = require('../models/mongoose_user');
+
 const db = require('../models');
 require('dotenv').config();
 
@@ -235,10 +240,284 @@ exports.fetchFolderSharing = (req, res) => {
     },
     include: [{ model: db.Folder }],
   }).then((user) => {
-    console.log('after fetchFolderSharing user=', user.dataValues);
 
-    // only return the files array that have been shared to the signed in user.
-    res.json(user.Folders);
+    if (!user) {
+      res.json([]);
+    } else {
+      console.log('after fetchFolderSharing user=', user.dataValues);
+      // only return the files array that have been shared to the signed in user.
+      res.json(user.Folders);
+    }
   });
+};
+
+
+// MongoDB ---------------------------------------------------------------
+
+exports.fetchFoldersMongo = (req, res) => {
+  console.log('fetchFoldersMongo', req.decoded._id);
+
+  Folder.find({
+    user: mongoose.Types.ObjectId(req.decoded._id),
+  }, (err, folders) => {
+    console.log('after fetchFoldersMongo folders=', folders);
+
+    res.json(folders);
+  });
+};
+
+exports.fetchRootFoldersMongo = (req, res) => {
+  console.log('fetchRootFoldersMongo', req.decoded._id);
+
+  Folder.find({
+    user: mongoose.Types.ObjectId(req.decoded._id),
+    path: process.env.ROOT_FOLDER + req.decoded.email,
+  }, (err, folders) => {
+    console.log('after fetchRootFoldersMongo folders=', folders);
+
+    res.json(folders);
+  });
+};
+
+exports.fetchRootFoldersWithShareMongo = (req, res) => {
+  console.log('fetchRootFoldersWithShare', req.decoded._id);
+
+  Folder
+    .find({
+      user: mongoose.Types.ObjectId(req.decoded._id),
+      path: process.env.ROOT_FOLDER + req.decoded.email,
+    })
+    .populate('user')
+    .populate('users')
+    .exec((err, folders) => {
+      console.log('after fetchRootFolder folders=', folders);
+
+      res.json(folders);
+    });
+};
+
+
+exports.starFolderMongo = (req, res) => {
+  console.log('starFolderMongo', req.decoded._id);
+  const folder = req.body;
+  console.log(`typeof folder.is_starred=${typeof folder.is_starred}`);
+ 
+  let star_status = folder.is_starred;
+  if ((typeof folder.is_starred) !== 'boolean') {
+    star_status = (folder.is_starred === 'true');
+  }
+  console.log(`starFolderMongo is_starred=${folder.is_starred}, star_status = ${star_status}, typeof ${typeof star_status}`);
+
+  // format date to ISO
+  const d = new Date();
+  const n = d.toISOString();
+
+  Folder.findByIdAndUpdate(
+    folder._id,
+    {
+      $set: {
+        is_starred: !star_status,
+        updatedAt: n,
+      },
+    },
+    (err, result) => {
+      console.log('after starFolderMongo result=', result);
+      if (result.nModified === 1) {
+        console.log("folder is starred successfully");
+        res.json(true);
+      } else {
+        res.json(false);
+      }
+    }
+  );
+};
+
+exports.deleteFolderMongo = (req, res) => {
+  console.log('deleteFolderMongo', req.decoded._id);
+  console.log('req.body', req.body);
+  const folder = req.body;
+  console.log(`typeof folder.is_deleted=${typeof folder.is_deleted}`);
+
+  let delete_status = folder.is_deleted;
+  if ((typeof folder.is_deleted) !== 'boolean') {
+    delete_status = (folder.is_deleted === 'true');
+  }
+  console.log(`deleteFolder is_deleted=${folder.is_deleted}, delete_status = ${delete_status}, typeof ${typeof delete_status}`);
+
+  // format date to ISO
+  const d = new Date();
+  const n = d.toISOString();
+
+  Folder.findByIdAndUpdate(
+    folder._id,
+    {
+      $set: {
+        is_deleted: !delete_status,
+        updatedAt: n,
+      },
+    },
+    (err, result) => {
+      console.log('after deleteFolderMongo result=', result);
+
+      // need to delete all the folders and files inside this folder
+      const formatted_path = result.full_path.replace(/\//g, '\\/');
+      console.log('**** formatted_path=', formatted_path);
+
+      Folder.update({
+        path: new RegExp('^(' + formatted_path + ')'),
+      }, {
+        $set: {
+          is_deleted: true,
+          updatedAt: n,
+        },
+      }, {
+        "multi": true,
+      }, (err, folders) => {
+        console.log('**** deleted sub folders=', folders)
+
+        File.update({
+          path: new RegExp('^(' + formatted_path + ')'),
+        }, {
+          $set: {
+            is_deleted: true,
+            updatedAt: n,
+          },
+        }, {
+          "multi": true,
+        }, (err, files) => {
+          res.json(files);
+        });
+      });
+    }
+  );
+};
+
+exports.fetchByIdMongo = (req, res) => {
+  console.log('fetchByIdMongo', req.decoded._id);
+  console.log('fetchByIdMongo req.params.id=', req.params.id);
+
+  Folder.findOne({
+    _id: mongoose.Types.ObjectId(req.params.id),
+  }, (err, folder) => {
+    console.log('after finding folder', folder);
+
+    if (folder) {
+      Folder
+        .find({
+          path: folder.full_path,
+        })
+        .populate('user')
+        .populate('users')
+        .exec((err2, folders) => {
+          console.log('getting the content of folder, folders', folders);
+
+          File
+            .find({
+              path: folder.full_path,
+            })
+            .populate('user')
+            .populate('users')
+            .exec((err3, files) => {
+              console.log('getting the content of folder, files', files);
+              res.json({
+                files,
+                folders,
+              });
+            });
+        });
+    } else {
+      res.json({
+        msg: 'folder id is invalid',
+      });
+    }
+  });
+};
+
+exports.addFolderSharingMongo = (req, res) => {
+  console.log('addFolderSharingMongo', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  let users = req.body.users.split(/[,]\s/);
+  console.log('users=', users);
+  let folder_id = mongoose.Types.ObjectId(req.body.folder_id);
+
+  User.find({
+    email: {
+      $in: users,
+    },
+  }, (err, fetchedUsers) => {
+    // fetch the file
+    Folder.findById(folder_id, (err2, fetchedFolder) => {
+      fetchedUsers.map((user) => {
+        fetchedFolder.users.push(user._id);
+      });
+
+      fetchedFolder.save((err3, savedFolder) => {
+        if (err3) res.json(err3);
+        console.log('***** savedFolder', savedFolder);
+
+        savedFolder
+          .populate({
+            path: 'users',
+            model: 'User',
+          })
+          .populate({
+            path: 'user',
+            model: 'User',
+          }, (err4, folder) => {
+            if (err4) res.json(err4);
+            res.json(folder);
+          });
+      });
+    });
+  });
+};
+
+
+exports.removeFolderSharingMongo = (req, res) => {
+  console.log('removeFolderSharingMongo', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  const user_id = mongoose.Types.ObjectId(req.body.user_id);
+  const folder_id = mongoose.Types.ObjectId(req.body.folder_id);
+
+  Folder.findById(
+    folder_id,
+    (err, folder) => {
+      // console.log(' **** file.users[0]', file.users[0]);
+      // console.log(`typeof user_id=`, typeof user_id);
+      // console.log(`typeof file.users[0]= ${typeof file.users[0]}`);
+      // const pos = file.users.findIndex(i => i === file_id);
+      const pos = folder.users.indexOf(user_id);
+      // console.log('******* pos=', pos);      
+      if (pos !== -1) {
+        folder.users.splice(pos, 1);
+        folder.save((err, savedFolder) => {
+          // console.log('******* savedFile=', savedFile);
+          if (err) res.json(err);
+          res.json({ msg: 'Remove folder share is successful.' });
+        });
+      } else {
+        res.json({ msg: 'error' });
+      }
+    }
+  );
+};
+
+
+exports.fetchFolderSharingMongo = (req, res) => {
+  console.log('fetchFolderSharingMongo', req.decoded._id);
+
+  Folder
+    .find({
+      users:  mongoose.Types.ObjectId(req.decoded._id),
+    })
+    .populate('users')
+    .populate('users')
+    .exec((err, folders) => {
+      if (err) res.json(err);
+      console.log('after fetchFolderSharingMongo folders=', folders);
+      res.json(folders);
+    });
 };
 
