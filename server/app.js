@@ -11,6 +11,8 @@ const session = require('client-sessions');
 const Sequelize = require('sequelize');
 const path = require('path');
 
+const action = require('./helpers/actionConstants');
+
 const env = process.env.NODE_ENV || "development";
 const config = require(path.join(__dirname, 'config', 'config.json'))[env];
 const pool = {
@@ -192,7 +194,7 @@ const kafka = require('./routes/kafka/client');
 passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (username, password, cb) => {
   console.log('In Passport, going to make kafka.make_request');
 
-  kafka.make_request('login_topic', { 'username': username, 'password': password }, (err, results) => {
+  kafka.make_request('request_topic', { action: action.USER_SIGN_IN, username: username, password: password }, (err, results) => {
     console.log('passport.use -> in result');
     console.log('   results=', results);
     if (err) {

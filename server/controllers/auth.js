@@ -3,7 +3,9 @@ const About = require('../models/mongoose_about');
 const Interest = require('../models/mongoose_interest');
 const passwordHash = require('password-hash');
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
+
+const kafka = require('../routes/kafka/client');
+const action = require('../helpers/actionConstants');
 
 require('dotenv').config();
 const fs = require('fs');
@@ -141,14 +143,6 @@ exports.signupMongo = (req, res, next) => {
       });
     } // end of else
   });
-
-  // User.create(data, (err, user) => {
-  //   if (err) {
-  //     res.json(err);
-  //   } else {
-  //     res.json(user);
-  //   }
-  // });
 };
 
 exports.signin = (req, res) => {
@@ -176,4 +170,63 @@ exports.signin = (req, res) => {
     // mongo_id: user._id,
     _id: user._id,
   });
+};
+
+
+// only using MongoDB
+exports.signupMongoKafka = (req, res, next) => {
+
+  kafka.make_request('request_topic', { action: action.USER_SIGN_UP, body: req.body }, (err, results) => {
+    console.log('signupMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> signupMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+
+  // const data = req.body;
+  // data.password = passwordHash.generate(req.body.password);
+
+  // User.findOne({ email: data.email }, (err, user) => {
+  //   if (user) {
+  //     const errorMsg = {
+  //       message: 'Email is already used. Please sign up using different email.',
+  //     };
+  //     res.json(errorMsg);
+  //   } else {
+  //     User.create({
+  //       firstname: data.firstname,
+  //       lastname: data.lastname,
+  //       email: data.email,
+  //       password: data.password,
+  //       // mysql_id: 0,
+  //     }, (err2, newUser) => {
+  //       if (err2) res.json(err2);
+
+  //       const newAbout = About({
+  //         overview: '',
+  //         work_edu: '',
+  //         contact_info: '',
+  //         life_events: '',
+  //         user: newUser._id,
+  //       });
+
+  //       newAbout.save((err3, about) => {
+  //         const newInterest = Interest({
+  //           music: '',
+  //           shows: '',
+  //           sports: '',
+  //           fav_teams: '',
+  //           user: newUser._id,
+  //         });
+  //         newInterest.save((err4, interest) => {
+  //           res.json(newUser);
+  //         });
+  //       }); // end of newAbout.save
+  //     });
+  //   } // end of else
+  // });
 };

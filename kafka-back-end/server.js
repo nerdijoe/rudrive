@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 
 
 const connection =  new require('./kafka/Connection');
-const login = require('./services/login');
+const action = require('./helpers/actionConstants');
+const auth = require('./services/auth');
 
-const topic_name = 'login_topic';
+const topic_name = 'request_topic';
 const consumer = connection.getConsumer(topic_name);
 const producer = connection.getProducer();
 
@@ -28,22 +29,57 @@ consumer.on('message', (message) => {
   console.log(JSON.stringify(message.value));
   console.log('----------------------------------\n')
   const data = JSON.parse(message.value);
-  login.handle_request(data.data, (err, res) => {
-    console.log('after handle, res=', res);
-    const payloads = [
-      {
-        topic: data.replyTo,
-        messages: JSON.stringify({
-          correlationId: data.correlationId,
-          data: res
-        }),
-        partition: 0,
-      },
-    ];
-    producer.send(payloads, (err, data) => {
-      console.log('producer.send');
-      console.log(data);
-    });
-    return;
-  });
+  console.log('#### action =', data.data.action);
+  switch (data.data.action) {
+    case action.USER_SIGN_IN: {
+      auth.signIn(data.data, (err, res) => {
+        console.log('after USER_SIGN_IN, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      
+      break;
+    }
+
+    case action.USER_SIGN_UP: {
+      auth.signUp(data.data, (err, res) => {
+        console.log('after USER_SIGN_UP, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      
+      break;    
+    }
+    default: {
+      console.log('invalid Action');
+    }
+  }
+  
+
 });
