@@ -4,7 +4,7 @@ const helper = require('../helpers/authVerifyHelper');
 const filesController = require('../controllers/files');
 
 router.get('/', helper.auth, filesController.fetchFilesMongo);
-router.get('/root', helper.auth, filesController.fetchRootFilesWithShareMongo);
+router.get('/root', helper.auth, filesController.fetchRootFilesWithShareMongoKafka);
 
 router.put('/star', helper.auth, filesController.starFileMongo);
 router.put('/delete', helper.auth, filesController.deleteFileMongo);

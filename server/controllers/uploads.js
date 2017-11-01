@@ -3,6 +3,8 @@ const fs = require('fs');
 const db = require('../models');
 const Folder = require('../models/mongoose_folder');
 const File = require('../models/mongoose_file');
+const kafka = require('../routes/kafka/client');
+const action = require('../helpers/actionConstants');
 
 exports.uploadFile = (req, res) => {
   // console.log('uploadFile req', req);
@@ -198,6 +200,8 @@ exports.createDir = (req, res) => {
   // res.json(files);
 };
 
+// MongoDB ---------------------------------------------------------------
+
 exports.uploadFileToPathMongo = (req, res) => {
   // console.log('uploadFile req', req);
   console.log('uploadFileToPathMongo req.body', req.body);
@@ -329,4 +333,96 @@ exports.createDirMongo = (req, res) => {
 
   // const files = fs.readdirSync(`${currentPath}`);
   // res.json(files);
+};
+
+
+// Kafka ----------
+
+exports.uploadFileToPathMongoKafka = (req, res) => {
+  // console.log('uploadFile req', req);
+  console.log('uploadFileToPathMongoKafka req.body', req.body);
+  console.log('uploadFileToPathMongoKafka req.file', req.file);
+
+  console.log('uploadFileToPathMongoKafka req.decoded', req.decoded);
+  console.log(`currentPath = [${req.params.currentPath}] `, typeof req.params.currentPath);
+
+  // need to query the path
+
+  const currentPath = req.params.currentPath;
+
+
+  kafka.make_request('request_topic', { action: action.ADD_NEW_FILE, body: req.body, file: req.file, decoded: req.decoded }, (err, results) => {
+    console.log('uploadFileToPathMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> signupMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+
+
+  // find folder
+  // if yes, then get the full path
+  // if no upload to root folder
+  // create dir if it does not exist
+  // then insert to file
+  Folder.findOne({ _id: currentPath }, (err, folder) => {
+    console.log('After Folder.findOne, folder=', folder);
+    const file = req.file;
+    const userEmail = req.decoded.email;
+
+    // var dir = `./public/uploads/${userEmail}`;
+    let dir = `./public/uploads/${userEmail}`;
+    if (folder) {
+      dir = folder.full_path;
+    }
+    
+    // create dir if it doesn't exist
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+
+    const default_path = file.path;
+    const target_path = dir + '/' + file.filename;
+
+    fs.rename(default_path, target_path, (err) => {
+      if (err) throw err;
+
+      console.log(`>>> ${file.filename} has been moved to ${target_path}`);
+
+      // add to db
+      /*
+      uploadFile req.file { fieldname: 'doc',
+        originalname: 'Police.csv',
+        encoding: '7bit',
+        mimetype: 'text/csv',
+        destination: './public/uploads/',
+        filename: 'Police_1507247984057.csv',
+        path: 'public/uploads/Police_1507247984057.csv',
+        size: 5740 }
+      */
+
+      const user_id = mongoose.Types.ObjectId(req.decoded._id);
+      // todo.tasks.push(task_id);
+
+      const newFile = File({
+        name: req.file.filename,
+        path: dir,
+        full_path: target_path,
+        type: req.file.mimetype,
+        size: req.file.size,
+        is_starred: false,
+        user: user_id,
+        is_deleted: false,
+      });
+
+      newFile.save((err, file) => {
+        console.log('>>>> inserted to mongoDB, file=', file);
+
+        res.json(file);
+      });
+    }); // end of fs.rename
+  });
 };

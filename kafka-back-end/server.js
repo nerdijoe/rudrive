@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 
 const connection =  new require('./kafka/Connection');
 const action = require('./helpers/actionConstants');
 const auth = require('./services/auth');
+const files = require('./services/files');
 
 const topic_name = 'request_topic';
 const consumer = connection.getConsumer(topic_name);
@@ -73,13 +75,34 @@ consumer.on('message', (message) => {
         });
         return;
       });
-      
+      break;    
+    }
+
+    case action.FETCH_FILES: {
+      console.log("here");
+      files.fetchFiles(data.data, (err, res) => {
+        console.log('after FETCH_FILES, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
       break;    
     }
     default: {
       console.log('invalid Action');
     }
   }
-  
 
 });
