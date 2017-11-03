@@ -5,6 +5,7 @@ require('dotenv').config();
 const connection =  new require('./kafka/Connection');
 const action = require('./helpers/actionConstants');
 const auth = require('./services/auth');
+const upload = require('./services/uploads');
 const files = require('./services/files');
 
 const topic_name = 'request_topic';
@@ -82,6 +83,27 @@ consumer.on('message', (message) => {
       console.log("here");
       files.fetchFiles(data.data, (err, res) => {
         console.log('after FETCH_FILES, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+    case action.ADD_NEW_FILE: {
+      upload.uploadFile(data.data, (err, res) => {
+        console.log('after ADD_NEW_FILE, res=', res);
         const payloads = [
           {
             topic: data.replyTo,

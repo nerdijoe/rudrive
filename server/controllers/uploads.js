@@ -348,19 +348,25 @@ exports.uploadFileToPathMongoKafka = (req, res) => {
 
   // need to query the path
 
-  const currentPath = req.params.currentPath;
+  fs.readFile(req.file.path, (err, data) => {
+    const binaryFile = new Buffer(data, 'binary');
+    console.log('binaryFile = ', binaryFile);
 
-
-  kafka.make_request('request_topic', { action: action.ADD_NEW_FILE, body: req.body, file: req.file, decoded: req.decoded }, (err, results) => {
-    console.log('uploadFileToPathMongoKafka');
-    console.log('   results=', results);
-    if (err) {
-      console.log('  ----> signupMongoKafka Error');
-      res.json(err);
-    } else {
-      res.json(results);
-    }
+    const currentPath = req.params.currentPath;
+    
+    kafka.make_request('request_topic', { action: action.ADD_NEW_FILE, body: req.body, file: req.file, currentPath, binaryFile, decoded: req.decoded }, (err, results) => {
+      console.log('uploadFileToPathMongoKafka');
+      console.log('   results=', results);
+      if (err) {
+        console.log('  ----> uploadFileToPathMongoKafka Error');
+        res.json(err);
+      } else {
+        res.json(results);
+      }
+    });
+    
   });
+
 
 
   // find folder
@@ -368,61 +374,62 @@ exports.uploadFileToPathMongoKafka = (req, res) => {
   // if no upload to root folder
   // create dir if it does not exist
   // then insert to file
-  Folder.findOne({ _id: currentPath }, (err, folder) => {
-    console.log('After Folder.findOne, folder=', folder);
-    const file = req.file;
-    const userEmail = req.decoded.email;
+  
+  // Folder.findOne({ _id: currentPath }, (err, folder) => {
+  //   console.log('After Folder.findOne, folder=', folder);
+  //   const file = req.file;
+  //   const userEmail = req.decoded.email;
 
-    // var dir = `./public/uploads/${userEmail}`;
-    let dir = `./public/uploads/${userEmail}`;
-    if (folder) {
-      dir = folder.full_path;
-    }
+  //   // var dir = `./public/uploads/${userEmail}`;
+  //   let dir = `./public/uploads/${userEmail}`;
+  //   if (folder) {
+  //     dir = folder.full_path;
+  //   }
     
-    // create dir if it doesn't exist
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
-    }
+  //   // create dir if it doesn't exist
+  //   if (!fs.existsSync(dir)) {
+  //     fs.mkdirSync(dir);
+  //   }
 
-    const default_path = file.path;
-    const target_path = dir + '/' + file.filename;
+  //   const default_path = file.path;
+  //   const target_path = dir + '/' + file.filename;
 
-    fs.rename(default_path, target_path, (err) => {
-      if (err) throw err;
+  //   fs.rename(default_path, target_path, (err) => {
+  //     if (err) throw err;
 
-      console.log(`>>> ${file.filename} has been moved to ${target_path}`);
+  //     console.log(`>>> ${file.filename} has been moved to ${target_path}`);
 
-      // add to db
-      /*
-      uploadFile req.file { fieldname: 'doc',
-        originalname: 'Police.csv',
-        encoding: '7bit',
-        mimetype: 'text/csv',
-        destination: './public/uploads/',
-        filename: 'Police_1507247984057.csv',
-        path: 'public/uploads/Police_1507247984057.csv',
-        size: 5740 }
-      */
+  //     // add to db
+  //     /*
+  //     uploadFile req.file { fieldname: 'doc',
+  //       originalname: 'Police.csv',
+  //       encoding: '7bit',
+  //       mimetype: 'text/csv',
+  //       destination: './public/uploads/',
+  //       filename: 'Police_1507247984057.csv',
+  //       path: 'public/uploads/Police_1507247984057.csv',
+  //       size: 5740 }
+  //     */
 
-      const user_id = mongoose.Types.ObjectId(req.decoded._id);
-      // todo.tasks.push(task_id);
+  //     const user_id = mongoose.Types.ObjectId(req.decoded._id);
+  //     // todo.tasks.push(task_id);
 
-      const newFile = File({
-        name: req.file.filename,
-        path: dir,
-        full_path: target_path,
-        type: req.file.mimetype,
-        size: req.file.size,
-        is_starred: false,
-        user: user_id,
-        is_deleted: false,
-      });
+  //     const newFile = File({
+  //       name: req.file.filename,
+  //       path: dir,
+  //       full_path: target_path,
+  //       type: req.file.mimetype,
+  //       size: req.file.size,
+  //       is_starred: false,
+  //       user: user_id,
+  //       is_deleted: false,
+  //     });
 
-      newFile.save((err, file) => {
-        console.log('>>>> inserted to mongoDB, file=', file);
+  //     newFile.save((err, file) => {
+  //       console.log('>>>> inserted to mongoDB, file=', file);
 
-        res.json(file);
-      });
-    }); // end of fs.rename
-  });
+  //       res.json(file);
+  //     });
+  //   }); // end of fs.rename
+  // });
 };

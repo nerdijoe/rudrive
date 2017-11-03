@@ -27,7 +27,7 @@ router.get('/listdir', helper.auth, uploadsController.listDir);
 
 router.post('/createfolder', helper.auth, uploadsController.createDirMongo);
 
-router.post('/:currentPath', [helper.auth, upload.single('doc')], uploadsController.uploadFileToPathMongo);
+router.post('/:currentPath', [helper.auth, upload.single('doc')], uploadsController.uploadFileToPathMongoKafka);
 
 
 module.exports = router;
