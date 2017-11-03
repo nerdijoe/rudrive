@@ -8,7 +8,43 @@
 
 ## How to run the application
 
-Server
+### Start Kafka Broker 
+
+```
+// on your terminal
+$ cd kafka_2.11-0.11.0.1
+
+
+// start zookeper
+$ bin/zookeeper-server-start.sh config/zookeeper.properties
+
+
+// start kafka server
+$ bin/kafka-server-start.sh config/server.properties
+
+
+// create 2 topics
+// request_topic and response_topic
+$ bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic request_topic
+$ bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic response_topic
+
+
+// see the topics that has been created
+$ bin/kafka-topics.sh --list --zookeeper localhost:2181
+
+```
+
+### Start 3 servers
+Kafka Backend Server
+```
+$ cd kafka-back-end
+$ yarn install
+
+$ yarn start
+```
+
+
+Express.js Backend Server 
 ```
 $ cd server
 $ yarn install
@@ -21,7 +57,7 @@ $ sequelize db:migrate
 $ yarn start
 ```
 
-Client
+React.js Client Server
 ```
 $ cd client
 $ yarn install

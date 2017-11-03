@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const db = require('../models');
 const File = require('../models/mongoose_file');
 const User = require('../models/mongoose_user');
+const kafka = require('../routes/kafka/client');
+const action = require('../helpers/actionConstants');
 
 exports.fetchFiles = (req, res) => {
   console.log('fetchFiles', req.decoded._id);
@@ -401,4 +403,21 @@ exports.fetchFileSharingMongo = (req, res) => {
       console.log('after fetchFileSharingMongo files=', files);
       res.json(files);
     });
+};
+
+// Kafka -----------------------
+
+exports.fetchRootFilesWithShareMongoKafka = (req, res) => {
+  console.log('fetchRootFilesWithShareMongoKafka', req.decoded._id);
+
+  kafka.make_request('request_topic', { action: action.FETCH_FILES, decoded: req.decoded }, (err, results) => {
+    console.log('after request fetchRootFilesWithShareMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> fetchRootFilesWithShareMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
 };

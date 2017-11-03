@@ -292,7 +292,7 @@ export const axiosUploadToPath = (data, currentPath) => (dispatch) => {
     console.log(res);
 
     // update the list state
-    dispatch(axiosFetchListing());
+    // dispatch(axiosFetchListing());
     dispatch(addNewFile(res.data));
 
 

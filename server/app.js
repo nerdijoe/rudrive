@@ -11,6 +11,8 @@ const session = require('client-sessions');
 const Sequelize = require('sequelize');
 const path = require('path');
 
+const action = require('./helpers/actionConstants');
+
 const env = process.env.NODE_ENV || "development";
 const config = require(path.join(__dirname, 'config', 'config.json'))[env];
 const pool = {
@@ -61,7 +63,7 @@ require('dotenv').config();
 // mongoose setup ####
 const dbConfig = {
   development: 'mongodb://127.0.0.1/273_lab1_dropbox_dev',
-  text: 'mongodb://127.0.0.1/273_lab1_dropbox_test'
+  test: 'mongodb://127.0.0.1/273_lab1_dropbox_test'
 };
 
 const appEnv = app.settings.env;
@@ -165,25 +167,56 @@ app.use(passport.initialize());
 //   });
 // }));
 
+// Mongoo
+// passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (username, password, cb) => {
+//   const User = require('./models/mongoose_user');
+//   User.findOne({
+//     email: username,
+//   }, (err, user) => {
+//     if (err) cb(err);
+//     if (!user) {
+//       cb(null, false, { message: 'User does not exist' });
+//       // cb.json({ message: 'User does not exist'})
+//     } else {
+//       if (passwordHash.verify(password, user.password)) {
+//         cb(null, user);
+//       } else {
+//         // cb(null, false, {message: 'Password is not correct !'})
+//         cb(null, false);
+//       }
+//     }
+//   });
+// }));
+
+// Kafka
+const kafka = require('./routes/kafka/client');
+
 passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (username, password, cb) => {
-  const User = require('./models/mongoose_user');
-  User.findOne({
-    email: username,
-  }, (err, user) => {
-    if (err) cb(err);
-    if (!user) {
-      cb(null, false, { message: 'User does not exist' });
-      // cb.json({ message: 'User does not exist'})
+  console.log('In Passport, going to make kafka.make_request');
+
+  kafka.make_request('request_topic', { action: action.USER_SIGN_IN, username: username, password: password }, (err, results) => {
+    console.log('passport.use -> in result');
+    console.log('   results=', results);
+    if (err) {
+      cb(err, {});
     } else {
-      if (passwordHash.verify(password, user.password)) {
-        cb(null, user);
+      // if (results.code == 200) {
+      //   console.log(' results.code == 200');
+      //   cb(null,{ username, password });
+      // } else {
+      //   console.log(' else results.code');
+      //   cb(null,false);
+      // }
+
+      if (results) {
+        cb(null, results);
       } else {
-        // cb(null, false, {message: 'Password is not correct !'})
         cb(null, false);
       }
     }
   });
 }));
+
 
 const port = process.env.PORT || '3000';
 

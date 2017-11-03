@@ -104,7 +104,7 @@ exports.fetchActivitiesMongo = (req, res) => {
       createdAt: 'desc',
     })
     .exec((err, activities) => {
-      console.log('after fetchActivitiesMongo activities=', activities);
+      console.log('after fetchActivitiesMongo activities.length=', activities.length);
       res.json(activities);
     });
 };
