@@ -6,12 +6,12 @@ const filesController = require('../controllers/files');
 router.get('/', helper.auth, filesController.fetchFilesMongo);
 router.get('/root', helper.auth, filesController.fetchRootFilesWithShareMongoKafka);
 
-router.put('/star', helper.auth, filesController.starFileMongo);
-router.put('/delete', helper.auth, filesController.deleteFileMongo);
+router.put('/star', helper.auth, filesController.starFileMongoKafka);
+router.put('/delete', helper.auth, filesController.deleteFileMongoKafka);
 
 // File Sharing
-router.post('/share', helper.auth, filesController.addFileSharingMongo);
-router.get('/share', helper.auth, filesController.fetchFileSharingMongo);
-router.put('/share', helper.auth, filesController.removeFileSharingMongo);
+router.post('/share', helper.auth, filesController.addFileSharingMongoKafka);
+router.get('/share', helper.auth, filesController.fetchFileSharingMongoKafka);
+router.put('/share', helper.auth, filesController.removeFileSharingMongoKafka);
 
 module.exports = router;

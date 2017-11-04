@@ -421,3 +421,100 @@ exports.fetchRootFilesWithShareMongoKafka = (req, res) => {
     }
   });
 };
+
+exports.starFileMongoKafka = (req, res) => {
+  console.log('starFileMongoKafka', req.decoded._id);
+
+  kafka.make_request('request_topic', {
+    action: action.STAR_FILE,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('starFileMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> starFileMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.deleteFileMongoKafka = (req, res) => {
+  console.log('deleteFileMongoKafka', req.decoded._id);
+  console.log('req.body', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.DELETE_FILE,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('deleteFileMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> deleteFileMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.addFileSharingMongoKafka = (req, res) => {
+  console.log('addFileSharingMongoKafka', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.FILE_SHARING_ADD,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('addFileSharingMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> addFileSharingMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.removeFileSharingMongoKafka = (req, res) => {
+  console.log('removeFileSharingMongoKafka', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.FILE_SHARING_REMOVE,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('removeFileSharingMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> removeFileSharingMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.fetchFileSharingMongoKafka = (req, res) => {
+  console.log('fetchFileSharingMongoKafka', req.decoded._id);
+
+  kafka.make_request('request_topic', {
+    action: action.FETCH_SHARE_FILES,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('fetchFileSharingMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> fetchFileSharingMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
