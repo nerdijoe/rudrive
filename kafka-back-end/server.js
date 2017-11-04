@@ -167,6 +167,51 @@ consumer.on('message', (message) => {
       });
       break;    
     }
+
+    case action.ADD_ACTIVITY: {
+      users.insertActivity(data.data, (err, res) => {
+        console.log('after ADD_ACTIVITY, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FETCH_ACTIVITIES: {
+      users.fetchActivities(data.data, (err, res) => {
+        console.log('after FETCH_ACTIVITIES, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
     case action.FETCH_FILES: {
       console.log("here");
       files.fetchFiles(data.data, (err, res) => {

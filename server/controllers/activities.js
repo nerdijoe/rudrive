@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Activity = require('../models/mongoose_activity');
+const kafka = require('../routes/kafka/client');
+const action = require('../helpers/actionConstants');
 
 const db = require('../models');
 
@@ -107,4 +109,45 @@ exports.fetchActivitiesMongo = (req, res) => {
       console.log('after fetchActivitiesMongo activities.length=', activities.length);
       res.json(activities);
     });
+};
+
+
+//---------- Kafka
+exports.insertActivityMongoKafka = (req, res) => {
+  console.log('insertActivityMongoKafka req.decoded._id=', req.decoded._id)
+  const data = req.body;
+  console.log('req.body', data);
+
+  kafka.make_request('request_topic', {
+    action: action.ADD_ACTIVITY,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('insertActivityMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> insertActivityMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.fetchActivitiesMongoKafka = (req, res) => {
+  console.log('fetchActivitiesMongoKafka', req.decoded._id);
+
+  kafka.make_request('request_topic', {
+    action: action.FETCH_ACTIVITIES,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('fetchActivitiesMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> fetchActivitiesMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
 };

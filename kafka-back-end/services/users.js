@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../models/mongoose_user');
 const About = require('../models/mongoose_about');
 const Interest = require('../models/mongoose_interest');
+const Activity = require('../models/mongoose_activity');
 
 module.exports = {
   fetchAbout: (msg, cb) => {
@@ -104,6 +105,47 @@ module.exports = {
       // res.json(updatedInterest);
       cb(false, updatedInterest);
     });
+  },
+  insertActivity: (msg, cb) => {
+    const req = msg;
+
+    console.log('insertActivity msg=', msg);
+    console.log('---> req.decoded._id=', mongoose.Types.ObjectId(req.decoded._id));
+    const data = req.body;
+    // action
+    // description
+    // user
+    const newActivity = Activity({
+      action: data.action,
+      description: data.description,
+      user: mongoose.Types.ObjectId(req.decoded._id),
+    });
+
+    newActivity.save((err, item) => {
+      console.log('activity inserted', item);
+      // res.json(item);
+      cb(false, item);
+    });
+  },
+  fetchActivities: (msg, cb) => {
+    const req = msg;
+
+    console.log('fetchActivities msg=', msg);
+    console.log('---> req.decoded._id=', mongoose.Types.ObjectId(req.decoded._id));
+    
+    Activity
+      .find({
+        user: mongoose.Types.ObjectId(req.decoded._id),
+      })
+      .sort({
+        createdAt: 'desc',
+      })
+      .exec((err, activities) => {
+        console.log('after fetchActivities activities.length=', activities.length);
+        // res.json(activities);
+        cb(false, activities);
+      });
+
   },
 
 };
