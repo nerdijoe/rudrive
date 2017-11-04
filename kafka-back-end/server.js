@@ -301,6 +301,71 @@ consumer.on('message', (message) => {
       break;    
     }
 
+    case action.STAR_FOLDER: {
+      folders.starFolder(data.data, (err, res) => {
+        console.log('after STAR_FOLDER, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.DELETE_FOLDER: {
+      folders.deleteFolder(data.data, (err, res) => {
+        console.log('after DELETE_FOLDER, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FETCH_CONTENTS_BY_FOLDER_ID: {
+      folders.fetchById(data.data, (err, res) => {
+        console.log('after FETCH_CONTENTS_BY_FOLDER_ID, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
 
     default: {
       console.log('invalid Action');

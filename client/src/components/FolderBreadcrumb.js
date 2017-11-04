@@ -36,7 +36,7 @@ class FolderBreadcrumb extends Component {
           {
             this.props.breadcrumb.map( (item, i) => {
               return (
-                <span key={item.id}>
+                <span key={item._id}>
                   <Breadcrumb.Divider icon='right chevron' />
                   {
                     (i === this.props.breadcrumb.length - 1) ?

@@ -523,7 +523,7 @@ exports.fetchFolderSharingMongo = (req, res) => {
     });
 };
 
-// MongoDB ---------------------------------------------------------------
+// Kafka ---------------------------------------------------------------
 
 exports.fetchRootFoldersWithShareMongoKafka = (req, res) => {
   console.log('fetchRootFoldersWithShareMongoKafka', req.decoded._id);
@@ -541,5 +541,64 @@ exports.fetchRootFoldersWithShareMongoKafka = (req, res) => {
       res.json(results);
     }
   });
+};
 
+
+exports.starFolderMongoKafka = (req, res) => {
+  console.log('starFolderMongoKafka', req.decoded._id);
+
+  kafka.make_request('request_topic', {
+    action: action.STAR_FOLDER,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('starFolderMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> starFolderMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.deleteFolderMongoKafka = (req, res) => {
+  console.log('deleteFolderMongoKafka', req.decoded._id);
+  console.log('req.body', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.DELETE_FOLDER,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('deleteFolderMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> deleteFolderMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.fetchByIdMongoKafka = (req, res) => {
+  console.log('fetchByIdMongoKafka', req.decoded._id);
+  console.log('fetchByIdMongoKafka req.params.id=', req.params.id);
+
+  kafka.make_request('request_topic', {
+    action: action.FETCH_CONTENTS_BY_FOLDER_ID,
+    params: req.params,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('fetchByIdMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> fetchByIdMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
 };
