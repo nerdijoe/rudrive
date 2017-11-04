@@ -602,3 +602,64 @@ exports.fetchByIdMongoKafka = (req, res) => {
     }
   });
 };
+
+exports.addFolderSharingMongoKafka = (req, res) => {
+  console.log('addFolderSharingMongoKafka', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.FOLDER_SHARING_ADD,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('addFolderSharingMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> addFolderSharingMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.removeFolderSharingMongoKafka = (req, res) => {
+  console.log('removeFolderSharingMongoKafka', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.FOLDER_SHARING_REMOVE,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('removeFolderSharingMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> removeFolderSharingMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });  
+};
+
+
+exports.fetchFolderSharingMongoKafka = (req, res) => {
+  console.log('fetchFolderSharingMongo', req.decoded._id);
+
+  kafka.make_request('request_topic', {
+    action: action.FETCH_SHARE_FOLDERS,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('fetchFolderSharingMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> fetchFolderSharingMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });  
+
+
+};

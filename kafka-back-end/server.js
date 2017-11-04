@@ -367,6 +367,73 @@ consumer.on('message', (message) => {
       break;    
     }
 
+    case action.FOLDER_SHARING_ADD: {
+      folders.addFolderSharing(data.data, (err, res) => {
+        console.log('after FOLDER_SHARING_ADD, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FOLDER_SHARING_REMOVE: {
+      folders.removeFolderSharing(data.data, (err, res) => {
+        console.log('after FOLDER_SHARING_REMOVE, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FETCH_SHARE_FOLDERS: {
+      folders.fetchFolderSharing(data.data, (err, res) => {
+        console.log('after FETCH_SHARE_FOLDERS, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+
     default: {
       console.log('invalid Action');
     }
