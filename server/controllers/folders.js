@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Folder = require('../models/mongoose_folder');
 const File = require('../models/mongoose_file');
 const User = require('../models/mongoose_user');
+const kafka = require('../routes/kafka/client');
+const action = require('../helpers/actionConstants');
 
 const db = require('../models');
 require('dotenv').config();
@@ -521,3 +523,143 @@ exports.fetchFolderSharingMongo = (req, res) => {
     });
 };
 
+// Kafka ---------------------------------------------------------------
+
+exports.fetchRootFoldersWithShareMongoKafka = (req, res) => {
+  console.log('fetchRootFoldersWithShareMongoKafka', req.decoded._id);
+
+  kafka.make_request('request_topic', {
+    action: action.FETCH_FOLDERS,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('fetchRootFoldersWithShareMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> fetchRootFoldersWithShareMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+
+exports.starFolderMongoKafka = (req, res) => {
+  console.log('starFolderMongoKafka', req.decoded._id);
+
+  kafka.make_request('request_topic', {
+    action: action.STAR_FOLDER,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('starFolderMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> starFolderMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.deleteFolderMongoKafka = (req, res) => {
+  console.log('deleteFolderMongoKafka', req.decoded._id);
+  console.log('req.body', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.DELETE_FOLDER,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('deleteFolderMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> deleteFolderMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.fetchByIdMongoKafka = (req, res) => {
+  console.log('fetchByIdMongoKafka', req.decoded._id);
+  console.log('fetchByIdMongoKafka req.params.id=', req.params.id);
+
+  kafka.make_request('request_topic', {
+    action: action.FETCH_CONTENTS_BY_FOLDER_ID,
+    params: req.params,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('fetchByIdMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> fetchByIdMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.addFolderSharingMongoKafka = (req, res) => {
+  console.log('addFolderSharingMongoKafka', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.FOLDER_SHARING_ADD,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('addFolderSharingMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> addFolderSharingMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.removeFolderSharingMongoKafka = (req, res) => {
+  console.log('removeFolderSharingMongoKafka', req.decoded._id);
+  console.log('req.body=', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.FOLDER_SHARING_REMOVE,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('removeFolderSharingMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> removeFolderSharingMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });  
+};
+
+
+exports.fetchFolderSharingMongoKafka = (req, res) => {
+  console.log('fetchFolderSharingMongo', req.decoded._id);
+
+  kafka.make_request('request_topic', {
+    action: action.FETCH_SHARE_FOLDERS,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('fetchFolderSharingMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> fetchFolderSharingMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });  
+
+
+};

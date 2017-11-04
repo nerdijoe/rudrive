@@ -75,4 +75,63 @@ module.exports = {
       }); // end of fs.rename
     });
   },
+  createFolder: (msg, cb) => {
+    const req = msg;
+
+    console.log('uploadFile msg=', msg);
+    console.log('---> req.decoded._id=', mongoose.Types.ObjectId(req.decoded._id));
+
+    const userEmail = req.decoded.email;
+
+    const newDirName = req.body.name;
+    const currentPath = req.body.currentPath;
+
+    // var newDirPath = `./public/uploads/${userEmail}/${newDirName}`;
+    const newDirPath = `${currentPath}/${newDirName}`;
+    // create dir if it doesn't exist
+    if (!fs.existsSync(newDirPath)) {
+      fs.mkdirSync(newDirPath);
+      console.log(`folder '${newDirName}' is created`);
+
+      // insert to DB
+      const newFolder = Folder({
+        name: newDirName,
+        path: currentPath,
+        full_path: newDirPath,
+        is_starred: false,
+        is_deleted: false,
+        user: mongoose.Types.ObjectId(req.decoded._id),
+      });
+  
+      newFolder.save((err, folder) => {
+        console.log('>>>> mongo inserted a new folder', folder);
+        // res.json(folder);
+        cb(false, folder);
+      });
+  
+      // db.Folder.create(new_folder)
+      //   .then( (folder) => {
+      //     console.log('>>>> DB inserted a new folder', folder);
+      //     res.json(folder);
+  
+      //     // need to return the newly created folder with the Users
+      //     // db.Folder.findAll({
+      //     //   where: { id: folder_id },
+      //     //   include: [{ model: db.User }],
+      //     // }).then((shareInfo) => {
+      //     //   console.log('shareInfo', shareInfo);
+      //     //   res.json(shareInfo);
+      //     // });
+  
+      //   })
+    } else {
+      const msg = {
+        message: `folder '${newDirName}' is already existed`,
+      };
+      console.log(msg);
+      // res.json(msg);
+      cb(false, msg);
+    }
+
+  }
 };

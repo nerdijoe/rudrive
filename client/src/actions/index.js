@@ -267,7 +267,7 @@ export const axiosUpload = (data) => (dispatch) => {
     console.log(res);
 
     // update the list state
-    dispatch(axiosFetchListing());
+    // dispatch(axiosFetchListing());
 
     dispatch(addNewFile(res.data));
 
@@ -324,7 +324,7 @@ export const axiosUploadToPathMongo = (data, currentPath) => (dispatch) => {
     console.log(res);
 
     // update the list state
-    dispatch(axiosFetchListing());
+    // dispatch(axiosFetchListing());
     dispatch(addNewFile(res.data));
 
 
@@ -387,7 +387,7 @@ export const axiosCreateFolder = data => (dispatch) => {
     console.log(res);
 
     // update the list state
-    dispatch(axiosFetchListing());
+    // dispatch(axiosFetchListing());
 
     // update folders list
     dispatch(addNewFolder(res.data));
@@ -415,7 +415,7 @@ export const axiosCreateFolderOnCurrentPath = (data, currentPath) => (dispatch) 
     console.log(res);
 
     // update the list state
-    dispatch(axiosFetchListing());
+    // dispatch(axiosFetchListing());
 
     // update folders list
     dispatch(addNewFolder(res.data));

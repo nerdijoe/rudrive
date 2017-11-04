@@ -7,6 +7,8 @@ const action = require('./helpers/actionConstants');
 const auth = require('./services/auth');
 const upload = require('./services/uploads');
 const files = require('./services/files');
+const users = require('./services/users');
+const folders = require('./services/folders');
 
 const topic_name = 'request_topic';
 const consumer = connection.getConsumer(topic_name);
@@ -79,6 +81,138 @@ consumer.on('message', (message) => {
       break;    
     }
 
+    case action.FETCH_USER_ABOUT: {
+      users.fetchAbout(data.data, (err, res) => {
+        console.log('after FETCH_USER_ABOUT, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.UPDATE_USER_ABOUT: {
+      users.updateAbout(data.data, (err, res) => {
+        console.log('after UPDATE_USER_ABOUT, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FETCH_USER_INTEREST: {
+      users.fetchInterest(data.data, (err, res) => {
+        console.log('after FETCH_USER_INTEREST, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.UPDATE_USER_INTEREST: {
+      users.updateInterest(data.data, (err, res) => {
+        console.log('after UPDATE_USER_INTEREST, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.ADD_ACTIVITY: {
+      users.insertActivity(data.data, (err, res) => {
+        console.log('after ADD_ACTIVITY, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FETCH_ACTIVITIES: {
+      users.fetchActivities(data.data, (err, res) => {
+        console.log('after FETCH_ACTIVITIES, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
     case action.FETCH_FILES: {
       console.log("here");
       files.fetchFiles(data.data, (err, res) => {
@@ -122,6 +256,184 @@ consumer.on('message', (message) => {
       });
       break;    
     }
+
+    case action.ADD_NEW_FOLDER: {
+      upload.createFolder(data.data, (err, res) => {
+        console.log('after ADD_NEW_FOLDER, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FETCH_FOLDERS: {
+      folders.fetchRootFoldersWithShare(data.data, (err, res) => {
+        console.log('after FETCH_FOLDERS, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.STAR_FOLDER: {
+      folders.starFolder(data.data, (err, res) => {
+        console.log('after STAR_FOLDER, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.DELETE_FOLDER: {
+      folders.deleteFolder(data.data, (err, res) => {
+        console.log('after DELETE_FOLDER, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FETCH_CONTENTS_BY_FOLDER_ID: {
+      folders.fetchById(data.data, (err, res) => {
+        console.log('after FETCH_CONTENTS_BY_FOLDER_ID, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FOLDER_SHARING_ADD: {
+      folders.addFolderSharing(data.data, (err, res) => {
+        console.log('after FOLDER_SHARING_ADD, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FOLDER_SHARING_REMOVE: {
+      folders.removeFolderSharing(data.data, (err, res) => {
+        console.log('after FOLDER_SHARING_REMOVE, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FETCH_SHARE_FOLDERS: {
+      folders.fetchFolderSharing(data.data, (err, res) => {
+        console.log('after FETCH_SHARE_FOLDERS, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+
     default: {
       console.log('invalid Action');
     }
