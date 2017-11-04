@@ -8,6 +8,7 @@ const auth = require('./services/auth');
 const upload = require('./services/uploads');
 const files = require('./services/files');
 const users = require('./services/users');
+const folders = require('./services/folders');
 
 const topic_name = 'request_topic';
 const consumer = connection.getConsumer(topic_name);
@@ -255,6 +256,52 @@ consumer.on('message', (message) => {
       });
       break;    
     }
+
+    case action.ADD_NEW_FOLDER: {
+      upload.createFolder(data.data, (err, res) => {
+        console.log('after ADD_NEW_FOLDER, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FETCH_FOLDERS: {
+      folders.fetchRootFoldersWithShare(data.data, (err, res) => {
+        console.log('after FETCH_FOLDERS, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+
     default: {
       console.log('invalid Action');
     }

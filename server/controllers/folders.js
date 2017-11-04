@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Folder = require('../models/mongoose_folder');
 const File = require('../models/mongoose_file');
 const User = require('../models/mongoose_user');
+const kafka = require('../routes/kafka/client');
+const action = require('../helpers/actionConstants');
 
 const db = require('../models');
 require('dotenv').config();
@@ -521,3 +523,23 @@ exports.fetchFolderSharingMongo = (req, res) => {
     });
 };
 
+// MongoDB ---------------------------------------------------------------
+
+exports.fetchRootFoldersWithShareMongoKafka = (req, res) => {
+  console.log('fetchRootFoldersWithShareMongoKafka', req.decoded._id);
+
+  kafka.make_request('request_topic', {
+    action: action.FETCH_FOLDERS,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('fetchRootFoldersWithShareMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> fetchRootFoldersWithShareMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+
+};
