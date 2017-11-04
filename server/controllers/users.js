@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const About = require('../models/mongoose_about');
 const Interest = require('../models/mongoose_interest');
+const kafka = require('../routes/kafka/client');
+const action = require('../helpers/actionConstants');
 
 const db = require('../models');
 
@@ -197,3 +199,77 @@ exports.updateInterestMongo = (req, res) => {
   });
 };
 
+// ===== kafka
+
+exports.getAboutMongoKafka = (req, res) => {
+  console.log('getAbout req.decoded._id=', req.decoded._id);
+
+  kafka.make_request('request_topic', { action: action.FETCH_USER_ABOUT, decoded: req.decoded }, (err, results) => {
+    console.log('getAboutMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> getAboutMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.updateAboutMongoKafka = (req, res) => {
+  console.log('updateAboutMongoKafka req.decode._id=', req.decoded._id);
+  console.log('updateAboutMongoKafka req.body=', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.UPDATE_USER_ABOUT,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('updateAboutMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> updateAboutMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.getInterestMongoKafka = (req, res) => {
+  console.log('getInterestMongoKafka req.decode._id=', req.decoded._id);
+
+  kafka.make_request('request_topic', {
+    action: action.FETCH_USER_INTEREST,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('getInterestMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> getInterestMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+exports.updateInterestMongoKafka = (req, res) => {
+  console.log('updateInterestMongoKafka req.decode._id=', req.decoded._id);
+  console.log('updateInterestMongoKafka req.body=', req.body);
+
+  kafka.make_request('request_topic', {
+    action: action.UPDATE_USER_INTEREST,
+    body: req.body,
+    decoded: req.decoded,
+  }, (err, results) => {
+    console.log('updateInterestMongoKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> updateInterestMongoKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};

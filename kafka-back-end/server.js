@@ -7,6 +7,7 @@ const action = require('./helpers/actionConstants');
 const auth = require('./services/auth');
 const upload = require('./services/uploads');
 const files = require('./services/files');
+const users = require('./services/users');
 
 const topic_name = 'request_topic';
 const consumer = connection.getConsumer(topic_name);
@@ -79,6 +80,93 @@ consumer.on('message', (message) => {
       break;    
     }
 
+    case action.FETCH_USER_ABOUT: {
+      users.fetchAbout(data.data, (err, res) => {
+        console.log('after FETCH_USER_ABOUT, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.UPDATE_USER_ABOUT: {
+      users.updateAbout(data.data, (err, res) => {
+        console.log('after UPDATE_USER_ABOUT, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.FETCH_USER_INTEREST: {
+      users.fetchInterest(data.data, (err, res) => {
+        console.log('after FETCH_USER_INTEREST, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
+
+    case action.UPDATE_USER_INTEREST: {
+      users.updateInterest(data.data, (err, res) => {
+        console.log('after UPDATE_USER_INTEREST, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+      break;    
+    }
     case action.FETCH_FILES: {
       console.log("here");
       files.fetchFiles(data.data, (err, res) => {
