@@ -6,6 +6,8 @@ const should = chai.should();
 
 var server = require('../app');
 var db = require('../models');
+const User = require('../models/mongoose_user');
+
 let passwordHash = require('password-hash');
 
 describe('Files and Folders', () => {
@@ -13,42 +15,77 @@ describe('Files and Folders', () => {
   let token = '';
   let user_id = '';
 
+  // beforeEach((done) => {
+  //   var newUser = {
+  //     firstname: 'Rudy',
+  //     lastname: 'W',
+  //     email: 'rudy@haha.com',
+  //     password: passwordHash.generate('haha'),
+  //   };
+
+  //   db.User.create(newUser)
+  //     .then((user) => {
+  //       newUser_id = user.id;
+  //       user_id = user.id
+
+  //       chai.request(server)
+  //         .post('/authseq/signin')
+  //         .send({
+  //           email: 'rudy@haha.com',
+  //           password: 'haha',
+  //         })
+  //         .end((err, result) => {
+  //           console.log('****** result.body=', result.body);
+  //           token = result.body.token;
+  //           done();
+  //         });
+
+
+  //     });
+  // }); // end of beforeEach
+
+  // afterEach((done) => {
+  //   db.User.destroy({where: {}})
+  //     .then(() => {
+  //       done();
+  //     });
+  // });
+
   beforeEach((done) => {
-    var newUser = {
+    const newUser = User({
       firstname: 'Rudy',
       lastname: 'W',
       email: 'rudy@haha.com',
       password: passwordHash.generate('haha'),
-    };
+    });
 
-    db.User.create(newUser)
-      .then((user) => {
-        newUser_id = user.id;
-        user_id = user.id
+    newUser.save((err, user) => {
+      // newUser_id = user._id;
+      user_id = user._id
 
-        chai.request(server)
-          .post('/authseq/signin')
-          .send({
-            email: 'rudy@haha.com',
-            password: 'haha',
-          })
-          .end((err, result) => {
-            console.log('****** result.body=', result.body);
-            token = result.body.token;
-            done();
-          });
+      chai.request(server)
+        .post('/auth/signin')
+        .send({
+          email: 'rudy@haha.com',
+          password: 'haha',
+        })
+        .end((err, result) => {
+          console.log('****** result.body=', result.body);
+          token = result.body.token;
+          done();
+        });
+    });
 
+    // upload a new file
 
-      });
+    
   }); // end of beforeEach
 
   afterEach((done) => {
-    db.User.destroy({where: {}})
-      .then(() => {
-        done();
-      });
+    User.findByIdAndRemove( user_id, (err, user) => {
+      done();
+    });
   });
-
 
 
   // user has signed in and use the token to access server API
@@ -140,7 +177,7 @@ describe('Files and Folders', () => {
 
   it('GET - /folders/invalidId - should not return folder contents, it returns json message', (done) => {
     chai.request(server)
-      .get('/folders/99')
+      .get('/folders/59fed1e6da4a701fd77165f5')
       .set('token', token)
       .end((err, result) => {
         console.log("*** get folders by id", result.body);
@@ -150,7 +187,7 @@ describe('Files and Folders', () => {
 
         result.body.should.have.property('msg');
 
-        result.body.msg.should.equal('folder id is invalid.');
+        result.body.msg.should.equal('folder id is invalid');
 
         done();
       });

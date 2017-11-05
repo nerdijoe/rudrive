@@ -6,6 +6,8 @@ const should = chai.should();
 
 var server = require('../app');
 var db = require('../models');
+const User = require('../models/mongoose_user');
+
 let passwordHash = require('password-hash');
 
 describe('User', () => {
@@ -14,42 +16,36 @@ describe('User', () => {
   let user_id = '';
 
   beforeEach((done) => {
-    var newUser = {
+    const newUser = User({
       firstname: 'Rudy',
       lastname: 'W',
       email: 'rudy@haha.com',
       password: passwordHash.generate('haha'),
-    };
+    });
 
-    db.User.create(newUser)
-      .then((user) => {
-        newUser_id = user.id;
-        user_id = user.id
+    newUser.save((err, user) => {
+      // newUser_id = user._id;
+      user_id = user._id
 
-        chai.request(server)
-          .post('/authseq/signin')
-          .send({
-            email: 'rudy@haha.com',
-            password: 'haha',
-          })
-          .end((err, result) => {
-            console.log('****** result.body=', result.body);
-            token = result.body.token;
-            done();
-          });
-
-
-      });
+      chai.request(server)
+        .post('/auth/signin')
+        .send({
+          email: 'rudy@haha.com',
+          password: 'haha',
+        })
+        .end((err, result) => {
+          console.log('****** result.body=', result.body);
+          token = result.body.token;
+          done();
+        });
+    });
   }); // end of beforeEach
 
   afterEach((done) => {
-    db.User.destroy({where: {}})
-      .then(() => {
-        done();
-      });
+    User.findByIdAndRemove( user_id, (err, user) => {
+      done();
+    });
   });
-
-
 
   // user has signed in and use the token to access server API
   it('GET - /users/about - should return user about', (done) => {
