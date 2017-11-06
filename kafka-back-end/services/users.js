@@ -19,7 +19,8 @@ module.exports = {
         console.log('--------> about null');
         about = {
           overview: '',
-          work_edu: '',
+          work: '',
+          education: '',
           contact_info: '',
           life_events: '',
         };

@@ -7,6 +7,8 @@ const should = chai.should();
 var server = require('../app');
 var db = require('../models');
 const User = require('../models/mongoose_user');
+const About = require('../models/mongoose_about');
+const Interest = require('../models/mongoose_interest');
 
 let passwordHash = require('password-hash');
 
@@ -27,17 +29,38 @@ describe('User', () => {
       // newUser_id = user._id;
       user_id = user._id
 
-      chai.request(server)
-        .post('/auth/signin')
-        .send({
-          email: 'rudy@haha.com',
-          password: 'haha',
-        })
-        .end((err, result) => {
-          console.log('****** result.body=', result.body);
-          token = result.body.token;
-          done();
+
+      const newAbout = About({
+        overview: '',
+        work: '',
+        education: '',
+        contact_info: '',
+        life_events: '',
+        user: user._id,
+      });
+
+      newAbout.save((err3, about) => {
+        const newInterest = Interest({
+          music: '',
+          shows: '',
+          sports: '',
+          fav_teams: '',
+          user: user._id,
         });
+        newInterest.save((err4, interest) => {
+          chai.request(server)
+            .post('/auth/signin')
+            .send({
+              email: 'rudy@haha.com',
+              password: 'haha',
+            })
+            .end((err, result) => {
+              console.log('****** result.body=', result.body);
+              token = result.body.token;
+              done();
+            });
+        });
+      });
     });
   }); // end of beforeEach
 
@@ -59,7 +82,8 @@ describe('User', () => {
         result.body.should.be.an('object');
 
         result.body.should.have.property('overview');
-        result.body.should.have.property('work_edu');
+        result.body.should.have.property('work');
+        result.body.should.have.property('education');
         result.body.should.have.property('contact_info');
         result.body.should.have.property('life_events');
 
@@ -98,6 +122,91 @@ describe('User', () => {
         result.body.length.should.equal(0);
 
         done();
+      });
+  });
+
+  it('PUT - /users/interest - should update user interest', (done) => {
+    let music = 'the 5 6 7 8';
+    let shows = 'curb';
+    let sports = 'football';
+    let fav_teams = 'nygiants';
+
+    chai.request(server)
+      .put('/users/interest')
+      .set('token', token)
+      .send({
+        music,
+        shows,
+        sports,
+        fav_teams,
+      })
+      .end((err, result) => {
+        console.log("*** update user interest", result.body);
+
+        chai.request(server)
+          .get('/users/interest')
+          .set('token', token)
+          .end((err, result) => {
+            console.log("*** get user interest after update", result.body);
+            result.should.have.status(200);
+            result.should.be.an('object');
+            result.body.should.be.an('object');
+
+            result.body.should.have.property('music');
+            result.body.should.have.property('shows');
+            result.body.should.have.property('sports');
+            result.body.should.have.property('fav_teams');
+
+            result.body.music.should.equal(music);
+
+            done();
+          });
+      });
+  });
+
+  it('PUT - /users/about - should update user about', (done) => {
+    let overview = 'fighter';
+    let work = 'developer';
+    let education = 'sjsu';
+    let contact_info = '3434 434 434 43';
+    let life_events = 'graduated'
+
+    chai.request(server)
+      .put('/users/about')
+      .set('token', token)
+      .send({
+        overview,
+        work,
+        education,
+        contact_info,
+        life_events,
+      })
+      .end((err, result) => {
+        console.log("*** update user about", result.body);
+
+        chai.request(server)
+          .get('/users/about')
+          .set('token', token)
+          .end((err, result) => {
+            console.log("*** get user about after update", result.body);
+            result.should.have.status(200);
+            result.should.be.an('object');
+            result.body.should.be.an('object');
+
+            result.body.should.have.property('overview');
+            result.body.should.have.property('work');
+            result.body.should.have.property('education');
+            result.body.should.have.property('contact_info');
+            result.body.should.have.property('life_events');
+
+            result.body.overview.should.equal(overview);
+            result.body.work.should.equal(work);
+            result.body.education.should.equal(education);
+            result.body.contact_info.should.equal(contact_info);
+            result.body.life_events.should.equal(life_events);
+
+            done();
+          });
       });
   });
 });
