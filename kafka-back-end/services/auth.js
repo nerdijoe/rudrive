@@ -34,8 +34,8 @@ module.exports = {
           console.log('********* user password is verified, user=', user);
           cb(null, user);
         } else {
-          // cb(null, false, {message: 'Password is not correct !'})
-          cb(null, false);
+          cb(null, false, {message: 'Password is not correct !'})
+          // cb(null, false);
         }
       }
     });
