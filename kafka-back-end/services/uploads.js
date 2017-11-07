@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
+require('dotenv').config();
+
+const AWS = require('aws-sdk');
+AWS.config.update({ accessKeyId: process.env.AWS_ACCESS_KEY, secretAccessKey: process.env.AWS_SECRET_KEY });
+
 const Folder = require('../models/mongoose_folder');
 const File = require('../models/mongoose_file');
 
@@ -60,6 +65,7 @@ module.exports = {
           name: req.file.filename,
           path: dir,
           full_path: target_path,
+          aws_s3_path: '',
           type: req.file.mimetype,
           size: req.file.size,
           is_starred: false,
@@ -67,11 +73,54 @@ module.exports = {
           is_deleted: false,
         });
   
-        newFile.save((err, file) => {
-          console.log('>>>> inserted to mongoDB, file=', file);
-          // res.json(file);
-          cb(false, file);
-        });
+        // Need to upload to AWS S3 before inserting the file entry to MongoDB
+        //   because we need to get the AWS S3 path
+        fs.readFile(newFile.full_path, (err, data) => {
+          if (err) { throw err; }
+          // Read in the file, convert it to base64, store to S3
+          const base64data = new Buffer(data, 'binary');
+
+          // var s3 = new AWS.S3();
+          const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
+
+          const uploadParams = {
+            Bucket: 'dropbox-kafka',
+            Key: req.decoded.email + '/' + newFile.name,
+            Body: base64data,
+            ACL: 'public-read',
+          };
+
+          s3.upload(uploadParams, (err, data) => {
+            if (err) {
+              console.log('Error', err);
+              cb(err);
+            } if (data) {
+              console.log('data =', data);
+              newFile.aws_s3_path = data.Location;
+              console.log("Upload Success", newFile.aws_s3_path);
+
+
+              newFile.save((err, savedFile) => {
+                console.log('>>>> inserted to mongoDB, savedFile=', savedFile);
+                // res.json(file)
+                cb(false, savedFile);
+              }); // eof newFile.save
+            }
+          });
+          // s3.client.putObject({
+          //   Bucket: 'dropbox-kafka',
+          //   Key: file.name,
+          //   Body: base64data,
+          //   ACL: 'public-read'
+          // }, (resp) => {
+          //   console.log(arguments);
+          //   console.log('Successfully uploaded package.');
+
+          // });
+        }); // eof fs.readFile
+
+
+
       }); // end of fs.rename
     });
   },
