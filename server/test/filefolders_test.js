@@ -285,6 +285,8 @@ describe('Files and Folders', () => {
   // });
 
   it('GET - /folders/invalidId - should not return folder contents, it returns json message', (done) => {
+
+
     chai.request(server)
       .get('/folders/59fed1e6da4a701fd77165f5')
       .set('token', token)

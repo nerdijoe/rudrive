@@ -125,6 +125,29 @@ describe('User', () => {
       });
   });
 
+
+  it('POST - /users/activities - insert user activity: signing in', (done) => {
+    let action = 'USER_SIGN_IN';
+    let description = 'User sign in';
+    chai.request(server)
+      .post('/users/activities')
+      .set('token', token)
+      .send({
+        action,
+        description
+      })
+      .end((err, result) => {
+        console.log("*** insert user activity", result.body);
+        result.should.have.status(200);
+        result.should.be.an('object');
+        result.body.action.should.equal(action);
+        result.body.description.should.equal(description);
+
+        done();
+      });
+  });
+
+
   it('PUT - /users/interest - should update user interest', (done) => {
     let music = 'the 5 6 7 8';
     let shows = 'curb';
