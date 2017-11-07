@@ -36,25 +36,26 @@ const pool = {
 // ** TESTING using Mocha **
 // use this for testing
 // const sequelize = new Sequelize(config.database, config.username, config.password, config);
-// ***************
-const sequelize = new Sequelize(config.database, config.username, config.password, {
-  host: '127.0.0.1',
-  dialect: 'mysql',
-  pool: {
-    max: 10,
-    min: 0,
-    idle: 10000,
-  },
-});
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Sequelize MySQL Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+// *************** Sequelize setup
+// const sequelize = new Sequelize(config.database, config.username, config.password, {
+//   host: '127.0.0.1',
+//   dialect: 'mysql',
+//   pool: {
+//     max: 10,
+//     min: 0,
+//     idle: 10000,
+//   },
+// });
+
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log('Sequelize MySQL Connection has been established successfully.');
+//   })
+//   .catch(err => {
+//     console.error('Unable to connect to the database:', err);
+//   });
 
 const app = express();
 
