@@ -80,6 +80,21 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 ```
 Don't forget to comment the other one.
 
+```
+yarn test
+```
+
+On Kafka Backend
+
+Change the environment to test
+```
+// Line: 23, change this value from 'development' to 'test'
+const appEnv = 'test';
+
+// then run Kafka Backend
+yarn start
+```
+
 
 ## Server
 
