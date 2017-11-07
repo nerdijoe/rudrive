@@ -150,7 +150,7 @@ class Listing extends Component {
                 return (
                   <Table.Row key={file.id}>
                     <Table.Cell>
-                      <a href={downloadLink} target="_blank" >{file.name}</a>{' '}
+                      <a href={file.aws_s3_path} target="_blank" >{file.name}</a>{' '}
                       
 
                     </Table.Cell>

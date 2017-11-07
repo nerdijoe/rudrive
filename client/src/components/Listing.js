@@ -305,7 +305,7 @@ class Listing extends Component {
                 return (
                   <Table.Row key={file._id}>
                     <Table.Cell>
-                      <a href={downloadLink} target="_blank" >{file.name}</a>{' '}
+                      <a href={file.aws_s3_path} target="_blank" >{file.name}</a>{' '}
                       {file.is_starred ? <Icon name='blue star' /> : ''}
 
                     </Table.Cell>

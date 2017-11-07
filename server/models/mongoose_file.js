@@ -6,6 +6,7 @@ const fileSchema = new Schema({
   name: { type: String },
   path: { type: String },
   full_path: { type: String },
+  aws_s3_path: { type: String },
   type: { type: String },
   size: { type: String },
   is_starred: { type: Boolean, default: false },
