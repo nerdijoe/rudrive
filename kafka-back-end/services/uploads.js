@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 require('dotenv').config();
-
 const AWS = require('aws-sdk');
-AWS.config.update({ accessKeyId: process.env.AWS_ACCESS_KEY, secretAccessKey: process.env.AWS_SECRET_KEY });
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+});
 
 const Folder = require('../models/mongoose_folder');
 const File = require('../models/mongoose_file');
