@@ -69,6 +69,29 @@ consumer.on('message', (message) => {
       break;
     }
 
+    case action.USER_SIGN_IN_TOKEN: {
+      auth.signInToken(data.data, (err, res) => {
+        console.log('after USER_SIGN_IN_TOKEN, res=', res);
+        const payloads = [
+          {
+            topic: data.replyTo,
+            messages: JSON.stringify({
+              correlationId: data.correlationId,
+              data: res
+            }),
+            partition: 0,
+          },
+        ];
+        producer.send(payloads, (err, data) => {
+          console.log('producer.send');
+          console.log(data);
+        });
+        return;
+      });
+
+      break;
+    }
+
     case action.USER_SIGN_UP: {
       auth.signUp(data.data, (err, res) => {
         console.log('after USER_SIGN_UP, res=', res);
