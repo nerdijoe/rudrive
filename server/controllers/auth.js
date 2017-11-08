@@ -230,3 +230,17 @@ exports.signupMongoKafka = (req, res, next) => {
   //   } // end of else
   // });
 };
+
+exports.signinKafka = (req, res) => {
+  // req.user is passed from passport
+  kafka.make_request('request_topic', { action: action.USER_SIGN_IN_TOKEN, user: req.user }, (err, results) => {
+    console.log('signinKafka');
+    console.log('   results=', results);
+    if (err) {
+      console.log('  ----> signinKafka Error');
+      res.json(err);
+    } else {
+      res.json(results);
+    }
+  });
+};

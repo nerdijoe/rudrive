@@ -1,4 +1,6 @@
 const passwordHash = require('password-hash');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const User = require('../models/mongoose_user');
 const About = require('../models/mongoose_about');
@@ -39,6 +41,44 @@ module.exports = {
           // cb(null, false);
         }
       }
+    });
+  },
+  signInToken: (msg, cb) => {
+    console.log('signInToken msg=', msg);
+    const req = msg;
+
+    const user = req.user;
+    console.log('auth.signin');
+    console.log(user);
+
+    const email = user.email;
+    const token = jwt.sign({
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      // mysql_id: user.mysql_id,
+      // mongo_id: user._id,
+      _id: user._id,
+    }, process.env.JWT_KEY);
+
+    // res.send({
+    //   token,
+    //   email,
+    //   firstname: user.firstname,
+    //   lastname: user.lastname,
+    //   // mysql_id: user.mysql_id,
+    //   // mongo_id: user._id,
+    //   _id: user._id,
+    // });
+
+    cb(null, {
+      token,
+      email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      // mysql_id: user.mysql_id,
+      // mongo_id: user._id,
+      _id: user._id,
     });
   },
   signUp: (msg, cb) => {
