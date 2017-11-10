@@ -20,7 +20,7 @@ const dbConfig = {
   test: 'mongodb://127.0.0.1/273_lab1_dropbox_test'
 };
 
-const appEnv = 'test'; //app.settings.env;
+const appEnv = 'development'; //app.settings.env;
 const options = {
   useMongoClient: true,
   autoIndex: false, // Don't build indexes
