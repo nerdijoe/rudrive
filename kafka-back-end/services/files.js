@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 const File = require('../models/mongoose_file');
 const User = require('../models/mongoose_user.js');
 
+// global.customPool.getIndex();
+const MongoPool = require('../helpers/customConnectionPooling');
+const customPool = new MongoPool(10);
+customPool.initPool();
+customPool.getIndex();
+
 module.exports = {
   fetchFiles: (msg, cb) => {
 
@@ -11,7 +17,10 @@ module.exports = {
     console.log('---> req.decoded._id=', mongoose.Types.ObjectId(req.decoded._id));
     console.log('---> path=', process.env.ROOT_FOLDER + req.decoded.email)
 
-    File
+    const db = customPool.get();
+    // console.log('******* customPool db ',db);
+    const dbUser = db.model('User');
+    dbUser
       .find({
         user: mongoose.Types.ObjectId(req.decoded._id),
         path: process.env.ROOT_FOLDER + req.decoded.email,

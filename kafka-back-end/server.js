@@ -31,11 +31,17 @@ const options = {
   bufferMaxEntries: 0,
 };
 
+
 mongoose.Promise = global.Promise;
 mongoose.connect(dbConfig[appEnv], options, (err, res) => {
   console.log(`Connected to DB: ${dbConfig[appEnv]}`);
 });
 // mongoose setup end ####
+
+
+const MongoPool = require('./helpers/customConnectionPooling');
+const customPool = new MongoPool(10);
+customPool.initPool();
 
 
 console.log('server is running');
