@@ -8,7 +8,9 @@
 
 ## How to run the application
 
-### Start Kafka Broker 
+Please follow these 2 steps.
+
+### Step 1. Start Kafka Broker 
 
 ```
 // on your terminal
@@ -34,7 +36,7 @@ $ bin/kafka-topics.sh --list --zookeeper localhost:2181
 
 ```
 
-### Start 3 servers
+### Step 2. Start 3 servers
 Kafka Backend Server
 ```
 $ cd kafka-back-end

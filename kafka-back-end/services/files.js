@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const File = require('../models/mongoose_file');
 const User = require('../models/mongoose_user.js');
 
-// global.customPool.getIndex();
 const MongoPool = require('../helpers/customConnectionPooling');
 const customPool = new MongoPool(10);
 customPool.initPool();
@@ -19,8 +18,9 @@ module.exports = {
 
     const db = customPool.get();
     // console.log('******* customPool db ',db);
-    const dbUser = db.model('User');
-    dbUser
+    const dbFile = db.model('File');
+    
+    dbFile
       .find({
         user: mongoose.Types.ObjectId(req.decoded._id),
         path: process.env.ROOT_FOLDER + req.decoded.email,
