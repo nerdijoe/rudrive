@@ -39,9 +39,9 @@ mongoose.connect(dbConfig[appEnv], options, (err, res) => {
 // mongoose setup end ####
 
 
-const MongoPool = require('./helpers/customConnectionPooling');
-const customPool = new MongoPool(10);
-customPool.initPool();
+// const MongoPool = require('./helpers/customConnectionPooling');
+// const customPool = new MongoPool(10);
+// customPool.initPool();
 
 
 console.log('server is running');
