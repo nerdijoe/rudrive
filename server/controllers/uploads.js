@@ -1,10 +1,18 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
+const AWS = require('aws-sdk');
+
 const db = require('../models');
 const Folder = require('../models/mongoose_folder');
 const File = require('../models/mongoose_file');
 const kafka = require('../routes/kafka/client');
 const action = require('../helpers/actionConstants');
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  region: 'us-west-2',
+});
 
 exports.uploadFile = (req, res) => {
   // console.log('uploadFile req', req);
@@ -363,12 +371,69 @@ exports.uploadFileToPathMongoKafka = (req, res) => {
       decoded: req.decoded,
     }, (err, results) => {
       console.log('uploadFileToPathMongoKafka');
-      console.log('   results=', results);
+      // console.log('   results=', results);
       if (err) {
         console.log('  ----> uploadFileToPathMongoKafka Error');
         res.json(err);
       } else {
         res.json(results);
+      }
+    });
+  });
+};
+
+exports.uploadFileKafkaS3 = (req, res) => {
+  // console.log('uploadFile req', req);
+  console.log('uploadFileKafkaS3 req.body', req.body);
+  console.log('uploadFileKafkaS3 req.file', req.file);
+
+  console.log('uploadFileKafkaS3 req.decoded', req.decoded);
+  console.log(`currentPath = [${req.params.currentPath}] `, typeof req.params.currentPath);
+
+  // need to query the path
+
+  fs.readFile(req.file.path, (err, data) => {
+    const binaryFile = new Buffer(data, 'binary');
+    console.log('binaryFile = ', binaryFile);
+
+    const currentPath = req.params.currentPath;
+
+
+    const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
+    const uploadParams = {
+      Bucket: 'dropbox-kafka',
+      Key: req.decoded.email + '/' + req.file.filename,
+      Body: data,
+      ACL: 'public-read',
+    };
+
+    s3.upload(uploadParams, (err, uploadedData) => {
+      if (err) {
+        console.log('Error', err);
+        cb(err);
+      } if (uploadedData) {
+        console.log('uploadedData =', uploadedData);
+        const aws_s3_path = uploadedData.Location;
+        console.log("Upload Success aws_s3_path=", aws_s3_path);
+
+        kafka.make_request('request_topic', {
+          action: action.ADD_NEW_FILE,
+          body: req.body,
+          file: req.file,
+          currentPath,
+          binaryFile,
+          aws_s3_path,
+          decoded: req.decoded,
+        }, (err, results) => {
+          console.log('uploadFileToPathMongoKafka');
+          // console.log('   results=', results);
+          if (err) {
+            console.log('  ----> uploadFileToPathMongoKafka Error');
+            res.json(err);
+          } else {
+            res.json(results);
+          }
+        });
       }
     });
   });
@@ -383,7 +448,7 @@ exports.createDirMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('createDirMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> createDirMongoKafka Error');
       res.json(err);

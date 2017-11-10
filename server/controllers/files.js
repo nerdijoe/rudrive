@@ -412,7 +412,7 @@ exports.fetchRootFilesWithShareMongoKafka = (req, res) => {
 
   kafka.make_request('request_topic', { action: action.FETCH_FILES, decoded: req.decoded }, (err, results) => {
     console.log('after request fetchRootFilesWithShareMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> fetchRootFilesWithShareMongoKafka Error');
       res.json(err);
@@ -431,7 +431,7 @@ exports.starFileMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('starFileMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> starFileMongoKafka Error');
       res.json(err);
@@ -451,7 +451,7 @@ exports.deleteFileMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('deleteFileMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> deleteFileMongoKafka Error');
       res.json(err);
@@ -471,7 +471,7 @@ exports.addFileSharingMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('addFileSharingMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> addFileSharingMongoKafka Error');
       res.json(err);
@@ -491,7 +491,7 @@ exports.removeFileSharingMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('removeFileSharingMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> removeFileSharingMongoKafka Error');
       res.json(err);
@@ -509,7 +509,7 @@ exports.fetchFileSharingMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('fetchFileSharingMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> fetchFileSharingMongoKafka Error');
       res.json(err);

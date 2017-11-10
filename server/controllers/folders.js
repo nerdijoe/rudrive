@@ -533,7 +533,7 @@ exports.fetchRootFoldersWithShareMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('fetchRootFoldersWithShareMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> fetchRootFoldersWithShareMongoKafka Error');
       res.json(err);
@@ -553,7 +553,7 @@ exports.starFolderMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('starFolderMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> starFolderMongoKafka Error');
       res.json(err);
@@ -573,7 +573,7 @@ exports.deleteFolderMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('deleteFolderMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> deleteFolderMongoKafka Error');
       res.json(err);
@@ -593,7 +593,7 @@ exports.fetchByIdMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('fetchByIdMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> fetchByIdMongoKafka Error');
       res.json(err);
@@ -613,7 +613,7 @@ exports.addFolderSharingMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('addFolderSharingMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> addFolderSharingMongoKafka Error');
       res.json(err);
@@ -633,7 +633,7 @@ exports.removeFolderSharingMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('removeFolderSharingMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> removeFolderSharingMongoKafka Error');
       res.json(err);
@@ -652,7 +652,7 @@ exports.fetchFolderSharingMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('fetchFolderSharingMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> fetchFolderSharingMongoKafka Error');
       res.json(err);

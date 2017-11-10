@@ -124,7 +124,7 @@ exports.insertActivityMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('insertActivityMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> insertActivityMongoKafka Error');
       res.json(err);
@@ -142,7 +142,7 @@ exports.fetchActivitiesMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('fetchActivitiesMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> fetchActivitiesMongoKafka Error');
       res.json(err);
