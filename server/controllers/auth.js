@@ -178,7 +178,7 @@ exports.signupMongoKafka = (req, res, next) => {
 
   kafka.make_request('request_topic', { action: action.USER_SIGN_UP, body: req.body }, (err, results) => {
     console.log('signupMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> signupMongoKafka Error');
       res.json(err);
@@ -235,7 +235,7 @@ exports.signinKafka = (req, res) => {
   // req.user is passed from passport
   kafka.make_request('request_topic', { action: action.USER_SIGN_IN_TOKEN, user: req.user }, (err, results) => {
     console.log('signinKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> signinKafka Error');
       res.json(err);

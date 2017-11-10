@@ -78,10 +78,15 @@ module.exports = {
   
         // Need to upload to AWS S3 before inserting the file entry to MongoDB
         //   because we need to get the AWS S3 path
-        fs.readFile(newFile.full_path, (err, data) => {
-          if (err) { throw err; }
+        // fs.readFile(newFile.full_path, (err, data) => {
+        //   if (err) { throw err; }
           // Read in the file, convert it to base64, store to S3
-          const base64data = new Buffer(data, 'binary');
+          // const base64data = new Buffer(data, 'binary');
+          
+          const fileStream = fs.createReadStream(newFile.full_path);
+          fileStream.on('error', (err) => {
+            console.log('File Error', err);
+          });
 
           // var s3 = new AWS.S3();
           const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
@@ -89,7 +94,7 @@ module.exports = {
           const uploadParams = {
             Bucket: 'dropbox-kafka',
             Key: req.decoded.email + '/' + newFile.name,
-            Body: base64data,
+            Body: fileStream,
             ACL: 'public-read',
           };
 
@@ -120,7 +125,7 @@ module.exports = {
           //   console.log('Successfully uploaded package.');
 
           // });
-        }); // eof fs.readFile
+        // }); // eof fs.readFile
 
 
 

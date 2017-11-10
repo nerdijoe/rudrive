@@ -363,7 +363,7 @@ exports.uploadFileToPathMongoKafka = (req, res) => {
       decoded: req.decoded,
     }, (err, results) => {
       console.log('uploadFileToPathMongoKafka');
-      console.log('   results=', results);
+      // console.log('   results=', results);
       if (err) {
         console.log('  ----> uploadFileToPathMongoKafka Error');
         res.json(err);
@@ -383,7 +383,7 @@ exports.createDirMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('createDirMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> createDirMongoKafka Error');
       res.json(err);

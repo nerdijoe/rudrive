@@ -206,7 +206,7 @@ exports.getAboutMongoKafka = (req, res) => {
 
   kafka.make_request('request_topic', { action: action.FETCH_USER_ABOUT, decoded: req.decoded }, (err, results) => {
     console.log('getAboutMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> getAboutMongoKafka Error');
       res.json(err);
@@ -226,7 +226,7 @@ exports.updateAboutMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('updateAboutMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> updateAboutMongoKafka Error');
       res.json(err);
@@ -244,7 +244,7 @@ exports.getInterestMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('getInterestMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> getInterestMongoKafka Error');
       res.json(err);
@@ -264,7 +264,7 @@ exports.updateInterestMongoKafka = (req, res) => {
     decoded: req.decoded,
   }, (err, results) => {
     console.log('updateInterestMongoKafka');
-    console.log('   results=', results);
+    // console.log('   results=', results);
     if (err) {
       console.log('  ----> updateInterestMongoKafka Error');
       res.json(err);
