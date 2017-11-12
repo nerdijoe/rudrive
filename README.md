@@ -71,22 +71,7 @@ $ yarn start
 
 
 ## Testing
-
-Server
-
-Please take a look at /server/app.js
-
-and uncomment this line
-```
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
-```
-Don't forget to comment the other one.
-
-```
-yarn test
-```
-
-On Kafka Backend
+### Kafka Backend Sever
 
 Change the environment to test
 ```
@@ -94,11 +79,43 @@ Change the environment to test
 const appEnv = 'test';
 
 // then run Kafka Backend
+cd kafka-back-end/
 yarn start
 ```
 
+For DB provided connection pooling
+```
+// use this options on kafka-back-end/server.js
+//   see line 24
+const options = {
+  useMongoClient: true,
+  autoIndex: false, // Don't build indexes
+  reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+  reconnectInterval: 500, // Reconnect every 500ms
+  poolSize: 10, // Maintain up to 10 socket connections
+  // If not connected, return errors immediately rather than waiting for reconnect
+  bufferMaxEntries: 0,
+};
 
-## Server
+```
+
+For custom connection pooling
+```
+// open kafka-back-end/services/files.js
+//  uncomment line 5 to 8
+//  and uncomment line 19-21, and use dbFile instead of File
+```
+
+### Express.js Backend Server
+
+```
+cd server/
+yarn test
+```
+
+
+
+## Database Models
 
 ### User Model
 
@@ -111,12 +128,14 @@ yarn start
 
 
 
+
+
 ### End Points
 
 ### Authorization
 #### Sign Up
 ```
-POST - localhost:3000/authseq/signup
+POST - localhost:3000/auth/signup
 ```
 | Field         |      |
 | --------------|:-------------:|
@@ -128,7 +147,7 @@ POST - localhost:3000/authseq/signup
 
 #### Sign In
 ```
-POST - localhost:3000/authseq/signin
+POST - localhost:3000/auth/signin
 ```
 | Field         |      |
 | --------------|:-------------:|
