@@ -1,11 +1,11 @@
-# Dropbox - Kafka and MongoDB
-_(273L2)_
+# ruDrive - Kafka and MongoDB
+
 
 ## 🚀 Migrating previous Lab 1 MySQL Database structure to MongoDB
 
 ## 💀 Client and Server should communicate via Kafka Streams
 
-# Dropbox 🗳️
+# ruDrive 🗳️
 
 ## How to run the application 🏃‍
 
